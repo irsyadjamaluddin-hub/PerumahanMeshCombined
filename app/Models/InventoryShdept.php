@@ -1,0 +1,110 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class InventoryShdept extends Model
+{
+      /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'inventory_sebutharga_dept';
+
+    /**
+     * The database primary key value.
+     *
+     * @var string
+     */
+    // protected $primaryKey = 'dis_id';
+    protected $primaryKey = 'id';
+
+    /**
+     * Attributes that should be mass-assignable.
+     *
+     * @var array
+     */
+
+    protected $fillable = [
+        'id',
+        'sh_id',
+        'unit_sch',
+        'penerima',
+        'penerima_icno',
+        'no_do',
+        'file',
+        'filename',
+        'date_recieve',
+        'created_at',
+        'updated_at'
+        
+   
+        
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+   
+
+    public $incrementing = false;
+
+    /**
+     * Get created_at in array format
+     *
+     * @param  string  $value
+     * @return array
+     */
+
+
+
+    /**
+     * Get updated_at in array format
+     *
+     * @param  string  $value
+     * @return array
+     */
+    public function getUpdatedAtAttribute($value)
+    {
+        return date('j/n/Y g:i A', strtotime($value));
+    }
+
+
+    public function getDataAttribute($value)
+{
+    return json_decode($value, true);
+}
+
+
+public function department()
+{
+    return $this->belongsTo(Department::class, 'unit_sch', 'id');
+}
+
+public function inventorysebutharga()
+{
+    return $this->belongsTo(
+        \App\Models\InventorySebutharga::class,
+        'sh_id',   // foreign key in InventoryShdept
+        'id'       // primary key in InventorySebutharga
+    );
+}
+}

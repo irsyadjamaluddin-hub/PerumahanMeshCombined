@@ -15,7 +15,7 @@
         @foreach ($cfg['jenis_permohonan'] as $label => $note)
             <a class="card pad lift" style="text-decoration:none;color:var(--ink);padding:20px;gap:6px"
                href="{{ route('housing2.create', [$jenis, 'jenis_permohonan' => $label]) }}">
-                <span class="kicker">{{ $t('Borang baharu') }}</span>
+                <span class="kicker">{{ $t('Borang bharu') }}</span>
                 <span class="h" style="font-size:22px">{{ $t($label) }}</span>
                 <p class="muted" style="margin:0;font-size:14px">{{ $t($note) }}</p>
             </a>

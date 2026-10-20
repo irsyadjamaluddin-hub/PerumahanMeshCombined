@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- #============= ORI CODE ============== -->
 <!--
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
@@ -435,3 +436,6 @@ When you only upload changed files, also upload any shared files listed in the c
 | "500 Server Error" with no details | Read `storage/logs/laravel.log`, or set `APP_DEBUG=true` (only on your own PC) |
 | Emails not sending | Check the `MAIL_*` values. For testing, use a Mailtrap sandbox |
 | Smart Bot doesn't answer new topics | Edit `resources/meshbot/knowledge.php`, then `php artisan cache:clear` |
+=======
+# PerumahanMeshCombined
+>>>>>>> a6c76ff1c5219c44a74053d46d5a767c3fbb62c4

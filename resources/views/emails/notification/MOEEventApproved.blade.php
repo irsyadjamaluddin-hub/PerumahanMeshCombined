@@ -5,7 +5,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td align="center">
-                <a href="https://mesh.moe.gov.bn">
+                <a href="http://127.0.0.1:8000">
                     <img src="{{ asset('img/newmoelogo.png') }}" class="d-block" style="height:200px" alt="img">
                 </a>
             </td>
@@ -33,7 +33,7 @@
     <p style="color:#2b2a2a;">Reminder:</p>
     <p style="color:#2b2a2a;">1. Please use the link provided to scan your attendance during the program:</p>
     <br>
-    <p style="color:#2b2a2a; margin-bottom: 0px;">Mesh: <a href="https://mesh.moe.gov.bn/moeeventscanqrcode/{{ $qrcodeid }}">https://mesh.moe.gov.bn/moeeventscanqrcode/{{$qrcodeid}}</a></p>
+    <p style="color:#2b2a2a; margin-bottom: 0px;">Mesh: <a href="http://127.0.0.1:8000/moeeventscanqrcode/{{ $qrcodeid }}">http://127.0.0.1:8000/moeeventscanqrcode/{{$qrcodeid}}</a></p>
     <br>
     <p style="color:#2b2a2a;">2. Attendance will start to be taken 15 minutes before the program</p>
    

@@ -3,6 +3,23 @@
 @section('title', 'Hadir @MOEBN')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- #============= ORI CODE ============== --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: shared styles in public/css/mesh-home-theme.css, --}}
+{{-- applied to everything inside the mesh-home-theme wrapper below. Light mode is unchanged. --}}
+{{-- <link href="{{ asset('css/mesh-home-theme.css') }}?v={{ filemtime(public_path('css/mesh-home-theme.css')) }}" rel="stylesheet"> --}}
+{{-- #================================ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" section; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+{{-- #================================ --}}
+<style>
+  /* Status text (set inline as green / red) */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme td[style*="green"] { color: #6ee7b7 !important; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme td[style*="red"] { color: #fca5a5 !important; }
+</style>
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
   <?php 
     $pagename = "Slip Kehadiran";
@@ -32,22 +49,29 @@
 
     <!-- ACT Table -->
      <div class="row mb-2">
-            <div class="col-md-10">
+            <div class="col-md-6">
             </div>
-            <div class="col-md-2" style="text-align:center;">
+            <div class="col-md-6 d-flex flex-nowrap justify-content-end gap-2">
                 <a href="{{ route('sk.slipkedatangan.createevent') }}" class="btn btn-primary">
                     <i class="bi bi-plus-lg"></i>
                 </a>
-                {{-- <a href="https://mesh.moe.gov.bn/sk"  target="_blank" class= "btn btn-primary">
+                {{-- <a href="http://127.0.0.1:8000/sk"  target="_blank" class= "btn btn-primary">
                     <i class="bi bi-link"></i>
                 </a> --}}
                 <a href="{{ route('slipkehadiran') }}"  target="_blank" class= "btn btn-primary">
                     <i class="bi bi-link"></i>
                 </a>
-                
+
                 <a href="/assets/img/qrcode/SlipKehadiran.jpg"  target="_blank" class= "btn btn-primary text-right">
                     <i class="bi bi-qr-code"></i>
                 </a>
+
+                {{-- ====== NEWLY ADDED ======== --}}
+                {{-- Share Perkara by IC No. feature: shows every Perkara that has been shared with the logged-in user's IC No. (SKController@sharedWithMe) --}}
+                <a href="{{ route('sk.slipkedatangan.sharedwithme') }}" class="btn btn-primary" title="Shared With Me">
+                    <i class="ri-user-received-2-fill"></i>
+                </a>
+                {{-- ====== ========. --}}
             </div>
         </div>
     <div class="col-12">
@@ -122,10 +146,10 @@
 
 
 
-
             <table class="table table-borderless datatable mt-3">
               <thead>
                 <tr>
+                  <th scope="col">Jabatan</th>               <!-- NEWLY ADDED -->
                   <th scope="col">Perkara</th>
                   <th scope="col">Tarikh Bermula</th>
                   <th scope="col">Tarikh Berakhir</th>
@@ -147,6 +171,7 @@
 
               @foreach($skperkaras as $skperkara)
               <tr>
+                <td>{{ $skperkara['jabatan'] }}</td>
                 <td>{{ $skperkara['label'] }}</td>
                 <td>{{ $skperkara['tarikh_bermula'] }}</td>
                 <td>{{ $skperkara['tarikh_berakhir'] }}</td>
@@ -181,7 +206,18 @@
                     </div>
                     <button class="btn btn-primary" type="submit" id="pdfButton">Export PDF</button>
                 </form>
-                
+
+                {{-- ====== NEWLY ADDED ======== --}}
+                {{-- Share Perkara by IC No. feature: opens the Grant Access form for this Perkara (SKController@grantAccess -> accessske.blade.php) --}}
+                <!----Grant Access Button----->
+                <form method="post" action="{{ route('sk.slipkedatangan.accessske', $skperkara['id']) }}">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-primary" title="Add IC No.">
+                        <i class="ri-user-add-fill"></i>
+                    </button>
+                </form>
+                {{-- ====== ========. --}}
+
                 <script>
                     document.getElementById('excelButton').addEventListener('click', function() {
                         document.getElementById('exportForm').action = "{{ route('export.excel') }}";
@@ -207,4 +243,7 @@
 
 </section>
 
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

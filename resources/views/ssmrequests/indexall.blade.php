@@ -3,6 +3,12 @@
 @section('title', 'SSM Request Admin Index')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <style>
     .label {
@@ -47,7 +53,7 @@ $pagename = "SSMSRequest_Admin";
         </a>
     </div>
     <div class="col-md-2 text-center">
-        <a href="https://mesh.moe.gov.bn/borangaduanssm" target="_blank" class="btn btn-primary">
+        <a href="http://127.0.0.1:8000/borangaduanssm" target="_blank" class="btn btn-primary">
             <i class="bi bi-link"></i>
         </a>
 
@@ -1103,4 +1109,7 @@ $pagename = "SSMSRequest_Admin";
         </div>
     </div>
 </section>
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

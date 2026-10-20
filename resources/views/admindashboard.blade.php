@@ -53,6 +53,30 @@
   .modal-body .card-body span {
       color: #899bbd;
   }
+
+  .services-category {
+    margin-bottom: 35px;
+  }
+  .services-category:last-child {
+    margin-bottom: 0;
+  }
+  .category-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #012970;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e6e9ec;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .category-title i {
+    color: #4154f1;
+    font-size: 18px;
+  }
 </style>
   <?php
     $pagename = "Admin_Dashboard";
@@ -87,12 +111,17 @@
 
 @if (Auth::check() && (!Auth::user()->hasRole('ROLE_SUPERADMIN')))
   <section class="section dashboard" id="allServicesList">
-  <div class="row">
 
-       <!-- MY SSM -->
-@if (Auth::check())
-@if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_SSM') || Auth::user()->hasRole('ROLE_ACT') || Auth::user()->hasRole('ROLE_BAKI_CUTI') || Auth::user()->hasRole('ROLE_PDMS_CUTI') || Auth::user()->hasRole('ROLE_PRESTASI'))
-<div class="col-lg-4">
+    <!-- Category: Human Resource -->
+    @if (Auth::check() && (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_SSM') || Auth::user()->hasRole('ROLE_ACT') || Auth::user()->hasRole('ROLE_BAKI_CUTI') || Auth::user()->hasRole('ROLE_PDMS_CUTI') || Auth::user()->hasRole('ROLE_PRESTASI')))
+    <div class="services-category">
+      <h5 class="category-title"><i class="bi bi-person-badge"></i> Human Resource</h5>
+      <div class="row">
+
+        <!-- MY SSM -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_SSM') || Auth::user()->hasRole('ROLE_ACT') || Auth::user()->hasRole('ROLE_BAKI_CUTI') || Auth::user()->hasRole('ROLE_PDMS_CUTI') || Auth::user()->hasRole('ROLE_PRESTASI'))
+        <div class="col-lg-4">
             <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;" type="button" data-bs-toggle="modal" data-bs-target="#ssmInternalModal">
               <div class="card-body" style="padding: 10px;">
                 <div class="d-flex align-items-center">
@@ -101,107 +130,6 @@
                   </div>
                   <div class="ps-3">
                     <h6 style="font-size: 22px;">My SSM</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>        
-        @endif
-        @endif
-
-        <!-- KOMUNIKASI NOTIFIKASI -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ONS_ADMIN'))
-        <div class="col-lg-4">
-            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;" type="button" data-bs-toggle="modal" data-bs-target="#komunikasiModal">
-              <div class="card-body" style="padding: 10px;">
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-chat-dots"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6 style="font-size: 22px;">Komunikasi Notifikasi</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-        @endif
-        @endif
-
-        <!-- KEHADIRAN & PENGURUSAN PESERTA -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_QUESTION&ANSWER') || Auth::user()->hasRole('ROLE_MOEEVENT') || Auth::user()->hasRole('ROLE_SLIPKEHADIRAN'))
-        <div class="col-lg-4">
-            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;" type="button" data-bs-toggle="modal" data-bs-target="#kehadiranModal">
-              <div class="card-body" style="padding: 10px;">
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-people-fill"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6 style="font-size: 22px;">Kehadiran & Pengurusan Peserta</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-        @endif
-        @endif
-
-        <!-- PERMOHONAN SOKONGAN -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
-        <div class="col-lg-4">
-            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;" type="button" data-bs-toggle="modal" data-bs-target="#permohonanSokonganModal">
-              <div class="card-body" style="padding: 10px;">
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-file-code"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6 style="font-size: 22px;">Permohonan Sokongan</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-        @endif
-        @endif
-
-        <!-- PERKHIDMATAN LAIN -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_BNS') || Auth::user()->hasRole('ROLE_TEGAHAN') || Auth::user()->hasRole('ROLE_POSTUP'))
-        <div class="col-lg-4">
-            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;" type="button" data-bs-toggle="modal" data-bs-target="#perkhidmatanLainModal">
-              <div class="card-body" style="padding: 10px;">
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-gear"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6 style="font-size: 22px;">Perkhidmatan Lain</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-        @endif
-        @endif
-
-        <!-- PERKHIDMATAN OPERASI DALAMAN -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_CCA_ADMIN') || Auth::user()->hasRole('ROLE_CCA_FOCAL') || Auth::user()->hasRole('ROLE_PERJAWATAN') || Auth::user()->hasRole('ROLE_PRESTASI') || Auth::user()->hasRole('ROLE_COMPETENCY') || Auth::user()->hasRole('ROLE_JAWATANKOSONG') || Auth::user()->hasRole('ROLE_CDDINVENTORY') || Auth::user()->hasRole('ROLE_DATAKEHADIRAN') || Auth::user()->hasRole('ROLE_DESPATCH') || Auth::user()->hasRole('ROLE_EMINITADMIN') || Auth::user()->hasRole('ROLE_ATTENDANCE_EVENT') || Auth::user()->hasRole('ROLE_PASUKANBERUNIFORM') || Auth::user()->hasRole('ROLE_PASUKANHADRAH')
-        || Auth::user()->hasRole('ROLE_ADMIN_PERUMAHAN') || Auth::user()->hasRole('ROLE_HRIDS'))
-        <div class="col-lg-4">
-            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;" type="button" data-bs-toggle="modal" data-bs-target="#operasiDalamanModal">
-              <div class="card-body" style="padding: 10px;">
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-building"></i>
-                  </div>
-                  <div class="ps-3">
-                    <h6 style="font-size: 22px;">Perkhidmatan Operasi Dalaman</h6>
                   </div>
                 </div>
               </div>
@@ -222,7 +150,7 @@
                       <i class="bi bi-file-text"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 style="font-size: 22px;">Permohonan Peranan Akses</h6>
+                      <h6 style="font-size: 22px;">Access Role Application</h6>
                     </div>
                   </div>
             </div>
@@ -231,25 +159,761 @@
         </div>
         @endif
         @endif
-<!-- PENGURUSAN TEMPAHAN FASILITAS -->
-@if (Auth::check())
-@if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_OSCROOM') || Auth::user()->hasRole('ROLE_OSC_OP'))
+
+      </div>
+    </div>
+    @endif
+
+    <!-- Category: Communication & Notifications -->
+    @if (Auth::check() && (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ONS_ADMIN')))
+    <div class="services-category">
+      <h5 class="category-title"><i class="bi bi-megaphone"></i> Communication & Notifications</h5>
+      <div class="row">
+
+        <!-- MNS -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ONS_ADMIN'))
         <div class="col-lg-4">
-            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;" type="button" data-bs-toggle="modal" data-bs-target="#tempahanFasilitasModal">
+          <a href="{{ route('onlinenotifications.onlinenotification.index') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-phone-vibrate"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">MNS</h6>
+                    <span>MESH Notification Service</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- MLS -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
+        <div class="col-lg-4">
+          <a href="{{ route('linkup.index') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-link-45deg"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">MLS</h6>
+                    <span>MESH Link Sharing</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+      </div>
+    </div>
+    @endif
+
+    <!-- Category: Attendance & Events -->
+    @if (Auth::check() && (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_QUESTION&ANSWER') || Auth::user()->hasRole('ROLE_MOEEVENT') || Auth::user()->hasRole('ROLE_SLIPKEHADIRAN')))
+    <div class="services-category">
+      <h5 class="category-title"><i class="bi bi-calendar-check"></i> Attendance & Events</h5>
+      <div class="row">
+
+        <!-- Q&A -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_QUESTION&ANSWER'))
+        <div class="col-lg-4">
+          <a href="{{ route('st.soalantaklimat.indexadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-file-text"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">Q&A</h6>
+                    <span>Q&A Service</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- MEA -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_MOEEVENT'))
+        <div class="col-lg-4">
+          <a href="{{ route('moeevent.moeevent.indexadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-card-heading"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">MEA</h6>
+                    <span>MESH Event Attendance</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- MAS -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_SLIPKEHADIRAN'))
+        <div class="col-lg-4">
+          <a href="{{ route('sk.slipkedatangan.indexadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-building"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">MAS</h6>
+                    <span>MESH Attendance Slip</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+      </div>
+    </div>
+    @endif
+
+    <!-- Category: Support Requests -->
+    @if (Auth::check() && Auth::user()->hasRole('ROLE_SUPERADMIN'))
+    <div class="services-category">
+      <h5 class="category-title"><i class="bi bi-file-code"></i> Support Requests</h5>
+      <div class="row">
+
+        <!-- DRF -->
+        <div class="col-lg-4">
+          <a href="{{ route('devops-request.indexadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-gear-wide-connected"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">DRF</h6>
+                    <span>Devops Request Form</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- DSS -->
+        <div class="col-lg-4">
+          <a href="{{ route('support-center.index') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-headset"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">DSS</h6>
+                    <span>Devops Support Service</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- MOE Enquiries -->
+        <div class="col-lg-4">
+          <a href="{{ route('soalanbiskita.soalanbiskita.indexadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-question-square"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">MOE Enquiries</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+    @endif
+
+    <!-- Category: Other Services -->
+    @if (Auth::check() && (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_BNS') || Auth::user()->hasRole('ROLE_TEGAHAN') || Auth::user()->hasRole('ROLE_POSTUP') || Auth::user()->hasRole('ROLE_DATAKERAMAIAN')))
+    <div class="services-category">
+      <h5 class="category-title"><i class="bi bi-gear"></i> Other Services</h5>
+      <div class="row">
+
+        <!-- MB -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_BNS'))
+        <div class="col-lg-4">
+          <a href="{{ route('bn.banner.index') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-view-list"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">MB</h6>
+                    <span>MESH Banner</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- MA -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
+        <div class="col-lg-4">
+          <a href="{{ route('announcement.announcementadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-megaphone"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">MA</h6>
+                    <span>MESH Announcement</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- MN -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
+        <div class="col-lg-4">
+          <a href="{{ route('news.newsadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-newspaper"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">MN</h6>
+                    <span>MESH News</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- MPC -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_TEGAHAN'))
+        <div class="col-lg-4">
+          <a href="{{ route('msc.mscadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-building-slash"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">MPC</h6>
+                    <span>Prohibited Company</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- PostUp -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_POSTUP'))
+        <div class="col-lg-4">
+          <a href="{{ route('postup.postup.indexadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-file-earmark-arrow-up-fill"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">PostUp</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- Student Data -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_DATAKERAMAIAN'))
+        <div class="col-lg-4">
+          <a href="{{ route('inventory.datakeramaianindex') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-table"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">Student Data</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+      </div>
+    </div>
+    @endif
+
+   
+    <!-- Category: Internal -->
+    @if (Auth::check() && (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_CCA_ADMIN') || Auth::user()->hasRole('ROLE_CCA_FOCAL') || Auth::user()->hasRole('ROLE_PERJAWATAN') || Auth::user()->hasRole('ROLE_PRESTASI') || Auth::user()->hasRole('ROLE_COMPETENCY') || Auth::user()->hasRole('ROLE_JAWATANKOSONG') || Auth::user()->hasRole('ROLE_CDDINVENTORY') || Auth::user()->hasRole('ROLE_DATAKEHADIRAN') || Auth::user()->hasRole('ROLE_EMINITADMIN') || Auth::user()->hasRole('ROLE_ATTENDANCE_EVENT') || Auth::user()->hasRole('ROLE_PASUKANBERUNIFORM') || Auth::user()->hasRole('ROLE_PASUKANHADRAH') || Auth::user()->hasRole('ROLE_ADMIN_PERUMAHAN') || Auth::user()->hasRole('ROLE_HRIDS') || Auth::user()->hasRole('ROLE_HRIDS_NONTEACHING')))
+    <div class="services-category">
+      <h5 class="category-title"><i class="bi bi-building"></i> Internal</h5>
+      <div class="row">
+
+        <!-- EMA -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_EMINITADMIN'))
+        <div class="col-lg-4" type="button" data-bs-toggle="modal" data-bs-target="#eminitModal">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+            <div class="card-body" style="padding: 10px;">
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-collection"></i>
+                </div>
+                <div class="ps-3">
+                  <h6 style="font-size: 22px;">D Flow</h6>
+                  <span>Documentation Flow</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+        @endif
+        <!-- HRIDS -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_HRIDS') || Auth::user()->hasRole('ROLE_HRIDS_NONTEACHING'))
+        <div class="col-lg-4">
+          <a href="{{ route('pj.landingpage') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-database"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">HRIDS</h6>
+                    <span>Human Resources Integrated Database System</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+             <!-- SPIS -->
+             @if (Auth::check())
+             @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_SPIS_ADMIN'))
+        <div class="col-lg-4">
+          <a href="{{ route('project-register.index') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-graph-up-arrow"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">SPIS</h6>
+                    <span>Strategic Performance Info System</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- HRIDS -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_DICTHR'))
+
+         <!-- DICTHR -->
+         <div class="col-lg-4">
+           <a href="{{ Route::has('dicthr.index') ? route('dicthr.index') : '#' }}">
+                      <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
+                          <div class="card-body" style="padding: 10px;">
+                              <div class="d-flex align-items-center">
+                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                      <i class="bi bi-person-badge"></i>
+                                  </div>
+                                  <div class="ps-3">
+                                      <h6 style="font-size: 22px;">DICTHR</h6>
+                                      <span>Pengurusan Rekod Kakitangan</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </a>
+              </div>
+
+              @endif
+              @endif
+
+
+              @if (Auth::check())
+               @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_TPA'))
+
+
+                  <!-- TPAWSE -->
+                  <div class="col-lg-4">
+                  <a href="{{ Route::has('tpawse.portal.index') ? route('tpawse.portal.index') : '#' }}">
+                      <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
+                          <div class="card-body" style="padding: 10px;">
+                              <div class="d-flex align-items-center">
+                                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                      <i class="bi bi-clipboard-check"></i>
+                                  </div>
+                                  <div class="ps-3">
+                                      <h6 style="font-size: 22px;">TPAWSE</h6>
+                                      <span>Penilaian Prestasi Guru</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </a>
+              </div>
+
+              @endif
+              @endif
+
+        <!-- Housing -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ADMIN_PERUMAHAN'))
+        <div class="col-lg-4" type="button" data-bs-toggle="modal" data-bs-target="#perumahandaModal">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+            <div class="card-body" style="padding: 10px;">
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-bank2"></i>
+                </div>
+                <div class="ps-3">
+                  <h6 style="font-size: 22px;">Housing</h6>
+                  <span>Housing Management</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+        @endif
+
+        <!-- CMS -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_CDDINVENTORY'))
+        <div class="col-lg-4" type="button" data-bs-toggle="modal" data-bs-target="#inventoryModal">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+            <div class="card-body" style="padding: 10px;">
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-file-earmark-arrow-up-fill"></i>
+                </div>
+                <div class="ps-3">
+                  <h6 style="font-size: 22px;">CMS</h6>
+                  <span>Curriculum Materials Service</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+        @endif
+
+        <!-- CCAM -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_CCA_ADMIN') || Auth::user()->hasRole('ROLE_CCA_FOCAL'))
+        <div class="col-lg-4">
+          <a href="{{ route('cca.cca.indexAll') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bx bx-bus-school"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">CCAM</h6>
+                    <span>Co-Curriculum Activities Management</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- Personnel ID -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
+        <div class="col-lg-4">
+          <a href="{{ route('personnelid.personnelids.index') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-file-medical"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">Personnel ID</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- Students & School Staff -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ATTENDANCE_EVENT'))
+        <div class="col-lg-4" type="button" data-bs-toggle="modal" data-bs-target="#studentPengawasModal">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+            <div class="card-body" style="padding: 10px;">
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-flag"></i>
+                </div>
+                <div class="ps-3">
+                  <h6 style="font-size: 22px;">Students & School Staff</h6>
+                  <span>Attendance Event</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+        @endif
+
+        <!-- Post Establishment Management (PERJAWATAN) -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PERJAWATAN'))
+        <div class="col-lg-4">
+          <a href="{{ route('perjawatan.perjawatan.index') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-bank2"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">Post Establishment Management</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- Competency -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_COMPETENCY'))
+        <div class="col-lg-4" type="button" data-bs-toggle="modal" data-bs-target="#competencyModal">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+            <div class="card-body" style="padding: 10px;">
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-journal-text"></i>
+                </div>
+                <div class="ps-3">
+                  <h6 style="font-size: 22px;">Competency</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+        @endif
+
+        <!-- Vacant Position (JAWATAN KOSONG) -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_JAWATANKOSONG'))
+        <div class="col-lg-4">
+          <a href="{{ route('jawatankosong.jawatankosong.indexadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-people"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">Vacant Position</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+        <!-- Attendance Data (DATA KEHADIRAN) -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_DATAKEHADIRAN') || Auth::user()->hasRole('ROLE_PASUKANBERUNIFORM') || Auth::user()->hasRole('ROLE_PASUKANHADRAH'))
+        <div class="col-lg-4" type="button" data-bs-toggle="modal" data-bs-target="#dkModal">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+            <div class="card-body" style="padding: 10px;">
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-file-earmark-arrow-up-fill"></i>
+                </div>
+                <div class="ps-3">
+                  <h6 style="font-size: 22px;">Attendance Data</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+        @endif
+
+        <!-- One Stop Centre Feedback (PPKP) -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
+        <div class="col-lg-4">
+          <a href="{{ route('feedbacks.feedback.indexadmin') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+              <div class="card-body" style="padding: 10px;">
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-chat-dots"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6 style="font-size: 22px;">One Stop Centre Feedback</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        @endif
+        @endif
+
+      </div>
+    </div>
+    @endif
+
+    <!-- Category: Facilities -->
+    @if (Auth::check() && (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_OSCROOM') || Auth::user()->hasRole('ROLE_OSC_OP') || Auth::user()->hasRole('ROLE_BOOKINGROOM_ADMIN')))
+    <div class="services-category">
+      <h5 class="category-title"><i class="bi bi-door-open"></i> Facilities</h5>
+      <div class="row">
+
+        <!-- MRB -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_BOOKINGROOM_ADMIN') || Auth::user()->hasRole('ROLE_OSCROOM'))
+        <div class="col-lg-4" type="button" data-bs-toggle="modal" data-bs-target="#bookingModal">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
+            <div class="card-body" style="padding: 10px;">
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-door-open"></i>
+                </div>
+                <div class="ps-3">
+                  <h6 style="font-size: 22px;">MRB</h6>
+                  <span>Meeting Room Booking</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+        @endif
+
+        <!-- SRB -->
+        @if (Auth::check())
+        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_OSC_OP'))
+        <div class="col-lg-4">
+          <a href="{{ route('bookings.booking.home') }}">
+            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
               <div class="card-body" style="padding: 10px;">
                 <div class="d-flex align-items-center">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                     <i class="bi bi-door-open"></i>
                   </div>
                   <div class="ps-3">
-                    <h6 style="font-size: 22px;">Pengurusan Tempahan Fasilitas</h6>
+                    <h6 style="font-size: 22px;">SRB</h6>
+                    <span>Syndicate Room Booking</span>
                   </div>
                 </div>
               </div>
             </div>
+          </a>
         </div>
         @endif
         @endif
+
+      </div>
+    </div>
+    @endif
+
+    <!-- Category: Archive & Records -->
+    @if (Auth::check() && (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ART_FOCAL')))
+    <div class="services-category">
+      <h5 class="category-title"><i class="bi bi-archive"></i> Archive & Records</h5>
+      <div class="row">
 
         <!-- ARCHIVED -->
         @if (Auth::check())
@@ -271,7 +935,10 @@
         @endif
         @endif
 
+      </div>
     </div>
+    @endif
+
   </section>
 @endif
 
@@ -299,7 +966,7 @@
                   <i class="bi bi-person-check"></i>
                 </div>
                 <div class="ps-3">
-                  <h6 style="font-size: 22px;">Aktif Akaun SSM</h6>
+                  <h6 style="font-size: 22px;">Activate SSM Account</h6>
                   <span>Sistem Sumber Manusia</span>
                 </div>
               </div>
@@ -331,7 +998,7 @@
                       <i class="bi bi-person-plus"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 style="font-size: 22px;">SSM Permohonan</h6>
+                      <h6 style="font-size: 22px;">SSM Application</h6>
                       <span>Sistem Sumber Manusia</span>
                     </div>
                   </div>
@@ -352,7 +1019,7 @@
                   <i class="bi bi-info-lg"></i>
                 </div>
                 <div class="ps-3">
-                  <h6 style="font-size: 22px;">Info</h6>
+                  <h6 style="font-size: 22px;">Information</h6>
                 </div>
               </div>
             </div>
@@ -390,7 +1057,7 @@
                       <i class="bi bi-person"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 style="font-size: 22px;">Pergerakan Pekerja</h6>
+                      <h6 style="font-size: 22px;">Employee Movement</h6>
                     </div>
                   </div>
             </div>
@@ -413,7 +1080,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Info</h5>
+        <h5 class="modal-title">Information</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -493,622 +1160,15 @@
 @endif
 @endif
 
-<!-- Komunikasi Notifikasi Modal -->
-@if (Auth::check())
-@if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ONS_ADMIN'))
-<div class="modal fade" id="komunikasiModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Komunikasi Notifikasi</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
 
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ONS_ADMIN'))
-        <a href="{{ route('onlinenotifications.onlinenotification.index') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-phone-vibrate"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">MPN</h6>
-                      <span>MESH Perkhidmatan Notifikasi</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
-        <a href="{{ route('linkup.index') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-link-45deg"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">MKP</h6>
-                      <span>MESH Kongsi Pautan</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-      </div>
-    </div>
-  </div>
-</div><!-- End Komunikasi Notifikasi Modal-->
-@endif
-@endif
-
-<!-- Kehadiran & Pengurusan Peserta Modal -->
-@if (Auth::check())
-@if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_QUESTION&ANSWER') || Auth::user()->hasRole('ROLE_MOEEVENT') || Auth::user()->hasRole('ROLE_SLIPKEHADIRAN'))
-<div class="modal fade" id="kehadiranModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Kehadiran & Pengurusan Peserta</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_QUESTION&ANSWER'))
-        <a href="{{ route('st.soalantaklimat.indexadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-file-text"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">PSSJ</h6>
-                      <span>Perkhidmatan Sesi Soal Jawab</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_MOEEVENT'))
-        <a href="{{ route('moeevent.moeevent.indexadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-card-heading"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">MPMKP</h6>
-                      <span>MESH Pengurusan Majlis KP</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_SLIPKEHADIRAN'))
-        <a href="{{ route('sk.slipkedatangan.indexadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-building"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">MSK</h6>
-                      <span>MESH Slip Kehadiran</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-      </div>
-    </div>
-  </div>
-</div><!-- End Kehadiran & Pengurusan Peserta Modal-->
-@endif
-@endif
-
-<!-- Permohonan Sokongan Modal -->
-@if (Auth::check())
-@if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
-<div class="modal fade" id="permohonanSokonganModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Permohonan Sokongan</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        <a href="{{ route('devops-request.indexadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-gear-wide-connected"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">DRF</h6>
-                      <span>Borang Permohonan DevOps</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-
-        <a href="{{ route('support-center.index') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-headset"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">DSD</h6>
-                      <span>Perkhidmatan Bantuan DevOps</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-
-        <a href="{{ route('soalanbiskita.soalanbiskita.indexadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-question-square"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">Tanya? MOEBN</h6>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-
-      </div>
-    </div>
-  </div>
-</div><!-- End Permohonan Sokongan Modal-->
-@endif
-@endif
-
-<!-- Perkhidmatan Lain Modal -->
-@if (Auth::check())
-@if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_BNS') || Auth::user()->hasRole('ROLE_TEGAHAN') || Auth::user()->hasRole('ROLE_POSTUP'))
-<div class="modal fade" id="perkhidmatanLainModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Perkhidmatan Lain</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_BNS'))
-        <a href="{{ route('bn.banner.index') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-view-list"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">MPI</h6>
-                      <span>MESH Paparan Iklan</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
-        <a href="{{ route('announcement.announcementadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-megaphone"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">MP</h6>
-                      <span>MESH Pemberitahuan</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
-        <a href="{{ route('news.newsadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-newspaper"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">MB</h6>
-                      <span>MESH Berita</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_TEGAHAN'))
-        <a href="{{ route('msc.mscadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-building-slash"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">MST</h6>
-                      <span>Syarikat Tegahan</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_POSTUP'))
-        <a href="{{ route('postup.postup.indexadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-file-earmark-arrow-up-fill"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">PostUp</h6>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_DATAKERAMAIAN'))
-        <a href="{{ route('inventory.datakeramaianindex') }}">
-            <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-                <div class="card-body" style="padding: 10px;">
-                    <div class="d-flex align-items-center">
-                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-table"></i>
-                        </div>
-                        <div class="ps-3">
-                            <h6 style="font-size: 22px;">Data Pelajar</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-        @endif
-        @endif
-
-      </div>
-    </div>
-  </div>
-</div><!-- End Perkhidmatan Lain Modal-->
-@endif
-@endif
-
-<!-- Perkhidmatan Operasi Dalaman Modal -->
-@if (Auth::check())
-@if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_CCA_ADMIN') || Auth::user()->hasRole('ROLE_CCA_FOCAL') || Auth::user()->hasRole('ROLE_PERJAWATAN') || Auth::user()->hasRole('ROLE_PRESTASI') || Auth::user()->hasRole('ROLE_COMPETENCY') || Auth::user()->hasRole('ROLE_JAWATANKOSONG') || Auth::user()->hasRole('ROLE_CDDINVENTORY') || Auth::user()->hasRole('ROLE_DATAKEHADIRAN') || Auth::user()->hasRole('ROLE_DESPATCH') || Auth::user()->hasRole('ROLE_EMINITADMIN') || Auth::user()->hasRole('ROLE_ATTENDANCE_EVENT') || Auth::user()->hasRole('ROLE_PASUKANBERUNIFORM') || Auth::user()->hasRole('ROLE_PASUKANHADRAH') || Auth::user()->hasRole('ROLE_ADMIN_PERUMAHAN')|| Auth::user()->hasRole('ROLE_HRIDS'))
-<div class="modal fade" id="operasiDalamanModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Perkhidmatan Operasi Dalaman</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-       <!-- E-MEMO TINDAKAN -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_EMINITADMIN'))
-        <div type="button" data-bs-toggle="modal" data-bs-target="#eminitModal">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; cursor: pointer;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-collection"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">EMT</h6>
-                      <span>E-Memo Tindakan</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </div>
-        @endif
-        @endif
-
-          <!-- HRIDS -->
-      @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_HRIDS'))
-        <a href="{{ route('pj.landingpage') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-database"></i>
-                    </div>
-                    <div class="ps-3">
-                    <h6 style="font-size: 22px;">HRIDS</h6>
-                    <span>Human Resources Integrated Database System</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-           <!-- Perumahan-->
-           @if (Auth::check())
-                    @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ADMIN_PERUMAHAN'))
-                    <div type="button" data-bs-toggle="modal" data-bs-target="#perumahandaModal">
-                      <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; cursor: pointer;">
-                        <div class="card-body" style="padding: 10px;">
-                              <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                  <i class="bi bi-bank2"></i>
-                                </div>
-                                <div class="ps-3">
-                                  <h6 style="font-size: 22px;">Perumahan</h6>
-                                  <span>Pengurusan Perumahan</span>
-                                </div>
-                              </div>
-                        </div>
-                      </div>
-                    </div>
-                    @endif
-                    @endif
-
-        <!-- INVENTORY -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_CDDINVENTORY'))
-        <div type="button" data-bs-toggle="modal" data-bs-target="#inventoryModal">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; cursor: pointer;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-file-earmark-arrow-up-fill"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">PBBK</h6>
-                      <span>Pengurusan Bahan-Bahan Kurikulum</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </div>
-        @endif
-        @endif
-
-        <!-- JPKK -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_CCA_ADMIN') || Auth::user()->hasRole('ROLE_CCA_FOCAL'))
-        <a href="{{ route('cca.cca.indexAll') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bx bx-bus-school"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">PKOKU</h6>
-                      <span>Pengurusan Aktiviti Ko-Kurikulum</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        <!-- ID PERSONNEL -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
-        <a href="{{ route('personnelid.personnelids.index') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-file-medical"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">ID Personel</h6>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        <!-- STUDENT PENGAWAS -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_ATTENDANCE_EVENT'))
-        <div type="button" data-bs-toggle="modal" data-bs-target="#studentPengawasModal">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; cursor: pointer;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center;">
-                      <i class="bi bi-flag"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">Student & Pengawas</h6>
-                      <span>Acara Kehadiran</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </div>
-        @endif
-        @endif
-
-        <!-- PERJAWATAN -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PERJAWATAN'))
-        <a href="{{ route('perjawatan.perjawatan.index') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-bank2"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">Perjawatan</h6>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-       
-
-        <!-- COMPETENCY -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_COMPETENCY'))
-        <div type="button" data-bs-toggle="modal" data-bs-target="#competencyModal">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; cursor: pointer;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-journal-text"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">Competency</h6>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </div>
-        @endif
-        @endif
-
-        <!-- JAWATAN KOSONG -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_JAWATANKOSONG'))
-        <a href="{{ route('jawatankosong.jawatankosong.indexadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-people"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">Jawatan Kosong</h6>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-        <!-- DATA KEHADIRAN -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_DATAKEHADIRAN') || Auth::user()->hasRole('ROLE_PASUKANBERUNIFORM') || Auth::user()->hasRole('ROLE_PASUKANHADRAH'))
-        <div type="button" data-bs-toggle="modal" data-bs-target="#dkModal">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; cursor: pointer;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-file-earmark-arrow-up-fill"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">Data Kehadiran</h6>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </div>
-        @endif
-        @endif
-
-        <!-- PPKP FEEDBACK -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
-        <a href="{{ route('feedbacks.feedback.indexadmin') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-chat-dots"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">Maklum Balas PPKP</h6>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-      </div>
-    </div>
-  </div>
-</div><!-- End Perkhidmatan Operasi Dalaman Modal-->
-@endif
-@endif
-
-<!-- E-MEMO TINDAKAN Submenu Modal -->
+<!-- D FLOW TINDAKAN Submenu Modal -->
 @if (Auth::check())
 @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_EMINITADMIN'))
 <div class="modal fade" id="eminitModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">E-Memo Tindakan</h5>
+        <h5 class="modal-title">D Flow Action</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -1122,45 +1182,33 @@
                       <i class="bi bi-card-heading"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 style="font-size: 22px;">E-Memo (Admin)</h6>
+                      <h6 style="font-size: 22px;">List of D Flow</h6>
                     </div>
                   </div>
             </div>
           </div>
         </a>
 
-        <a href="{{ route('adminsettings.adminsettingsdashboard') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; ">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-gear-fill"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">Settings</h6>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-
-        <a href="{{ route('eminit.eminit.indexeminit') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; background-color: #FFDAB9">
+           <a href="{{ route('eminit.eminit.indexeminit') }}">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid #1F4E78; border-left: 4px solid #012970; margin-bottom: 20px; background-color: #EAF1FB;">
             <div class="card-body" style="padding: 10px;">
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-card-list"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 style="font-size: 22px;">E-Memo</h6>
+                      <h6 style="font-size: 22px;">Create D Flow</h6>
                     </div>
                   </div>
             </div>
           </div>
         </a>
 
+   
+     
+
         <a href="{{ route('eminit.eminit.indexeminitaction') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; background-color: #FFDAB9">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid #1F4E78; border-left: 4px solid #012970; margin-bottom: 20px; background-color: #EAF1FB;">
             <div class="card-body" style="padding: 10px;">
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -1168,7 +1216,7 @@
                     </div>
                     <div class="ps-3">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                          <h6 style="font-size: 22px; margin: 0;">E-Memo (Tindakan)</h6>
+                          <h6 style="font-size: 22px; margin: 0;">D Flow (Action)</h6>
                           <h6 style="
                               font-size: 26px; 
                               display: inline-block;
@@ -1192,11 +1240,27 @@
           </div>
         </a>
 
+             <a href="{{ route('adminsettings.adminsettingsdashboard') }}">
+          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; ">
+            <div class="card-body" style="padding: 10px;">
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-gear-fill"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 style="font-size: 22px;">Settings</h6>
+                    </div>
+                  </div>
+            </div>
+          </div>
+        </a>
+
+
   
       </div>
     </div>
   </div>
-</div><!-- End E-MEMO TINDAKAN Modal-->
+</div><!-- End D FLOW TINDAKAN Modal-->
 @endif
 @endif
 
@@ -1414,7 +1478,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Student & Pengawas</h5>
+        <h5 class="modal-title">Students & School Staff</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -1658,67 +1722,6 @@
 @endif
 @endif
 
-<!-- Pengurusan Tempahan Fasilitas Modal -->
-@if (Auth::check())
-@if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_OSCROOM') || Auth::user()->hasRole('ROLE_OSC_OP'))
-<div class="modal fade" id="tempahanFasilitasModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Pengurusan Tempahan Fasilitas</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        <!-- TEMPAHAN BILIK MESYUARAT -->
-        @if (Auth::check())
-        @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_BOOKINGROOM_ADMIN') || Auth::user()->hasRole('ROLE_OSCROOM'))
-        <div type="button" data-bs-toggle="modal" data-bs-target="#bookingModal">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px; cursor: pointer;">
-            <div class="card-body" style="padding: 10px;">
-              <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                  <i class="bi bi-door-open"></i>
-                </div>
-                <div class="ps-3">
-                  <h6 style="font-size: 22px;">TBM</h6>
-                  <span>Tempahan Bilik Mesyuarat</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        @endif
-        @endif
-
-       <!-- TEMPAHAN SINDIKIT ROOM -->
-@if (Auth::check())
-@if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_OSC_OP'))
-        <a href="{{ route('bookings.booking.home') }}">
-          <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
-            <div class="card-body" style="padding: 10px;">
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-door-open"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 style="font-size: 22px;">TBS</h6>
-                      <span>Tempahan Bilik Sindikit</span>
-                    </div>
-                  </div>
-            </div>
-          </div>
-        </a>
-        @endif
-        @endif
-
-      </div>
-    </div>
-  </div>
-</div><!-- End Pengurusan Tempahan Fasilitas Modal-->
-@endif
-@endif
-
 <!-- Booking Submenu Modal -->
 @if (Auth::check())
 @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_BOOKINGROOM_ADMIN') || Auth::user()->hasRole('ROLE_BOOKINGROOM_ADMIN'))
@@ -1838,7 +1841,7 @@
                       <i class="bi bi-gear-wide-connected"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 style="font-size: 22px;">Borang Permintaan MESH</h6>
+                      <h6 style="font-size: 22px;">MESH Request Form</h6>
                     </div>
                   </div>
             </div>
@@ -1857,7 +1860,7 @@
                       <i class="bi bi-person"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 style="font-size: 22px;">Pelawat PPS</h6>
+                      <h6 style="font-size: 22px;">One Stop Centre Visitor</h6>
                     </div>
                   </div>
             </div>
@@ -1891,5 +1894,8 @@
 </div><!-- End Archived Modal-->
 @endif
 @endif
+
+</div>
+    </section>
 
 @endsection

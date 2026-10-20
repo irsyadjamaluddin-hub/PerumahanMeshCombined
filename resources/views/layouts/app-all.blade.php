@@ -6,6 +6,22 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title>@yield('title')</title>
+
+  {{-- #============= ORI CODE ============== --}}
+  {{-- =============== NISAH =============== --}}
+  {{-- Dark mode (Oct 2026): apply the saved choice before any CSS paints, so the page doesn't flash light first. --}}
+  {{-- Only pages that declare @section('mesh_dark_ready') actually turn dark (see the mesh-dark-ready body class below). --}}
+  {{-- <script> --}}
+  {{--   try { --}}
+  {{--     if (window.localStorage && localStorage.getItem('mesh-theme') === 'dark') { --}}
+  {{--       document.documentElement.setAttribute('data-mesh-theme', 'dark'); --}}
+  {{--     } --}}
+  {{--   } catch (e) {} --}}
+  {{-- </script> --}}
+  {{-- =============================================== --}}
+  {{-- #================================ --}}
+  {{-- Moved to resources/views/inc/theme-head.blade.php, included at the end of <head> below --}}
+  {{-- #================================ --}}
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -40,7 +56,10 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i,800|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- MESH v4 redesign fonts (additive — existing Open Sans/Nunito/Poppins above are kept, other pages still use them) -->
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Anton&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -53,7 +72,10 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('assets/css/admin.css') }}" rel="stylesheet">
-  <script src="{{ asset('assets/js/apexcharts-bundle.js') }}"></script>  
+  <script src="{{ asset('assets/js/apexcharts-bundle.js') }}"></script>
+
+  <!-- MESH v4 redesign (scoped under .mesh-v4-sidebar/.mesh-v4-header — does not override admin.css) -->
+  <link href="{{ asset('css/mesh-v4.css') }}?v={{ filemtime(public_path('css/mesh-v4.css')) }}" rel="stylesheet">
 
   <!-- {{-- Tailwind CSS --}} -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -201,118 +223,199 @@
     }
   </style>
 
+  {{-- #========== NEWLY ADDED ============ --}}
+  {{-- Dark mode: saved-choice script + public/css/mesh-dark.css. Must stay the last thing in <head>. --}}
+  @include('inc.theme-head')
+  {{-- #================================ --}}
+  {{-- #========== NEWLY ADDED ============ --}}
+  {{-- English / Malay switch: keeps the page hidden for a moment when BM is saved, so it doesn't flash English --}}
+  @include('inc.lang-head')
+  {{-- #================================ --}}
+
 </head>
 
-<body>
+{{-- #============= ORI CODE ============== --}}
+{{-- <body class="mesh-v4-page"> --}}
+{{-- =============== NISAH =============== --}}
+{{-- mesh-dark-ready: added only on pages that declare @section('mesh_dark_ready') (Home for now). Dark mode styles --}}
+{{-- in public/css/mesh-v4.css are all scoped to this class, so the ~495 other pages using this layout stay light. --}}
+{{-- <body class="mesh-v4-page @hasSection('mesh_dark_ready') mesh-dark-ready @endif"> --}}
+{{-- =============================================== --}}
+{{-- #================================ --}}
+{{-- mesh-dark-ready lets the dark mode styles apply on this page (every page, unless it declares @section('mesh_dark_off')) --}}
+<body class="mesh-v4-page @sectionMissing('mesh_dark_off') mesh-dark-ready @endif">
+{{-- #================================ --}}
 
-  <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
+  <!-- MESH v4: shared decorative "network/mesh" SVG pattern, reused by the sidebar
+       brand area and the announcement/news modal cover panels via <use href="#netmesh">. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="netmesh" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
+      <g stroke="currentColor" stroke-width="0.7" fill="none" opacity="0.9">
+        <path d="M20 40 110 15 195 80 285 25 370 95 455 30 545 85 630 20 715 75 790 25"></path>
+        <path d="M60 150 150 205 240 140 330 190 420 150 505 210 590 145 680 200 770 140"></path>
+        <path d="M25 290 115 340 205 275 295 330 385 270 470 335 560 280 650 330 740 275"></path>
+        <path d="M20 40 60 150 25 290 115 340 90 395"></path>
+        <path d="M110 15 150 205 205 275 300 398"></path>
+        <path d="M195 80 240 140 295 330"></path>
+        <path d="M285 25 330 190 385 270 520 392"></path>
+        <path d="M370 95 420 150 470 335"></path>
+        <path d="M455 30 505 210 560 280 700 398"></path>
+        <path d="M545 85 590 145 650 330"></path>
+        <path d="M630 20 680 200 740 275"></path>
+        <path d="M715 75 770 140 790 25"></path>
+        <path d="M60 150 195 80 330 190 455 30 590 145 715 75"></path>
+        <path d="M115 340 240 140 385 270 505 210 650 330 770 140"></path>
+        <path d="M25 290 150 205 295 330 420 150 560 280 680 200"></path>
+      </g>
+      <g fill="currentColor">
+        <circle cx="20" cy="40" r="2.4"></circle><circle cx="110" cy="15" r="1.8"></circle><circle cx="195" cy="80" r="2.8"></circle><circle cx="285" cy="25" r="1.8"></circle>
+        <circle cx="370" cy="95" r="2.4"></circle><circle cx="455" cy="30" r="2.8"></circle><circle cx="545" cy="85" r="1.8"></circle><circle cx="630" cy="20" r="2.4"></circle>
+        <circle cx="715" cy="75" r="2.8"></circle><circle cx="790" cy="25" r="1.8"></circle><circle cx="60" cy="150" r="2.8"></circle><circle cx="150" cy="205" r="2.4"></circle>
+        <circle cx="240" cy="140" r="1.8"></circle><circle cx="330" cy="190" r="2.8"></circle><circle cx="420" cy="150" r="2.4"></circle><circle cx="505" cy="210" r="2.8"></circle>
+        <circle cx="590" cy="145" r="1.8"></circle><circle cx="680" cy="200" r="2.4"></circle><circle cx="770" cy="140" r="2.8"></circle><circle cx="25" cy="290" r="1.8"></circle>
+        <circle cx="115" cy="340" r="2.8"></circle><circle cx="205" cy="275" r="2.4"></circle><circle cx="295" cy="330" r="1.8"></circle><circle cx="385" cy="270" r="2.8"></circle>
+        <circle cx="470" cy="335" r="2.4"></circle><circle cx="560" cy="280" r="2.8"></circle><circle cx="650" cy="330" r="1.8"></circle><circle cx="740" cy="275" r="2.4"></circle>
+        <circle cx="90" cy="395" r="2.4"></circle><circle cx="300" cy="398" r="1.8"></circle><circle cx="520" cy="392" r="2.4"></circle><circle cx="700" cy="398" r="1.8"></circle>
+      </g>
+    </symbol>
+  </svg>
 
-    <div class="d-flex align-items-center justify-content-between">
-      <a href="/home" class="logo d-flex align-items-center">
-        <span class="d-none d-lg-block">M E S H</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+  <!-- ======= Header (MESH v4) ======= -->
+  <header id="header" class="header mesh-v4-header fixed-top">
+    <button id="meshSidebarToggle" type="button" class="mesh-toggle-btn" aria-label="Toggle menu">
+      <i class="bi bi-list"></i>
+    </button>
 
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
+    <div>
+      <p class="mesh-page-title">{{ $pagename ?? 'MESH' }}</p>
+      <p class="mesh-page-subtitle">Ministry of Education &middot; Employee &amp; Services Hub (MESH)</p>
+    </div>
 
-            <li class="nav-item dropdown pe-3">
+    <div class="mesh-header-right">
+      {{-- =============== NISAH =============== --}}
+      {{-- The bell is now the announcements dropdown on EVERY page (was decorative only). Latest 4 announcements are --}}
+      {{-- loaded here once; inc/announcement-bell-modals.blade.php (near the end of <body>) reuses the same list for the popups. --}}
+      {{-- #============= ORI CODE ============== --}}
+      {{-- =============== NISAH =============== --}}
+      {{-- Light/dark mode switch, left of the bell. Only shown on dark-ready pages; click handler is in public/js/mesh-v4.js. --}}
+      {{-- @hasSection('mesh_dark_ready') --}}
+      {{--   <button type="button" class="mesh-bell-btn mesh-theme-btn" id="meshThemeToggle" aria-label="Switch to dark mode" aria-pressed="false"> --}}
+      {{--     <i class="bi bi-sun mesh-theme-sun"></i> --}}
+      {{--     <i class="bi bi-moon-stars mesh-theme-moon"></i> --}}
+      {{--   </button> --}}
+      {{-- @endif --}}
+      {{-- =============================================== --}}
+      {{-- #================================ --}}
+      {{-- #========== NEWLY ADDED ============ --}}
+      {{-- English / Malay switch, left of the sun/moon button (resources/views/inc/lang-toggle.blade.php) --}}
+      @include('inc.lang-toggle')
+      {{-- #================================ --}}
+      {{-- Light/dark mode switch, left of the bell (resources/views/inc/theme-toggle.blade.php) --}}
+      @include('inc.theme-toggle')
+      {{-- #================================ --}}
+      @php
+        $meshBellAnnouncements = \App\Models\Announcement::orderBy('created_at', 'DESC')->take(4)->get();
+      @endphp
+      @include('inc.announcement-bell')
+      {{-- =============================================== --}}
 
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-person-fill"></i>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
-                </a><!-- End Profile Image Icon -->
-
-            
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('biodatas.biodata.show', [Auth::user()->ic_no]) }}">
-                        <i class="bi bi-person"></i>
-                        <span>My Profile</span>
-                    </a>
-                    </li>
-                    <li>
-                    <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('change_password') }}">
-                        <i class="bi bi-key-fill"></i>
-                        <span>Change Password</span>
-                    </a>
-                    </li>
-                    <li>
-                    <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('logout') }}">
-                        <i class="bi bi-box-arrow-right"></i>
-                        <span>Sign Out</span>
-                    </a>
-                    </li>
-                </ul><!-- End Profile Dropdown Items -->
-
-            </li><!-- End Profile Nav -->
-
+      <div class="dropdown">
+        <a href="#" class="mesh-user-chip dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="mesh-user-avatar">{{ Str::upper(Str::substr(Auth::user()->name, 0, 1)) }}</span>
+          {{-- =============== NISAH =============== --}}
+          {{-- Name shown in normal case (Nur, not NUR) via User::display_name --}}
+          <span class="mesh-user-name">{{ Auth::user()->display_name }}</span>
+          {{-- =============================================== --}}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{{ route('biodatas.biodata.show', [Auth::user()->ic_no]) }}">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{{ route('change_password') }}">
+              <i class="bi bi-key-fill"></i>
+              <span>Change Password</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{{ route('logout') }}">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Sign Out</span>
+            </a>
+          </li>
         </ul>
-    </nav><!-- End Icons Navigation -->
+      </div>
+    </div>
+  </header><!-- End Header -->
 
-    </header><!-- End Header -->
+  <!-- Backdrop for the off-canvas sidebar on narrow screens (<992px) -->
+  <div class="mesh-sidebar-backdrop" data-mesh-sidebar-backdrop></div>
 
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
+  <!-- ======= Sidebar (MESH v4) ======= -->
+  <aside id="sidebar" class="sidebar mesh-v4-sidebar">
+
+    <div id="mesh-sidebar-particles" class="mesh-sidebar-particles" aria-hidden="true"></div>
+
+    <div class="mesh-brand">
+      {{-- =============== NISAH =============== --}}
+      {{-- Brunei crest on the left of the MESH title (styles: .mesh-brand-logo in public/css/mesh-v4.css) --}}
+      <div class="mesh-brand-logo"><img src="{{ asset('assets/img/logo.png') }}" alt="Brunei Darussalam crest"></div>
+      {{-- =============================================== --}}
+      <div class="mesh-brand-text">
+        <div class="mesh-brand-title">M E S H</div>
+        <div class="mesh-brand-sub">EMPLOYEE &amp; SERVICES HUB</div>
+      </div>
+    </div>
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
       @if (Auth::check())
-      @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PDMS_ADMIN') 
+      @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PDMS_ADMIN')
       || Auth::user()->hasRole('ROLE_PDMS_SERVICE') || Auth::user()->hasRole('ROLE_PDMS_CUTI'))
-      <li class="nav-heading">MESH</li>
+      <li class="mesh-nav-heading">MESH</li>
 
       <li class="nav-item">
-        <a class="@if($pagename == 'pdmshome') nav-link @else nav-link collapsed @endif" href="{{ route('pdmshome') }}">
+        <a class="@if($pagename == 'pdmshome') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('pdmshome') }}">
           <i class="bi bi-pc-display"></i>
           <span>Admin Home</span>
         </a>
       </li><!-- End Home-->
       @endif
     @endif
-	
-	  <li class="nav-heading">Main Menu</li>
+
+	  <li class="mesh-nav-heading">Main Menu</li>
 
 	      <li class="nav-item">
-        <a class="@if($pagename == 'home') nav-link @else nav-link collapsed @endif" href="{{ route('home') }}">
+        <a class="@if($pagename == 'home') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('home') }}">
           <i class="bi bi-house-fill"></i>
           <span>Home</span>
         </a>
       </li><!-- End Home-->
 
 	   <li class="nav-item">
-        <a class="@if($pagename == 'Profile') nav-link @else nav-link collapsed @endif" href="{{ route('biodatas.biodata.show', [Auth::user()->ic_no]) }}">
+        <a class="@if($pagename == 'Profile') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('biodatas.biodata.show', [Auth::user()->ic_no]) }}">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
       </li><!-- End Profile Page Nav -->
 
       <!-- archivephasebyphase -->
-    
+
     <li class="nav-item">
-        <a class="@if($pagename == 'Dashboard' || $pagename == 'Report' || $pagename == 'ARTReport' || $pagename == 'JPKKReport'|| $pagename == 'Status Jawatan Kosong Report') nav-link @else nav-link collapsed @endif"  data-bs-target="#dash-nav" data-bs-toggle="collapse" href="{{ route('home') }}">
+        <a class="@if($pagename == 'Dashboard' || $pagename == 'Report' || $pagename == 'ARTReport' || $pagename == 'JPKKReport'|| $pagename == 'Status Jawatan Kosong Report') mesh-nav-link mesh-active @else mesh-nav-link @endif"  data-bs-target="#dash-nav" data-bs-toggle="collapse" href="{{ route('home') }}">
           <i class="bi bi-grid"></i><span>Dashboard</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-      <ul id="dash-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-
-      <!-- <li>
-        <a class="@if($pagename == 'Dashboard') nav-link collapsed @else nav-link collapsed @endif" href="{{ route('home') }}">
-          <i class="bi bi-circle"></i><span>Welcome</span>
-        </a>
-      </li> -->
+      <ul id="dash-nav" class="nav-content mesh-sub-nav collapse " data-bs-parent="#sidebar-nav">
 
       @if (Auth::check())
          @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_MGT'))
       <li>
-        <a class="@if($pagename == 'Report') nav-link @else nav-link collapsed @endif" href="{{ route('homereport') }}">
+        <a class="@if($pagename == 'Report') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('homereport') }}">
           <i class="bi bi-circle"></i><span>Users Report</span>
         </a>
       </li>
@@ -322,7 +425,7 @@
         @if (Auth::check())
          @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_MGT'))
         <li>
-        <a class="@if($pagename == 'ARTReport') nav-link @else nav-link collapsed @endif" href="{{ route('artreport') }}">
+        <a class="@if($pagename == 'ARTReport') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('artreport') }}">
           <i class="bi bi-circle"></i><span>ART Report</span>
         </a>
       </li>
@@ -332,7 +435,7 @@
         @if (Auth::check())
          @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PPSDASHBOARD'))
         <li>
-        <a class="@if($pagename == 'PPSVisitor') nav-link @else nav-link collapsed @endif" href="{{ route('ppsvisitor') }}">
+        <a class="@if($pagename == 'PPSVisitor') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('ppsvisitor') }}">
           <i class="bi bi-circle"></i><span>PPS Visitors</span>
         </a>
       </li>
@@ -344,7 +447,7 @@
         @if (Auth::check())
          @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_MGT')  || Auth::user()->hasRole('ROLE_CCA_ADMIN'))
         <li>
-        <a class="@if($pagename == 'JPKKReport') nav-link @else nav-link collapsed @endif" href="{{ route('ccareport') }}">
+        <a class="@if($pagename == 'JPKKReport') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('ccareport') }}">
           <i class="bi bi-circle"></i><span>JPKK Report</span>
         </a>
       </li>
@@ -355,7 +458,7 @@
         @if (Auth::check())
          @if (Auth::user()->hasRole('ROLE_SUPERADMIN')  || Auth::user()->hasRole('ROLE_PRESTASI') || Auth::user()->hasRole('ROLE_JAWATANKOSONG'))
         <li>
-        <a class="@if($pagename == 'Status Jawatan Kosong Report') nav-link @else nav-link collapsed @endif" href="{{ route('jawatankosongreport') }}">
+        <a class="@if($pagename == 'Status Jawatan Kosong Report') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('jawatankosongreport') }}">
           <i class="bi bi-circle"></i><span>SJK Report</span>
         </a>
       </li>
@@ -365,7 +468,7 @@
        @if (Auth::check())
          @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
         <li>
-        <a class="@if($pagename == 'ONS Dashboard Report') nav-link @else nav-link collapsed @endif" href="{{ route('onsdashboard') }}">
+        <a class="@if($pagename == 'ONS Dashboard Report') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('onsdashboard') }}">
           <i class="bi bi-circle"></i><span>ONS Report</span>
         </a>
       </li>
@@ -375,17 +478,17 @@
       @if (Auth::check())
         @if (Auth::user()->hasRole('ROLE_SUPERADMIN')  || Auth::user()->hasRole('ROLE_TEGAHAN'))
         <li>
-          <a class="@if($pagename == 'Suspended Company Report') nav-link @else nav-link collapsed @endif" href="{{ route('msc.mscindex') }}">
+          <a class="@if($pagename == 'Suspended Company Report') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('msc.mscindex') }}">
             <i class="bi bi-circle"></i><span>Tegahan Report</span>
           </a>
         </li>
         @endif
       @endif
-  
+
 
     @if (Auth::check() && Auth::user()->hasRole('ROLE_SUPERADMIN'))
   <li>
-    <a class="@if($pagename == 'GenAI Report') nav-link @else nav-link collapsed @endif"
+    <a class="@if($pagename == 'GenAI Report') mesh-nav-link mesh-active @else mesh-nav-link @endif"
        href="{{ route('genai.report') }}">
       <i class="bi bi-circle"></i><span>GenAI Report</span>
     </a>
@@ -398,212 +501,85 @@
 
 <!-- MOE INFO -->
 
-      <li class="nav-item">
-        <a class="@if($pagename == 'Services') nav-link @else nav-link collapsed @endif" href="{{ route('servicesdashboard') }}">
-          <i class="bi bi-list-task">
-          </i><span>Services</span>
-        </a>
-      </li>
-      
-      @if(false)
-      <li class="nav-item">
-        <a class="@if($pagename == 'announcement' || $pagename == 'newsindex') nav-link @else nav-link collapsed @endif"  data-bs-target="#add1-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-info-circle"></i><span> MOE Info</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-      <ul id="add1-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-
-     <li class="nav-item">
-        <a class="@if($pagename == 'announcement') nav-link @else nav-link collapsed @endif" href="{{ route('announcement.announcementindex') }}">
-          <i class="bi bi-megaphone"></i>
-          <span>Announcement</span>
-        </a>
-      </li><!-- End Announcement Page Nav -->
-
-      <li class="nav-item">
-        <a class="@if($pagename == 'newsindex') nav-link @else nav-link collapsed @endif" href="{{ route('news.newsindex') }}">
-          <i class="bi bi-newspaper"></i>
-          <span>News</span>
-        </a>
-      </li><!-- End News Page Nav -->
-
-    </ul>
-    </li>
-    @endif
-    <!-- MOE INFO -->
-
-    <!-- @if (Auth::check()) -->
-    <!-- @if (Auth::user()->hasRole('ROLE_SUPERADMIN')  || Auth::user()->hasRole('ROLE_ONS_USER')) -->
-      <!-- <li class="nav-item" > -->
-        <!-- <a class="@if($pagename == 'Online Notification User') nav-link @else nav-link collapsed @endif" > -->
-         <!-- <a class="@if($pagename == 'Online Notification User') nav-link @else nav-link collapsed @endif" href="{{ route('onlinenotifications.onlinenotification.indexuser') }}" > -->
-          <!-- <a class="@if($pagename == 'Maintenance Page') nav-link @else nav-link collapsed @endif" href="{{ route('maintenance.page') }}" > -->
-          <!-- <i class="bi bi-file-text"> -->
-          <!-- </i><span>O.N.S 2.0</span> -->
-        <!-- </a> -->
-      <!-- </li> -->
-    <!-- @endif -->
-    <!-- @endif -->
-
-       <!-- <li class="nav-item">
-        <a class="@if($pagename == 'data_kehadiran') nav-link @else nav-link collapsed @endif" href="{{ route('datakehadiran.datakehadiran.index') }}">
-          <i class="bi bi-file-earmark-post">
-          </i><span>Data Kehadiran</span>
-        </a>
-      </li> -->
-
-      <!-- part wani tambah -->
-      <li class="nav-item">
-        <a class="@if($pagename == 'Calendar') nav-link @else nav-link collapsed @endif" href="{{ route('fsm.fsm.index') }}">
-          <i class="bi bi-file-text-fill">
-          </i><span>F.S.M</span>
-        </a>
-      </li>
-
-      <!-- requested by AO to comment this out and not use this code anymore date 10/10/2024 -->
-      <!-- <li class="nav-item">
-        <a class="@if($pagename == 'Calendar') nav-link @else nav-link collapsed @endif" href="{{ route('adminbooking.systemcalendar') }}">
-          <i class="bi bi-calendar-event-fill">
-          </i><span>Room Booking</span>
-        </a>
-      </li> -->
-
-
-    <!--   <li class="nav-item">
-        <a class="@if($pagename == 'prestasi') nav-link @else nav-link collapsed @endif" href="{{ route('prestasi.prestasi.index') }}">
-          <i class="bi bi-bookmark-star-fill">
-          </i><span>Prestasi</span>
-        </a>
-      </li> -->
-
-
-   
-<!-- 
-	<li class="nav-item">
-    		<a class="@if($pagename == 'TaskTracking') nav-link @else nav-link collapsed @endif"href="{{ route('tasktracking.indextasktracking') }}">
-        <i class="bi bi-file-earmark-text"></i>
-        <span>TaskTracking</span>
-    </a>
-</li> -->
-
-
-       <!--- Download Tab Start ------>
-    <!-- <li class="nav-item">
-        <a class="@if($pagename == 'dp-download') nav-link @else nav-link collapsed @endif"  data-bs-target="#dl-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-download"></i><span>Download</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-      <ul id="dl-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-
-      <li>
-        <a class="@if($pagename == 'dp-download') nav-link @else nav-link collapsed @endif" href="/download">
-          <i class="bi bi-circle"></i><span>DP</span>
-        </a>
-      </li>
-
-    </ul>
-    </li> -->
-    <!---- Download Tab End ------->
-
-    
-  
-
-       <!-- MEC MED -->
-<!--       <li class="nav-item">
-        <a class="@if($pagename == 'DIS' || $pagename == 'MEC') nav-link @else nav-link collapsed @endif"  data-bs-target="#add3-nav" data-bs-toggle="collapse" href="#">
-          <i class="ri-article-line"></i><span> MEC MED </span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-      <ul id="add3-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-
-  
-      <li class="nav-item">
-          <a class="@if($pagename == 'DIS') nav-link @else nav-link collapsed @endif"
-              href="{{ route('dispatchs.dis.index') }}">
-              <i class="ri-article-line">
-              </i><span>Despatch</span>
-          </a>
-      </li>
-
-      <li class="nav-item">
-          <a class="@if($pagename == 'MEC') nav-link @else nav-link collapsed @endif"
-              href="{{ route('dispatchs.dis.indextindakan') }}">
-              <i class="bi bi-person-check-fill">
-              </i><span>Correspondence</span>
-          </a>
-      </li>
-
-    </ul>
-    </li> -->
-    <!-- MEC MED -->
-
+      {{-- =============== NISAH =============== --}}
+      {{-- Services and F.S.M links hidden from the sidebar (Sept 2026) — the Home page now lists all services. --}}
+      {{-- The pages themselves still work at /servicesdashboard and the F.S.M URL; the old links are in layouts/app-all-oldver-2025-2026septver.blade.php if they need to come back. --}}
+      {{-- =============================================== --}}
 
       @if (Auth::check())
         @if (Auth::user()->hasRole('ROLE_TATATERTIB'))
           <li class="nav-item">
-            <a class="@if($pagename == 'SSM Tatatertib') nav-link @else nav-link collapsed @endif" href="{{ route('ssmtatatertib.ssmrequest.indextatatertib') }}">
+            <a class="@if($pagename == 'SSM Tatatertib') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('ssmtatatertib.ssmrequest.indextatatertib') }}">
               <i class="bi bi-person-plus"></i>
               <span>SSM Tatatertib</span>
             </a>
           </li>
         @endif
-      @endif     
+      @endif
 
-<li class="nav-heading">Admin</li>
-    
+<li class="mesh-nav-heading">Admin</li>
+
     <!-- Start Admin Tab -->
     @if (Auth::check())
     @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
         <li class="nav-item">
-            <a class="@if($pagename == 'Super_Admin_Dashboard') nav-link @else nav-link collapsed @endif" href="{{ route('superadmindashboard') }}">
+            <a class="@if($pagename == 'Super_Admin_Dashboard') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('superadmindashboard') }}">
                 <i class="bi bi-menu-button-wide"></i><span>Super Admin</span>
             </a>
         </li>
-        @elseif (Auth::user()->hasRole('ROLE_CCA_ADMIN') || Auth::user()->hasRole('ROLE_ART_FOCAL') || 
-                Auth::user()->hasRole('ROLE_SSM') || Auth::user()->hasRole('ROLE_PERJAWATAN') || 
-                Auth::user()->hasRole('ROLE_PERMOHONAN') || Auth::user()->hasRole('ROLE_CCA_FOCAL') || 
-                Auth::user()->hasRole('ROLE_OSCROOM') || Auth::user()->hasRole('ROLE_FOCALADMIN_COMPETENCY')|| 
-                Auth::user()->hasRole('ROLE_OSC_OP') || Auth::user()->hasRole('ROLE_DESPATCH') || 
-                Auth::user()->hasRole('ROLE_QUESTION&ANSWER') || Auth::user()->hasRole('ROLE_ONS_ADMIN') || 
-                Auth::user()->hasRole('ROLE_MOEEVENT') || Auth::user()->hasRole('ROLE_SLIPKEHADIRAN') || 
-                Auth::user()->hasRole('ROLE_PRESTASI')|| 
-                Auth::user()->hasRole('ROLE_DATAKERAMAIAN')|| 
-                Auth::user()->hasRole('ROLE_ADMIN_PERUMAHAN')|| 
-                Auth::user()->hasRole('ROLE_HRIDS')|| 
+        @elseif (Auth::user()->hasRole('ROLE_CCA_ADMIN') || Auth::user()->hasRole('ROLE_ART_FOCAL') ||
+                Auth::user()->hasRole('ROLE_SSM') || Auth::user()->hasRole('ROLE_PERJAWATAN') ||
+                Auth::user()->hasRole('ROLE_PERMOHONAN') || Auth::user()->hasRole('ROLE_CCA_FOCAL') ||
+                Auth::user()->hasRole('ROLE_OSCROOM') || Auth::user()->hasRole('ROLE_FOCALADMIN_COMPETENCY')||
+                Auth::user()->hasRole('ROLE_OSC_OP') || Auth::user()->hasRole('ROLE_DESPATCH') ||
+                Auth::user()->hasRole('ROLE_QUESTION&ANSWER') || Auth::user()->hasRole('ROLE_ONS_ADMIN') ||
+                Auth::user()->hasRole('ROLE_MOEEVENT') || Auth::user()->hasRole('ROLE_SLIPKEHADIRAN') ||
+                Auth::user()->hasRole('ROLE_PRESTASI')||
+                Auth::user()->hasRole('ROLE_DATAKERAMAIAN')||
+                Auth::user()->hasRole('ROLE_ADMIN_PERUMAHAN')||
+                Auth::user()->hasRole('ROLE_HRIDS')||
                 Auth::user()->hasRole('ROLE_DATAKEHADIRAN') || Auth::user()->hasRole('ROLE_ATTENDANCE_EVENT')  || Auth::user()->hasRole('ROLE_EMINITADMIN') ||
                 Auth::user()->hasRole('ROLE_CDDINVENTORY'))
             <li class="nav-item">
-                <a class="@if($pagename == 'Admin_Dashboard') nav-link @else nav-link collapsed @endif" href="{{ route('admindashboard') }}">
+                <a class="@if($pagename == 'Admin_Dashboard') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('admindashboard') }}">
                     <i class="bi bi-menu-button-wide"></i><span>Admin</span>
                 </a>
             </li>
         @endif
     @endif
 
+  {{-- =============== NISAH =============== --}}
+  {{-- SSM Admin hidden from the sidebar (29 Sept 2026) — it belongs in the admin services page only --}}
+  {{-- (admindashboard / superadmindashboard already link Aktif Akaun, Aduan and Permohonan SSM). --}}
+  {{-- Hidden for now, not deleted: remove the comment wrap around this block (next line and END SSM Tab) to bring it back. --}}
+  {{--
   <!-- Start SSM Tab -->
     @if (Auth::check())
       @if (Auth::user()->hasRole('ROLE_SUPERADMIN')  || Auth::user()->hasRole('ROLE_SSM') || Auth::user()->hasRole('ROLE_ADUANSSM'))
         <li class="nav-item">
-          <a class="@if($pagename == 'Admin_SSM' || $pagename == 'SSMSRequest_Admin' || $pagename == 'SSM Permohonan') nav-link @else nav-link collapsed @endif" data-bs-target="#adminssm-nav"  data-bs-toggle="collapse" href="#">
+          <a class="@if($pagename == 'Admin_SSM' || $pagename == 'SSMSRequest_Admin' || $pagename == 'SSM Permohonan') mesh-nav-link mesh-active @else mesh-nav-link @endif" data-bs-target="#adminssm-nav"  data-bs-toggle="collapse" href="#">
             <i class="bi bi-briefcase-fill"></i><span>SSM Admin</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
         </li>
       @endif
     @endif
 
-    <ul id="adminssm-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">  
+    <ul id="adminssm-nav" class="nav-content mesh-sub-nav collapse " data-bs-parent="#sidebar-nav">
       @if (Auth::check())
 			  @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_SSM'))
           <li class="nav-item">
-            <a class="@if($pagename == 'Admin_SSM') nav-link @else nav-link collapsed @endif" href="{{ route('ssms.ssm.indexall') }}">
+            <a class="@if($pagename == 'Admin_SSM') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('ssms.ssm.indexall') }}">
               <i class="bi bi-person-check"></i>
               <span>Aktif Akaun SSM</span>
             </a>
           </li>
         @endif
       @endif
-      
+
       @if (Auth::check())
         @if (Auth::user()->hasRole('ROLE_SUPERADMIN')  || Auth::user()->hasRole('ROLE_SSM') || Auth::user()->hasRole('ROLE_ADUANSSM'))
           <li class="nav-item">
-            <a class="@if($pagename == 'SSMSRequest_Admin') nav-link @else nav-link collapsed @endif" href="{{ route('ssmrequests.ssmrequest.indexall') }}">
+            <a class="@if($pagename == 'SSMSRequest_Admin') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('ssmrequests.ssmrequest.indexall') }}">
               <i class="bi bi-person-plus"></i>
               <span>Aduan SSM</span>
             </a>
@@ -615,7 +591,7 @@
       @if (Auth::check())
         @if (Auth::user()->hasRole('ROLE_SUPERADMIN')  || Auth::user()->hasRole('ROLE_SSM'))
           <li class="nav-item">
-            <a class="@if($pagename == 'SSM Permohonan') nav-link @else nav-link collapsed @endif" href="{{ route('ssmrequests.ssmrequest.indexpermohonan') }}">
+            <a class="@if($pagename == 'SSM Permohonan') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('ssmrequests.ssmrequest.indexpermohonan') }}">
               <i class="bi bi-person-plus"></i>
               <span>Permohonan SSM (Tindakan)</span>
             </a>
@@ -626,7 +602,7 @@
       @if (Auth::check())
         @if (Auth::user()->hasRole('ROLE_SUPERADMIN')  || Auth::user()->hasRole('ROLE_SSM'))
           <li class="nav-item">
-            <a class="@if($pagename == 'SSM Penilai Admin') nav-link @else nav-link collapsed @endif" href="{{ route('ssms.penilai.index') }}">
+            <a class="@if($pagename == 'SSM Penilai Admin') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('ssms.penilai.index') }}">
               <i class="bi bi-person-gear"></i>
               <span>SSM Pertukaran Pegawai Penilai</span>
             </a>
@@ -635,8 +611,10 @@
       @endif
     </ul>
   <!-- END SSM Tab -->
+  --}}
+  {{-- =============================================== --}}
 
-  
+
   @php
           $icNos = \App\Models\SSMKod::pluck('ic_no')->toArray();
       @endphp
@@ -644,7 +622,7 @@
       @if (in_array(Auth::user()->ic_no, $icNos))
 
       <li class="nav-item">
-          <a class="@if($pagename == 'SSM_Staff_Permohonan') nav-link @else nav-link collapsed @endif"
+          <a class="@if($pagename == 'SSM_Staff_Permohonan') mesh-nav-link mesh-active @else mesh-nav-link @endif"
               href="{{ route('ssmrequests.ssmrequest.indexstaffpermohonan') }}">
               <i class="bi bi-person-plus">
               </i><span>Permohonan SSM (ST)</span>
@@ -652,24 +630,24 @@
       </li>
 
       @endif
-  
+
   <!-- Start User Tab -->
   @if (Auth::check())
     @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
       <li class="nav-item">
-        <a class="@if($pagename == 'Super_Admin_Role_User' || $pagename == 'Admin_User_Profile' || $pagename == 'Admin_List_Of_User') nav-link @else nav-link collapsed @endif" data-bs-target="#adminuser-nav"  data-bs-toggle="collapse" href="#">
+        <a class="@if($pagename == 'Super_Admin_Role_User' || $pagename == 'Admin_User_Profile' || $pagename == 'Admin_List_Of_User') mesh-nav-link mesh-active @else mesh-nav-link @endif" data-bs-target="#adminuser-nav"  data-bs-toggle="collapse" href="#">
           <i class="bi bi-people"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
       </li>
     @endif
   @endif
 
-  <ul id="adminuser-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">  
-    
+  <ul id="adminuser-nav" class="nav-content mesh-sub-nav collapse " data-bs-parent="#sidebar-nav">
+
     @if (Auth::check())
       @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
         <li class="nav-item">
-          <a class="@if($pagename == 'Admin_User_Profile') nav-link @else nav-link collapsed @endif" href="{{ route('profileusers.profileuser.index') }}">
+          <a class="@if($pagename == 'Admin_User_Profile') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('profileusers.profileuser.index') }}">
             <i class="bi bi-circle"></i>
             <span>Profile</span>
           </a>
@@ -681,7 +659,7 @@
     @if (Auth::check())
       @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
         <li class="nav-item">
-          <a class="@if($pagename == 'Admin_List_Of_User') nav-link @else nav-link collapsed @endif" href="{{ route('users.user.index') }}">
+          <a class="@if($pagename == 'Admin_List_Of_User') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('users.user.index') }}">
             <i class="bi bi-circle"></i>
             <span>List/Verify</span>
           </a>
@@ -694,7 +672,7 @@
     @if (Auth::check())
       @if (Auth::user()->hasRole('ROLE_SUPERADMIN'))
         <li class="nav-item">
-          <a class="nav-link collapsed" data-bs-target="#adminuser-nav-request" data-bs-toggle="collapse" href="#">
+          <a class="mesh-nav-link" data-bs-target="#adminuser-nav-request" data-bs-toggle="collapse" href="#">
             <i class="bi bi-file-earmark-person-fill"></i>
             <span>Role</span>
             <i class="bi bi-chevron-down ms-auto"></i>
@@ -704,9 +682,9 @@
     @endif
 
     <!-- Role -->
-    <ul id="adminuser-nav-request" class="nav-content collapse" data-bs-parent="#sidebar-nav">  
+    <ul id="adminuser-nav-request" class="nav-content mesh-sub-nav collapse" data-bs-parent="#sidebar-nav">
       <li class="nav-item">
-        <a class="@if($pagename == 'Super_Admin_Role_User') nav-link @else nav-link collapsed @endif" href="{{ route('role_users.role_user.index') }}">
+        <a class="@if($pagename == 'Super_Admin_Role_User') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('role_users.role_user.index') }}">
           <i class="bi bi-circle"></i>
           <span>Assigned Role</span>
         </a>
@@ -714,16 +692,18 @@
     </ul>
 
     <!-- Role Request -->
-    <ul id="adminuser-nav-request" class="nav-content collapse" data-bs-parent="#sidebar-nav">  
+    <ul id="adminuser-nav-request" class="nav-content mesh-sub-nav collapse" data-bs-parent="#sidebar-nav">
       <li class="nav-item">
-        <a class="@if($pagename == 'Super_Admin_Role_User') nav-link @else nav-link collapsed @endif" href="{{ route('permohonanrole.permohonanrole.indexadmin') }}">
+        <a class="@if($pagename == 'Super_Admin_Role_User') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('permohonanrole.permohonanrole.indexadmin') }}">
           <i class="bi bi-circle"></i>
           <span>Request Role</span>
         </a>
       </li><!-- End Role User Page Nav -->
     </ul>
 
-</aside><!-- End Sidebar-->
+    </ul>
+  </aside><!-- End Sidebar (MESH v4) -->
+
 
 
 
@@ -747,12 +727,14 @@
 
 
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-      <span style="color:black" title="Developed by: Saidatul Ekma (MESH Lead Developer), Laila Khamis(EASE Lead Developer), Nurul Hasinah(Database Administrator), Nadzirah Ali Hassim(Programmer), Wan Arif(Project Officer), Lyanna Karim (MESH Layout & Design)">
-		Ministry of Education &copy; 2021 All Rights Reserved. Powered by DevOps ICT. Version 3.0.</span>
-    </div>
-</footer><!-- End Footer -->
+
+<footer id="footer" class="footer mesh-v4-footer">
+  <img src="{{ asset('assets/img/logo.png') }}" alt="">
+  <span class="mesh-footer-text" title="Developed by: Saidatul Ekma (MESH Lead Developer), Laila Khamis(EASE Lead Developer), Nurul Hasinah(Database Administrator), Nadzirah Ali Hassim(Programmer), Wan Arif(Project Officer), Lyanna Karim (MESH Layout & Design)">
+    Ministry of Education &copy; 2026 All Rights Reserved. Powered by DevOps ICT.
+  </span>
+  <span class="mesh-footer-version">v4.0</span>
+</footer><!-- End Footer (MESH v4) -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -1082,7 +1064,36 @@
 });
 
     </script>
+
+    {{-- =============== NISAH =============== --}}
+    {{-- Header bell's announcement popups + dropdown script, at <body> level so the popups aren't trapped under the --}}
+    {{-- fixed header. Must stay ABOVE mesh-v4.js: it adds the poster lightbox on pages that don't already have one. --}}
+    @include('inc.announcement-bell-modals')
+    {{-- =============================================== --}}
+
+    <!-- MESH v4 redesign: full-height sidebar particle background (same library/config as welcome-new.blade.php's hero) -->
+    <script src="{{ asset('js/particles.min.js') }}"></script>
+
+    <!-- MESH v4 redesign: sidebar collapse + poster lightbox (additive, guarded, see public/js/mesh-v4.js) -->
+    <script src="{{ asset('js/mesh-v4.js') }}?v={{ filemtime(public_path('js/mesh-v4.js')) }}"></script>
+
+    {{-- #========== NEWLY ADDED ============ --}}
+    {{-- English / Malay switch: swaps the page text to Malay when BM is picked (word list inside the file) --}}
+    <script src="{{ asset('js/mesh-lang.js') }}?v={{ filemtime(public_path('js/mesh-lang.js')) }}"></script>
+    {{-- #================================ --}}
+
     @yield('scripts')
+
+    
+
+    {{-- MESH Smart Bot --}}
+    {{-- @include('inc.smartbot') --}} {{-- SmartBot disabled temporarily --}}
+
+
+    @includeIf('inc.pwa-register')
+
+    @includeIf('inc.pwa-install-banner')
+
 
 </body>
 

@@ -395,7 +395,7 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <a href="https://mesh.moe.gov.bn/inventory/indexadmin">
+                        <a href="http://127.0.0.1:8000/inventory/indexadmin">
                           <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                             <div class="card-body" style="padding: 10px;">
                                   <div class="d-flex align-items-center">
@@ -410,7 +410,7 @@
                           </div>
                         </a>
       
-                        <a href="https://mesh.moe.gov.bn/inventory/indexsebutharga">
+                        <a href="http://127.0.0.1:8000/inventory/indexsebutharga">
                           <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                             <div class="card-body" style="padding: 10px;">
                                   <div class="d-flex align-items-center">
@@ -425,7 +425,7 @@
                           </div>
                         </a>
 
-                        <a href="https://mesh.moe.gov.bn/inventory/indexbook">
+                        <a href="http://127.0.0.1:8000/inventory/indexbook">
                           <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                             <div class="card-body" style="padding: 10px;">
                                   <div class="d-flex align-items-center">

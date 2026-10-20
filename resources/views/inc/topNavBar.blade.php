@@ -20,6 +20,20 @@
 
     </div>
 
+    {{-- #========== NEWLY ADDED ============ --}}
+    {{-- English / Malay switch at the top right, left of the user name -- same corner as on the other MESH pages. --}}
+    {{-- ml-auto keeps it next to the name. Styled here because layouts/app2 doesn't load public/css/mesh-v4.css. --}}
+    <style>
+      .mesh-lang-bar { margin-left: auto; margin-right: 16px; }
+      .mesh-lang-bar .mesh-lang-toggle { display: flex; gap: 2px; padding: 3px; background: #ffffff; border: 1px solid #e3e6f0; border-radius: 12px; }
+      .mesh-lang-bar .mesh-lang-toggle button { height: 28px; min-width: 32px; padding: 0 8px; border: 0; border-radius: 9px; background: none; color: #5b6275; font-size: 12px; font-weight: 600; line-height: 1; letter-spacing: .04em; cursor: pointer; }
+      .mesh-lang-bar .mesh-lang-toggle button:hover { background: #f2f3fa; color: #1c1934; }
+      .mesh-lang-bar .mesh-lang-toggle button[aria-pressed="true"] { background: #3730a3; color: #ffffff; }
+    </style>
+    <div class="mesh-lang-bar">
+      @include('inc.lang-toggle')
+    </div>
+    {{-- #================================ --}}
 
   <div id="username-dropdown" class="flex flex-row cursor-pointer group">
 

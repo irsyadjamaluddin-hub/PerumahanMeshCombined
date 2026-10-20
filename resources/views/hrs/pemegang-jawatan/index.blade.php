@@ -225,10 +225,15 @@
     <div class="w-24 h-1 bg-blue-600 mx-auto rounded-full"></div>
 </div>
 
-<!-- 🔹 Export Button -->
-<div class="flex justify-end mb-4">
-    <button 
-        @click="openExportModal()" 
+<!-- 🔹 Export / Report Buttons -->
+<div class="flex justify-end gap-2 mb-4">
+    <a
+        href="{{ route('pj.nonteaching.report') }}"
+        class="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition">
+        Dashboard Report
+    </a>
+    <button
+        @click="openExportModal()"
         class="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition">
         Export Excel
     </button>

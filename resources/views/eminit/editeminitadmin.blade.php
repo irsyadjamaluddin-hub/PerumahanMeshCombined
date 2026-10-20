@@ -1,7 +1,7 @@
 {{-- resources/views/eminit/editeminitadmin.blade.php --}}
 @extends('layouts.app-all')
 
-@section('title', 'Edit e-minit admin')
+@section('title', 'Edit E-Memo Admin')
 
 @push('styles')
   {{-- Select2 CSS (load once) --}}
@@ -44,11 +44,11 @@
         {{-- ====== INFO (read-only) ====== --}}
 
         <div class="col profile-overview" style="border: 2px solid #012970; padding: 20px; border-radius: 25px;">
-          <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">Maklumat E-Memo</h5>
+          <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">E-Memo Information</h5>
 
 @forelse ($eminits as $eminit)
           <div class="row mt-3">
-            <div class="col-lg-4 label">Tarikh Diterima</div>
+            <div class="col-lg-4 label">Date Received</div>
             <div class="col-lg-8">{{ $eminit->created_at}}</div>
           </div>
 @empty
@@ -57,59 +57,59 @@
 @endforelse
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Jenis</div>
+            <div class="col-lg-4 label">Category</div>
             <div class="col-lg-8">{{ $jenisLabel }}</div>
           </div>
 
           <div class="row mt-3" hidden>
-            <div class="col-lg-4 label">Daripada</div>
+            <div class="col-lg-4 label">From</div>
             <div class="col-lg-8">{{ $deptLabel }}</div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Memo Daripada</div>
+            <div class="col-lg-4 label">Memo From</div>
             <div class="col-lg-8">{{ $eminit->memoDepartment->label ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Kepada</div>
+            <div class="col-lg-4 label">To</div>
             <div class="col-lg-8">{!! $kepadaNames !== '' ? $kepadaNames : '-' !!}</div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Untuk Perhatian</div>
+            <div class="col-lg-4 label">For Attention</div>
             <div class="col-lg-8">{{ $eminit->untukperhatian ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-              <div class="col-lg-4 label">Perkara</div>
+              <div class="col-lg-4 label">Subject</div>
               <div class="col-lg-8" style="font-weight: bold; text-transform: uppercase;">
                   {{ $eminit->perkara ?? '-' }}
               </div>
           </div>
 
           <div class="row mt-3" hidden>
-            <div class="col-lg-4 label">Rujukan Persuratan</div>
+            <div class="col-lg-4 label">Correspondence Reference</div>
             <div class="col-lg-8">{{ $eminit->rujukan_persuratan ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Rujukan (Memo Diterima)</div>
+            <div class="col-lg-4 label">No Reference (Memo Recieved)</div>
             <div class="col-lg-8">{{ $eminit->rujukan_tp ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-              <div class="col-lg-4 label">Muat Naik Dokumen</div>
+              <div class="col-lg-4 label">Uploaded Document</div>
               <div class="col-lg-8">
                   @if(count($eminitFiles))
                       @foreach ($eminitFiles as $f)
                           @if(!empty($f['url']))
-                              <a href="{{ $f['url'] }}" target="_blank" class="btn btn-primary btn-sm mb-2" title="Lihat Dokumen">
+                              <a href="{{ $f['url'] }}" target="_blank" class="btn btn-primary btn-sm mb-2" title="View Document">
                                   <i class="bi bi-file-earmark"></i>
-                                  {{ $f['original'] ?? $f['stored'] ?? 'Dokumen' }}
+                                  {{ $f['original'] ?? $f['stored'] ?? 'Document' }}
                               </a><br>
                           @else
-                              <span class="text-muted">{{ $f['original'] ?? $f['stored'] ?? 'Dokumen' }}</span><br>
+                              <span class="text-muted">{{ $f['original'] ?? $f['stored'] ?? 'Document' }}</span><br>
                           @endif
                       @endforeach
                   @else
@@ -120,31 +120,31 @@
 
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Catatan</div>
+            <div class="col-lg-4 label">Remarks</div>
             <div class="col-lg-8">{{ $eminit->catatan ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Salinan</div>
+            <div class="col-lg-4 label">CC To</div>
             <div class="col-lg-8">{!! $salinanNames !== '' ? $salinanNames : '-' !!}</div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Salinan Persuratan Luar</div>
+            <div class="col-lg-4 label">CC External</div>
             <div class="col-lg-8">{{ $eminit->salinan ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Muat Naik Dokumen Persuratan Luar</div>
+            <div class="col-lg-4 label">Uploaded CC External Document</div>
             <div class="col-lg-8">
               @if(count($salinanFiles))
                 <ul class="mb-0">
                   @foreach ($salinanFiles as $f)
                     <li>
                       @if(!empty($f['url']))
-                        <a href="{{ $f['url'] }}" target="_blank">{{ $f['original'] ?? $f['stored'] ?? 'Dokumen' }}</a>
+                        <a href="{{ $f['url'] }}" target="_blank">{{ $f['original'] ?? $f['stored'] ?? 'Document' }}</a>
                       @else
-                        {{ $f['original'] ?? $f['stored'] ?? 'Dokumen' }}
+                        {{ $f['original'] ?? $f['stored'] ?? 'Document' }}
                       @endif
                     </li>
                   @endforeach
@@ -156,13 +156,13 @@
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Rujukan Jabatan</div>
+            <div class="col-lg-4 label">Department Reference</div>
             <div class="col-lg-8">{{ $eminit->no_rujukan ?? '-' }}</div>
           </div>
         </div>
 {{-- ====== TINDAKAN (editable form) ====== --}}
 <div class="col profile-overview mt-4" style="border: 2px solid #012970; padding: 20px; border-radius: 25px;">
-  <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">Tindakan</h5>
+  <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">Action</h5>
 
   @if ($errors->any())
     <div class="alert alert-danger">
@@ -180,7 +180,7 @@
 
     {{-- No. Rujukan --}}
     <div class="row mb-3" hidden>
-      <label class="col-lg-4 label">No Rujukan</label>
+      <label class="col-lg-4 label">Reference No</label>
       <div class="col-lg-8">
         <input
           type="text"
@@ -196,7 +196,7 @@
 
     {{-- Catatan --}}
     <div class="row mb-3">
-      <label class="col-lg-4 label">Catatan</label>
+      <label class="col-lg-4 label">Remarks</label>
       <div class="col-lg-8">
         <textarea class="form-control" name="catatan" style="height: 100px;">{{ old('catatan', optional($prefill ?? null)->catatan) }}</textarea>
       </div>
@@ -222,7 +222,7 @@
 
     <!-- Tindakan Diperlukan -->
     <div class="row mb-3">
-      <label class="col-lg-4 label">Kepada</label>
+      <label class="col-lg-4 label">Action To</label>
       <div class="col-lg-8">
         <select class="form-control select2" id="myselect" name="tindakan_diperlukan[]" multiple required>
           @foreach (($eminit_Tindakandiperlukan ?? []) as $key => $value)
@@ -238,7 +238,7 @@
 
     <!-- Jenis Tindakan -->
     <div class="row mb-3">
-      <label class="col-lg-4 label">Jenis Tindakan</label>
+      <label class="col-lg-4 label">Action Type</label>
       <div class="col-lg-8">
         <select class="form-control select2" id="jenisTindakanSelect" name="jenis_tindakan[]" multiple>
           @foreach (($tindakan ?? []) as $key => $value)
@@ -285,13 +285,13 @@
     });
     $('#jenisTindakanSelect').select2({
       width: '100%',
-      placeholder: "Pilih Jenis Tindakan",
+      placeholder: "Select Action Type",
       allowClear: true
     });
 
     $('#tindakanSelect').select2({
       width: '100%',
-      placeholder: "Pilih tindakan",
+      placeholder: "Select action",
       allowClear: true
     });
 </script>

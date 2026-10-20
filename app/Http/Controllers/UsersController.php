@@ -161,7 +161,7 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
 
         // 🔒 Prevent duplicate approval & emails
-    if ($user->email_verified_at) {
+    if ($user->approval_response === 'Accept Registration') {
         return redirect()->route('users.user.index')
             ->with('warning_message', 'User already approved.');
     }

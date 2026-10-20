@@ -149,6 +149,11 @@ class ProfileusersController extends Controller
 					->where('ic_no', $icNos)
 					->first();
 
+		// No biodata for this IC (e.g. a stray /profileusers/show/index.html link) -- 404 instead of a null crash in the view
+		if (!$biodata) {
+			abort(404, 'Profile not found.');
+		}
+
 		$biodatas = Biodata::all()
 					->where('ic_no', '=', $id);
 

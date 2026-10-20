@@ -1,7 +1,7 @@
 {{-- resources/views/eminit/editeminitadmin.blade.php --}}
 @extends('layouts.app-all')
 
-@section('title', 'E-Memo Tindakan')
+@section('title', 'E-Memo Action')
 
 @push('styles')
   {{-- Select2 CSS (load once) --}}
@@ -22,37 +22,37 @@
 
         {{-- ====== INFO (read-only) ====== --}}
         <div class="col profile-overview" style="border: 2px solid #012970; padding: 20px; border-radius: 25px;">
-          <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">Maklumat E-Memo</h5>
+          <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">E-Memo Information</h5>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Tarikh Diterima</div>
+            <div class="col-lg-4 label">Date Received</div>
             <div class="col-lg-8">{{ $eminit->created_at ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-              <div class="col-lg-4 label">Jenis</div>
+              <div class="col-lg-4 label">Category</div>
               <div class="col-lg-8">{{ $eminit_jenis }}</div>
           </div>
 
 
           <div class="row mt-3" hidden>
-              <div class="col-lg-4 label">Daripada</div>
+              <div class="col-lg-4 label">From</div>
               <div class="col-lg-8">{{ $eminit_daripada }}</div>
           </div>
 
           <div class="row mt-3">
-              <div class="col-lg-4 label">Memo Daripada</div>
+              <div class="col-lg-4 label">Memo From</div>
               <div class="col-lg-8">{{ $eminit->memoDepartment->label ?? '-' }}</div>
           </div>
 
 
        <div class="row mt-3">
-            <div class="col-lg-4 label">Kepada</div>
+            <div class="col-lg-4 label">To</div>
             <div class="col-lg-8">
                 @if(!empty($eminit_kepada))
                     {{ implode(', ', $eminit_kepada) }}
                 @else
-                    <span class="text-muted">Tiada Kepada</span>
+                    <span class="text-muted">No Recipient</span>
                 @endif
             </div>
         </div>
@@ -61,7 +61,7 @@
 
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Untuk Perhatian</div>
+            <div class="col-lg-4 label">For Attention</div>
             <div class="col-lg-8">
               @if(!empty($eminit->untukperhatian))
                 {{ is_array($eminit->untukperhatian) ? implode(', ', $eminit->untukperhatian) : $eminit->untukperhatian }}
@@ -71,17 +71,17 @@
             </div>
           </div>
 
-       
+
 
           <div class="row mt-3">
-          <div class="col-lg-4 label">Perkara</div>
+          <div class="col-lg-4 label">Subject</div>
             <div class="col-lg-8" style="font-weight: bold; text-transform: uppercase;">
                 {{ $eminit->perkara ?? '-' }}
             </div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Rujukan (Memo Diterima)</div>
+            <div class="col-lg-4 label">No Reference (Memo Recieved)</div>
             <div class="col-lg-8">{{ $eminit->rujukan_tp ?? '-' }}</div>
           </div>
 
@@ -91,7 +91,7 @@
           </div> -->
 
           <div class="row mt-3">
-                <div class="col-lg-4 label">Muat Naik Dokumen</div>
+                <div class="col-lg-4 label">Uploaded Document</div>
                 <div class="col-lg-8">
                     @if(!empty($eminit->eminit_file))
                         @foreach($eminit->eminit_file as $file)
@@ -110,14 +110,14 @@
 
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Catatan</div>
+            <div class="col-lg-4 label">Remarks</div>
             <div class="col-lg-8">
               {{ $eminit->catatan ?? '-' }}
             </div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Salinan</div>
+            <div class="col-lg-4 label">CC To</div>
             <div class="col-lg-8">
               @if(!empty($eminit->salinan))
                 {{ is_array($eminit->salinan) ? implode(', ', $eminit->salinan) : $eminit->salinan }}
@@ -128,7 +128,7 @@
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Salinan Persuratan Luar</div>
+            <div class="col-lg-4 label">CC External</div>
             <div class="col-lg-8">
                @if(!empty($eminit->salinan_dokumen))
                   {{ is_array($eminit->salinan_dokumen) ? implode(', ', $eminit->salinan_dokumen) : $eminit->salinan_dokumen }}
@@ -139,7 +139,7 @@
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Muat Naik Dokumen Persuratan Luar</div>
+            <div class="col-lg-4 label">Uploaded CC External Document</div>
             <div class="col-lg-8">
                @if(!empty($eminit->salinan_kepada))
                   @foreach($eminit->salinan_kepada as $file)
@@ -148,12 +148,12 @@
                 @else
                   -
                 @endif
-            
+
             </div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Rujukan Jabatan</div>
+            <div class="col-lg-4 label">Department Reference</div>
             <div class="col-lg-8">{{ $eminit->no_rujukan ?? '-' }}</div>
           </div>
         </div>
@@ -162,32 +162,32 @@
         {{-- ====== INFO (read-only) ====== --}}
         <div class="col profile-overview" style="border: 2px solid #012970; padding: 20px; border-radius: 25px;">
         <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">
-           Maklumat E-Memo Pengarah/Penolong Pengarah
+           E-Memo Information (Director/Assistant Director)
         </h5>
             <div class="mt-3 p-3" style="border:1px dashed #1F4E78; border-radius: 12px;">
             {{-- Tarikh Diterima --}}
             <div class="row mt-3">
-                <div class="col-lg-4 label">Tarikh Diterima</div>
+                <div class="col-lg-4 label">Date Received</div>
                      <div class="col-lg-8">{{ $eminitadmin->created_at ?? '-' }}</div>
             </div>
 
             {{-- No Rujukan --}}
             <div class="row mt-3" hidden>
-                <div class="col-lg-4 label">No Rujukan</div>
+                <div class="col-lg-4 label">Reference No</div>
                 <div class="col-lg-8">{{ $eminitadmin->no_rujukan ?? '-' }}</div>
             </div>
 
             {{-- Catatan --}}
             <div class="row mt-3">
-                <div class="col-lg-4 label">Catatan</div>
+                <div class="col-lg-4 label">Remarks</div>
                 <div class="col-lg-8">{{ $eminitadmin->catatan ?? '-' }}
-               
+
                 </div>
             </div>
 
-            
+
             <div class="row mt-3">
-                <div class="col-lg-4 label">Daripada</div>
+                <div class="col-lg-4 label">Action From</div>
                   <div class="col-lg-8">
                       @if(!empty($tindakan_labels))
                           {{ implode(', ', $tindakan_labels) }}
@@ -198,7 +198,7 @@
                 </div>
 
             <div class="row mt-3">
-                <div class="col-lg-4 label">Kepada</div>
+                <div class="col-lg-4 label">Action To</div>
                   <div class="col-lg-8">
                       @if(!empty($tindakan_labels))
                           {{ implode(', ', $tindakan_labels) }}
@@ -207,9 +207,9 @@
                       @endif
                   </div>
                 </div>
-              
+
               <div class="row mt-3">
-                  <div class="col-lg-4 label">Jenis Tindakan</div>
+                  <div class="col-lg-4 label">Action Type</div>
                   <div class="col-lg-8">
                       @if(!empty($jenis_labels))
                           {{ implode(', ', $jenis_labels) }}
@@ -227,13 +227,13 @@
           {{-- ====== Action INFO (read-only) ====== --}}
           <div class="col profile-overview" style="border: 2px solid #012970; padding: 20px; border-radius: 25px;">
               <h5 class="card-title text-center text-white p-2" style="background-color: #1F4E78;">
-                Maklumat E-Memo Tindakan
+                E-Memo Action Information
               </h5>
 
               <div class="mt-3 p-3" style="border:1px dashed #1F4E78; border-radius: 12px;">
                   {{-- Tarikh Diterima --}}
                   <div class="row mt-3">
-                      <div class="col-lg-4 label">Tarikh Diterima</div>
+                      <div class="col-lg-4 label">Date Received</div>
                       <div class="col-lg-8">
                           {{ $relatedAction->created_at ? $relatedAction->created_at->format('d/m/Y H:i') : '-' }}
                       </div>
@@ -241,7 +241,7 @@
 
                   {{-- No Rujukan --}}
                   <div class="row mt-3" hidden>
-                      <div class="col-lg-4 label">No Rujukan</div>
+                      <div class="col-lg-4 label">Reference No</div>
                       <div class="col-lg-8">
                           {{ $relatedAction->no_rujukan ?? '-' }}
                       </div>
@@ -249,7 +249,7 @@
 
                   {{-- Tindakan Dokumen --}}
                       <div class="row mt-3">
-                          <div class="col-lg-4 label">Tindakan Dokumen</div>
+                          <div class="col-lg-4 label">Action Document</div>
                           <div class="col-lg-8">
                               @if(!empty($relatedAction->tindakan_file) && count($relatedAction->tindakan_file) > 0)
                                   <ul class="list-unstyled">
@@ -275,7 +275,7 @@
 
                   {{-- Catatan --}}
                   <div class="row mt-3">
-                      <div class="col-lg-4 label">Catatan</div>
+                      <div class="col-lg-4 label">Remarks</div>
                       <div class="col-lg-8">
                           {{ $relatedAction->catatan ?? '-' }}
                       </div>
@@ -283,7 +283,7 @@
 
                   {{-- Tindakan Diperlukan --}}
                   <div class="row mt-3">
-                      <div class="col-lg-4 label">Kepada</div>
+                      <div class="col-lg-4 label">Action To</div>
                       <div class="col-lg-8">
                           @if(!empty($relatedTindakanLabels))
                               <ul>
@@ -299,7 +299,7 @@
 
                   {{-- Jenis Tindakan --}}
                   <div class="row mt-3">
-                      <div class="col-lg-4 label">Jenis Tindakan</div>
+                      <div class="col-lg-4 label">Action Type</div>
                       <div class="col-lg-8">
                           @if(!empty($relatedJenisLabels))
                               <ul>
@@ -319,7 +319,7 @@
 
         {{-- ====== TINDAKAN (editable form) ====== --}}
         <div class="col profile-overview mt-4" style="border: 2px solid #012970; padding: 20px; border-radius: 25px;">
-          <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">Tindakan</h5>
+          <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">Action</h5>
 
           {{-- Show validation errors for this form too --}}
           @if ($errors->any())
@@ -339,7 +339,7 @@
 
           {{-- No. Rujukan --}}
             <div class="row" hidden>
-                <label class="col-lg-4 label">No Rujukan</label>
+                <label class="col-lg-4 label">Reference No</label>
                 <div class="col-lg-8">
                     <input type="text" 
                           name="no_rujukan" 
@@ -350,7 +350,7 @@
 
                  <!-- Tindakan Dokumen -->
                  <div class="row form-group mb-3">
-                  <label class="col-lg-4 label">Tindakan Dokumen</label>
+                  <label class="col-lg-4 label">Action Document</label>
 
                   <div class="col-lg-8">
                       {{-- Show existing uploaded files --}}
@@ -359,24 +359,24 @@
                                 @foreach($eminitaction->tindakan_file as $file)
                                     <li>
                                         <i class="bi bi-file-earmark-fill me-1" style="color: #0d6efd;"></i>
-                                        <a href="{{ $file['url'] ?? asset('storage/' . ($file['path'] ?? '')) }}" 
+                                        <a href="{{ $file['url'] ?? asset('storage/' . ($file['path'] ?? '')) }}"
                                           target="_blank">{{ $file['original'] ?? basename($file['path'] ?? '') }}</a>
                                     </li>
                                 @endforeach
                             </ul>
                         @else
-                            <p class="text-muted mb-3">Tiada dokumen tindakan yang dimuat naik.</p>
+                            <p class="text-muted mb-3">No action documents uploaded.</p>
                         @endif
 
                       {{-- File upload input section --}}
                       <div id="fileRows">
                           <div class="input-group mb-2 file-row">
                               <input type="file" name="tindakan_file[]" class="form-control">
-                              <button type="button" class="btn btn-outline-danger ms-2 remove-row" disabled>Buang</button>
+                              <button type="button" class="btn btn-outline-danger ms-2 remove-row" disabled>Remove</button>
                           </div>
                       </div>
 
-                      <button type="button" id="addFileRow" class="btn btn-outline-secondary mt-2">+ Tambah fail</button>
+                      <button type="button" id="addFileRow" class="btn btn-outline-secondary mt-2">+ Add file</button>
                   </div>
               </div>
 
@@ -398,7 +398,7 @@
                       row.className = 'input-group mb-2 file-row';
                       row.innerHTML = `
                           <input type="file" name="tindakan_file[]" class="form-control">
-                          <button type="button" class="btn btn-outline-danger ms-2 remove-row">Buang</button>
+                          <button type="button" class="btn btn-outline-danger ms-2 remove-row">Remove</button>
                       `;
                       container.appendChild(row);
                       updateState();
@@ -420,7 +420,7 @@
 
             {{-- Catatan --}}
             <div class="row">
-                <label class="col-lg-4 label">Catatan</label>
+                <label class="col-lg-4 label">Remarks</label>
                 <div class="col-lg-8">
                     <textarea class="form-control" name="catatan" style="height: 100px;">{{ old('catatan', $eminitaction->catatan) }}</textarea>
                 </div>
@@ -428,13 +428,13 @@
 
             {{-- Tindakan Diperlukan --}}
             <div class="row">
-                <label class="col-lg-4 label">Kepada</label>
+                <label class="col-lg-4 label">Action To</label>
                 <div class="col-lg-8">
                     <select class="form-control select2"
                             id="tindakanDiperlukanSelect"
                             name="tindakan_diperlukan[]"
                             multiple
-                            data-placeholder="Pilih tindakan">
+                            data-placeholder="Select action">
                         @foreach($tindakans as $tindakan)
                             <option value="{{ $tindakan->id }}"
                                 {{ (collect(old('tindakan_diperlukan', json_decode($eminitaction->tindakan_diperlukan) ?? []))->contains($tindakan->id)) ? 'selected' : '' }}>
@@ -448,13 +448,13 @@
 
             {{-- Jenis Tindakan --}}
             <div class="row">
-                <label class="col-lg-4 label">Jenis Tindakan</label>
+                <label class="col-lg-4 label">Action Type</label>
                 <div class="col-lg-8">
                     <select class="form-control select2"
                             id="jenisTindakanSelect"
                             name="jenis_tindakan[]"
                             multiple
-                            data-placeholder="Pilih jenis">
+                            data-placeholder="Select type">
                         @foreach($jenistindakans as $jenis)
                             <option value="{{ $jenis->id }}"
                                 {{ (collect(old('jenis_tindakan', json_decode($eminitaction->jenis_tindakan) ?? []))->contains($jenis->id)) ? 'selected' : '' }}>
@@ -473,17 +473,17 @@
 
                 {{-- Selesai Checkbox --}}
                 <div class="row mt-3">
-                    <label class="col-lg-4 label">Selesai</label>
+                    <label class="col-lg-4 label">Completed</label>
                     <div class="col-lg-8">
                         <div class="form-check">
-                            <input class="form-check-input" 
-                                  type="checkbox" 
-                                  name="status" 
-                                  id="selesai" 
+                            <input class="form-check-input"
+                                  type="checkbox"
+                                  name="status"
+                                  id="selesai"
                                   value="selesai"
                                   @if(old('status', $adminStatus) === 'selesai') checked @endif>
                             <label class="form-check-label" for="selesai">
-                                Memo maklumbalas telah dilaksanakan
+                                Memo response has been completed
                             </label>
                         </div>
                     </div>
@@ -527,13 +527,13 @@
     });
     $('#jenisTindakanSelect').select2({
       width: '100%',
-      placeholder: "Pilih Jenis Tindakan",
+      placeholder: "Select Action Type",
       allowClear: true
     });
 
     $('#tindakanDiperlukanSelect').select2({
       width: '100%',
-      placeholder: "Pilih tindakan",
+      placeholder: "Select action",
       allowClear: true
     });
 </script>

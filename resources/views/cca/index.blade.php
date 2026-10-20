@@ -3,6 +3,18 @@
 @section('title', 'Pengurusan Aktiviti Ko-Kurikulum')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- #============= ORI CODE ============== --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: shared styles in public/css/mesh-home-theme.css, --}}
+{{-- applied to everything inside the mesh-home-theme wrapper below. Light mode is unchanged. --}}
+{{-- <link href="{{ asset('css/mesh-home-theme.css') }}?v={{ filemtime(public_path('css/mesh-home-theme.css')) }}" rel="stylesheet"> --}}
+{{-- #================================ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" section; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+{{-- #================================ --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "CCA";
@@ -145,4 +157,7 @@ $pagename = "CCA";
     </div>
 
 
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
     @endsection

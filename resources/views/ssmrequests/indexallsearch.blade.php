@@ -47,7 +47,7 @@ $pagename = "SSMSRequest_Admin";
             </a>
         </div>
         <div class="col-md-2" style="text-align:center;">
-            <a href="https://mesh.moe.gov.bn/borangaduanssm"  target="_blank" class= "btn btn-primary">
+            <a href="http://127.0.0.1:8000/borangaduanssm"  target="_blank" class= "btn btn-primary">
                 <i class="bi bi-link"></i>
             </a>
             <a href="{{ route('ssmrequests.ssmrequest.ssmkod') }}" class="btn btn-primary">

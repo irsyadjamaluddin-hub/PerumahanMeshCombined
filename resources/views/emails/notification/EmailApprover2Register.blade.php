@@ -138,7 +138,7 @@ style="
                             </p>
 
                             <p style="color:#2b2a2a; margin:1rem 0 0 0;">
-                                Mesh: <a href="https://mesh.moe.gov.bn" style="color: {{ $purple }}; text-decoration: none;">https://mesh.moe.gov.bn</a>
+                                Mesh: <a href="http://127.0.0.1:8000" style="color: {{ $purple }}; text-decoration: none;">http://127.0.0.1:8000</a>
                             </p>
 
                             <p style="color:#232425; margin-top:0.5rem;"><i>Ministry of Education, Brunei Darussalam</i></p>

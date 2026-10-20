@@ -72,9 +72,17 @@
 			}
 
     </style>
-	
+
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- English / Malay switch: keeps the page hidden for a moment when BM is saved, so it doesn't flash English --}}
+@include('inc.lang-head')
+{{-- #================================ --}}
 </head>
 <body>
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- English / Malay switch (floating, bottom left) -- this layout has no MESH v4 header to hold it --}}
+@include('inc.lang-float')
+{{-- #================================ --}}
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
@@ -143,6 +151,17 @@
       </div>  
     </div>
   </footer><!-- End Footer -->
+
+    {{-- @include('inc.smartbot') --}} {{-- SmartBot disabled temporarily --}}
+
+    @includeIf('inc.pwa-register')
+
+    @includeIf('inc.pwa-install-banner')
+
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- English / Malay switch: swaps the page text to Malay when BM is picked (word list inside the file) --}}
+<script src="{{ asset('js/mesh-lang.js') }}?v={{ filemtime(public_path('js/mesh-lang.js')) }}"></script>
+{{-- #================================ --}}
 
 </body>
 </html>

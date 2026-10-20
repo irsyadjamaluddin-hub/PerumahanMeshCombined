@@ -59,7 +59,7 @@ Sila log masuk ke sistem untuk tindakan lanjut.
 
 <!-- BUTTON -->
 <div style="text-align:center; margin:25px 0;">
-<a href="https://mesh.moe.gov.bn"
+<a href="http://127.0.0.1:8000"
    style="background:{{ $purple }};
           color:white;
           padding:12px 25px;

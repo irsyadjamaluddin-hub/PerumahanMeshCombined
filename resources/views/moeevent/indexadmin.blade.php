@@ -3,6 +3,24 @@
 @section('title', 'Event')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- #============= ORI CODE ============== --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: shared styles in public/css/mesh-home-theme.css, --}}
+{{-- applied to everything inside the mesh-home-theme wrapper below. Light mode is unchanged. --}}
+{{-- <link href="{{ asset('css/mesh-home-theme.css') }}?v={{ filemtime(public_path('css/mesh-home-theme.css')) }}" rel="stylesheet"> --}}
+{{-- #================================ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" section; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+{{-- #================================ --}}
+<style>
+  /* QR codes keep a white backing so they still scan; Pdf / IMG buttons in gold */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme td > a > svg { background: #ffffff; padding: 6px; border-radius: 8px; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme td > button { background: transparent; border: 0; padding: 0; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .download-button { background: transparent; color: #f3c35f; border-color: #f3c35f; }
+</style>
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "Event";
@@ -49,11 +67,11 @@ $pagename = "Event";
  
     <div class="col-12 mb-2 mt-2" style="text-align: right;">
         <!-- Added by Amal 'Izzah (PB) -->
-        <a href="https://mesh.moe.gov.bn/ratingopenform"  target="_blank" class= "btn btn-primary" hidden>
+        <a href="http://127.0.0.1:8000/ratingopenform"  target="_blank" class= "btn btn-primary" hidden>
             <i class="bi bi-send"></i>
         </a>
         <!------ ==========  ------>
-        <a href="https://mesh.moe.gov.bn/moeevent"  target="_blank" class= "btn btn-primary">
+        <a href="http://127.0.0.1:8000/moeevent"  target="_blank" class= "btn btn-primary">
             <i class="bi bi-link"></i>
         </a>
         <a href="{{ route('moeevent.moeevent.createevent') }}" class="btn btn-primary">
@@ -191,6 +209,16 @@ $pagename = "Event";
                                                 </button>
                                             </form>
 
+
+
+                                            <!-- CC Person Button -->
+                                            <form method="get" action="{{ route('moeevent.moeevent.cc', $perkaraevent->id) }}">
+                                                @csrf
+                                                <button type="submit" class="btn btn-outline-primary" title="Add CC Person">
+                                                    <i class="bi bi-person-fill"></i>
+                                                </button>
+                                            </form>
+
                                          
                                         </div>
                                     </div>           
@@ -234,5 +262,8 @@ $pagename = "Event";
 </script>
 
 </section>
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection
 

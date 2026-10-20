@@ -100,6 +100,7 @@ $pagename = "Event";
                 </div>
 
                 @endforeach
+                
 
                  
 <br>

@@ -45,9 +45,17 @@
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"></script>
     
     {{-- Alpine JS Core (MUST load last) --}}
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="{{ asset('vendor/alpinejs/alpine.min.js') }}"></script>
+    {{-- #========== NEWLY ADDED ============ --}}
+    {{-- English / Malay switch: keeps the page hidden for a moment when BM is saved, so it doesn't flash English --}}
+    @include('inc.lang-head')
+    {{-- #================================ --}}
 </head>
 <body class="relative">
+    {{-- #========== NEWLY ADDED ============ --}}
+    {{-- English / Malay switch (floating, bottom left) -- this layout has no MESH v4 header to hold it --}}
+    @include('inc.lang-float')
+    {{-- #================================ --}}
 
     @include('hrs.layouts.nav')
 
@@ -58,6 +66,13 @@
     <div class="p-10">
         @yield('content')
     </div>
-    
+    {{-- MESH Smart Bot --}}
+    {{-- @include('inc.smartbot') --}} {{-- SmartBot disabled temporarily --}}
+
+    {{-- #========== NEWLY ADDED ============ --}}
+    {{-- English / Malay switch: swaps the page text to Malay when BM is picked (word list inside the file) --}}
+    <script src="{{ asset('js/mesh-lang.js') }}?v={{ filemtime(public_path('js/mesh-lang.js')) }}"></script>
+    {{-- #================================ --}}
+
 </body>
 </html>

@@ -5,7 +5,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td align="center">
-                <a href="https://mesh.moe.gov.bn">
+                <a href="http://127.0.0.1:8000">
                     <img src="{{ asset('img/newmoelogo.png') }}" class="d-block" style="height:200px" alt="img">
                 </a>
             </td>
@@ -34,7 +34,7 @@
 
     
     <br>
-    <p style="color:#2b2a2a; margin-bottom: 0px;">Mesh: <a href="https://mesh.moe.gov.bn">https://mesh.moe.gov.bn</a></p>
+    <p style="color:#2b2a2a; margin-bottom: 0px;">Mesh: <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p>
     <br>
    
     <b style="color:#232425;"><i>Ministry of Education, Brunei Darussalam</i></b>

@@ -18,6 +18,12 @@ use App\Models\Rating;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
+//======================== NEWLY ADDED =====================================
+
+//use Illuminate\Support\Facades\Mail; //MAYBE???
+
+//======================================================
+
 // Export Excel - Fira
 use App\Exports\ExportExcel; // Import your export class
 use Maatwebsite\Excel\Facades\Excel;
@@ -132,8 +138,9 @@ public function openform()
 }
 
 
+public function store()
 
-public function store(Request $request)
+// public function store(Request $request)
 {
 
    
@@ -371,12 +378,36 @@ public function storeevent(Request $request)
     $perkaraevent->nama = $request->nama;
     $perkaraevent->created_at = $now;
 
+//     //========================= NEWLY ADDED ===================================
+
+//     if(Auth::user()->role == 'admin' && $request->filled('cc_ic'))
+// {
+//     $ics = explode(',', $request->cc_ic);
+
+//     $emails = Biodata::whereIn('ic_no', $ics)
+//                 ->pluck('email')
+//                 ->toArray();
+
+//     // When sending email
+//     Mail::to($mainEmail)
+//         ->cc($emails)
+//         ->send(new YourExistingMailClass($event));
+// }
+
+//     //==================================================================
+
+
     // Save data
     $perkaraevent->save();
 
     return redirect()->route('moeevent.moeevent.indexadmin')
         ->with('success_message', 'New Event Details Succesfully added!');
 }
+
+
+
+
+
 
 public function updateadmin(Request $request){
 
@@ -425,40 +456,123 @@ public function destroyregisterlist($id){
 }
 
 
-public function indexadmin()
-{
+// public function indexadmin()
+// {
 
-    if (Auth::user()->hasRole('ROLE_SUPERADMIN') ){
-        $perkaraevent = Perkaraevent::select('perkaraevent.*')
-        ->orderBy('created_at', 'DESC')
-        ->get();
+//     if (Auth::user()->hasRole('ROLE_SUPERADMIN') ){
+//         $perkaraevent = Perkaraevent::select('perkaraevent.*')
+//         ->orderBy('created_at', 'DESC')
+//         ->get();
 
-        return view('moeevent.indexadmin', compact('perkaraevent'));
+//         return view('moeevent.indexadmin', compact('perkaraevent'));
         
-    }
+//     }
 
-    if ( Auth::user()->hasRole('ROLE_MOEEVENT')){
+//     if ( Auth::user()->hasRole('ROLE_MOEEVENT')){
 
-        $icNos = Auth::user()->ic_no;
+//         $icNos = Auth::user()->ic_no;
 
-        $employments = Employment::select('emp_employment_infos.*')
-                    ->where('ic_no', '=', $icNos)->first();
+//         $employments = Employment::select('emp_employment_infos.*')
+//                     ->where('ic_no', '=', $icNos)->first();
 
-        $id = $employments->department_id;
+//         $id = $employments->department_id;
 
-        $perkaraevent = Perkaraevent::select('perkaraevent.*')
-        ->orderBy('created_at', 'DESC')
-        ->where('jabatan', '=', $id)
-        ->get();
+//         $perkaraevent = Perkaraevent::select('perkaraevent.*')
+//         ->orderBy('created_at', 'DESC')
+//         ->where('jabatan', '=', $id)
+//         ->get();
 
-        return view('moeevent.indexadmin', compact('perkaraevent','employments'));
+//         return view('moeevent.indexadmin', compact('perkaraevent','employments'));
         
-    }
+//     }
 
 
    
+// }
+
+
+//======================= NEWLY ADDED ============================
+
+
+public function indexadmin()
+{
+    $user = Auth::user();
+
+    // SUPER ADMIN CAN SEE ALL
+    if ($user->hasRole('ROLE_SUPERADMIN')) {
+
+        $perkaraevent = Perkaraevent::with('biodata')
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        return view('moeevent.indexadmin', compact('perkaraevent'));
+    }
+
+
+    // MOE EVENT ADMIN
+    if ($user->hasRole('ROLE_MOEEVENT')) {
+
+
+        // Get logged in user's department
+        $employment = Employment::where('ic_no', $user->ic_no)
+            ->first();
+
+
+        if (!$employment) {
+
+            return back()->with(
+                'error',
+                'Department information not found'
+            );
+
+        }
+
+
+        $department_id = $employment->department_id;
+
+
+
+        // Only same department events
+        $perkaraevent = Perkaraevent::where(
+                'jabatan',
+                $department_id
+            )
+            ->with('biodata')
+            ->orderBy('created_at','DESC')
+            ->get();
+
+
+
+        return view(
+            'moeevent.indexadmin',
+            compact(
+                'perkaraevent',
+                'employment'
+            )
+        );
+
+    }
+
+
+    abort(403);
+
 }
 
+
+//================ CC EVENT ==================
+
+public function cc($id)
+{
+    $event = Perkaraevent::findOrFail($id);
+
+    $biodatas = Biodata::all();
+
+    return view('moeevent.cc', compact('event','biodatas'));
+}
+
+
+
+//========================================================================
 
 public function editadmin($id)
 {
@@ -671,10 +785,10 @@ public function reject($id)
 
     public function dashboard(Request $request, $id){
 
-        
+
        $perkaraevent = Perkaraevent::all()
-    ->where('id', '=', $id);  
-       
+    ->where('id', '=', $id);
+
 
         $totalAttendees = Moeevent::where('event', $id)
         ->where('status', 'approve')

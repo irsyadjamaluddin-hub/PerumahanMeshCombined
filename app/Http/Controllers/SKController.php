@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+
 use App\Models\Biodata;
 use App\Models\Employment;
 use App\Models\User;
@@ -56,15 +59,114 @@ public function index()
 }
 
 
+// public function indexadmin()
+// {
+//     $departments = Department::pluck('id', 'label')->all();
+//     $borangs = SlipKedatangan::select('slipkedatangan.*')->orderBy('created_at', 'DESC')->get();
+//     $skperkaras = SKPerkara::all();
+//     $perkaradropdown = SKPerkara::pluck('label', 'label')->all();
+
+//     return view('slipkedatangan.indexadmin', compact('departments','borangs','skperkaras', 'perkaradropdown'));
+// }
+
+
+#==========================================================
+
 public function indexadmin()
 {
-    $departments = Department::pluck('id', 'label')->all();
-    $borangs = SlipKedatangan::select('slipkedatangan.*')->orderBy('created_at', 'DESC')->get();
-    $skperkaras = SKPerkara::all();
-    $perkaradropdown = SKPerkara::pluck('label', 'label')->all();
 
-    return view('slipkedatangan.indexadmin', compact('departments','borangs','skperkaras', 'perkaradropdown'));
+    $user = Auth::user();
+
+
+    $departments = Department::pluck('id','label')->all();
+
+
+    if($user && $user->role == 'admin')
+    {
+
+        // get admin department from biodata
+
+        $jabatan = Biodata::where('ic_no',$user->ic_no)
+                          ->value('jabatan');
+
+
+        // only show same department
+
+        $borangs = SlipKedatangan::where('jabatan',$jabatan)
+                    ->orderBy('created_at','DESC')
+                    ->get();
+
+    }
+    else
+    {
+
+        // normal user sees everything
+
+        $borangs = SlipKedatangan::orderBy('created_at','DESC')
+                    ->get();
+
+    }
+
+
+
+    if ($user && $user->hasRole('ROLE_SUPERADMIN')) {
+
+        // Superadmin sees every Perkara, across all departments
+
+        $skperkaras = SKPerkara::all();
+
+    } else {
+
+        // Everyone else only sees Perkara belonging to their own department
+
+        $jabatan = null;
+
+        if ($user) {
+            $employment = Employment::where('ic_no', $user->ic_no)->first();
+            $jabatan = $employment ? Department::where('id', $employment->department_id)->value('label') : null;
+        }
+
+        $skperkaras = SKPerkara::where('jabatan', $jabatan)->get();
+
+    }
+
+
+    $perkaradropdown = SKPerkara::pluck('label','label')->all();
+
+
+
+    return view(
+        'slipkedatangan.indexadmin',
+        compact(
+            'departments',
+            'borangs',
+            'skperkaras',
+            'perkaradropdown'
+        )
+    );
+
 }
+
+#====== NEWLY ADDED ========
+#================ SHARE PERKARA BY IC NO. — "SHARED WITH ME" (mirrors FileSystemController@showSharedFolders) ================
+# Lists every Perkara whose shared_with column contains the current user's IC No.
+# Reached from the "Shared With Me" button on slipkedatangan/indexadmin.blade.php.
+
+public function sharedWithMe()
+{
+    $user = Auth::user();
+
+    $sharedPerkaras = $user
+        ? SKPerkara::where('shared_with', 'like', '%' . $user->ic_no . '%')->get()
+        : collect();
+
+    return view('slipkedatangan.sharedperkara', compact('sharedPerkaras'));
+}
+#====== ========.
+
+#===============================================================================
+
+#===============================================================================
 
 public function showslip(SKPerkara $skperkara) {
     $slips = $skperkara->slipkedatangans()->get();
@@ -72,6 +174,76 @@ public function showslip(SKPerkara $skperkara) {
 
     return view('slipkedatangan.showslip', compact('skperkara', 'slips', 'statuses'));
 }
+
+#====== NEWLY ADDED ========
+#================ SHARE PERKARA BY IC NO. — "GRANT ACCESS" (mirrors FileSystemController) ================
+# This whole block is the "cc someone by their IC No." feature: it lets an admin give another
+# user (identified only by IC No., stored as a CSV string in SKPerkara.shared_with) visibility
+# into a Perkara's attendance slips, without changing that user's role or department.
+# Views: slipkedatangan/accessske.blade.php (grant form), slipkedatangan/access_users.blade.php
+#        (manage/revoke), slipkedatangan/sharedperkara.blade.php (recipient's "Shared With Me" list)
+
+# Shows the "Grant Access" form (list of IC Nos. already shared, plus room to add more).
+public function grantAccess(SKPerkara $skperkara)
+{
+    $icNos = $skperkara->shared_with ? explode(',', $skperkara->shared_with) : [];
+
+    return view('slipkedatangan.accessske', compact('skperkara', 'icNos'));
+}
+
+// Merges newly-submitted IC Nos. into the existing shared_with CSV (deduped via array_unique).
+public function storeAccess(Request $request, SKPerkara $skperkara)
+{
+    $request->validate([
+        'ic_no' => 'required|array',
+        'ic_no.*' => 'required|digits:8|exists:users,ic_no',
+    ]);
+
+    $sharedWith = $skperkara->shared_with ? explode(',', $skperkara->shared_with) : [];
+
+    $newIcNos = $request->input('ic_no');
+
+    $mergedIcNos = array_unique(array_merge($sharedWith, $newIcNos));
+
+    $skperkara->update(['shared_with' => implode(',', $mergedIcNos)]);
+
+    return redirect()->route('sk.slipkedatangan.showAccessUsers', $skperkara->id)
+        ->with('success_message', 'Access granted successfully.');
+}
+
+// Lists the IC Nos. currently shared on a Perkara, each with a revoke button.
+public function showAccessUsers(SKPerkara $skperkara)
+{
+    $sharedUsers = $skperkara->shared_with ? explode(',', $skperkara->shared_with) : [];
+
+    return view('slipkedatangan.access_users', compact('skperkara', 'sharedUsers'));
+}
+
+// Removes one IC No. from the shared_with CSV (array_diff), revoking that user's access.
+public function revokeAccess(SKPerkara $skperkara, $icNo)
+{
+    if ($skperkara->shared_with) {
+        $sharedWith = explode(',', $skperkara->shared_with);
+
+        $updatedSharedWith = array_diff($sharedWith, [$icNo]);
+
+        $skperkara->update(['shared_with' => implode(',', $updatedSharedWith)]);
+    }
+
+    return redirect()->route('sk.slipkedatangan.showAccessUsers', $skperkara->id)
+        ->with('success_message', 'Access revoked successfully.');
+}
+
+// AJAX endpoint used by accessske/access_users' JS to validate a typed IC No. exists in `users` before submit.
+public function checkIcExists(Request $request)
+{
+    $icNo = $request->query('ic_no');
+
+    $exists = $icNo ? User::where('ic_no', $icNo)->exists() : false;
+
+    return response()->json(['exists' => $exists]);
+}
+#====== ========.
 
 public function createevent() {
     $skperkaras = SKPerkara::all();
@@ -147,7 +319,8 @@ public function storeperkara(){
 
 
 
-public function store()
+// public function store()
+public function store(Request $request)
 {
     $skperkara = SKPerkara::where('label', request('perkara'))->first();
     
@@ -156,6 +329,7 @@ public function store()
         'jabatan' => 'required',
         'nama' => 'required',
         'rolelabel' => 'required',
+        'cc_ic' => 'nullable|string',           #======================= NEWLY ADDED ================
         // 'jawatan' => 'required',
         // 'email' => 'required',
         // 'remark' => 'required',
@@ -172,6 +346,56 @@ public function store()
         'remark' => request('remark'),
         's_k_perkara_id' => $skperkara->id,
     ]);
+
+    // Seed the Perkara's own jabatan from its first submitter, if not already set
+    if ($skperkara && empty($skperkara->jabatan)) {
+        $skperkara->update(['jabatan' => request('jabatan')]);
+    }
+
+
+    #====================  NEWLY ADDED ======================================
+
+
+// CC PEOPLE USING IC NUMBER
+
+if(Auth::check() && Auth::user()->role == 'admin' && $request->filled('cc_ic'))
+{
+
+    // Split IC numbers
+    $icNumbers = array_map(
+        'trim',
+        explode(',', $request->cc_ic)
+    );
+
+
+    // Find users from biodata table
+    $ccUsers = Biodata::whereIn('ic_no', $icNumbers)
+                      ->get();
+
+
+
+    foreach($ccUsers as $user)
+    {
+
+        // Send CC email
+        Mail::raw(
+            "You have been CCed for Slip Kehadiran: ".$request->perkara,
+            
+            function($message) use ($user){
+
+                $message->to($user->email)
+                        ->subject('Slip Kehadiran Notification');
+
+            }
+        );
+
+
+    }
+
+}
+
+#===============================================================================
+
 
     return redirect()->route('slipkehadiran')
         ->with('success_message', 'Borang telah berjaya dihantar');

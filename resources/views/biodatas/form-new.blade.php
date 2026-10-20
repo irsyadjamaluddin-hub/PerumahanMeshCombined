@@ -180,7 +180,7 @@
                     <div class="row">
                       <div class="col-lg-3 col-md-5 label ">Kementerian <br> <i>Ministry</i></div>
                       <div class="col-lg-9 col-md-7">
-                        {!! Form::text('ministry_id', $ministry->ministry_name, ['readonly' => 'true', 'class' => 'bg-gray-200 form-control', 'spellcheck' => 'false','autocomplete'=>'off', 'maxlength' => '20', 'placeholder' => '', ]) !!}
+                        {!! Form::text('ministry_id', optional($ministry)->ministry_name, ['readonly' => 'true', 'class' => 'bg-gray-200 form-control', 'spellcheck' => 'false','autocomplete'=>'off', 'maxlength' => '20', 'placeholder' => '', ]) !!}
                       </div>
                     </div>
 

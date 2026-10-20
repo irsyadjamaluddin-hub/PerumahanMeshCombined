@@ -12,6 +12,82 @@ $pagename = "fsm";
 
 </style>
 
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Wrapper so this page's dark mode styles stay on this page (closed just before @endsection). --}}
+{{-- Dark mode in the Home page theme (Oct 2026), same design as linkup/index and ssms/index: deep purple cards --}}
+{{-- with violet borders, gold active tab, purple title bars with gold text, lavender table headings, violet "+" --}}
+{{-- button, gold edit / lavender access buttons. Covers both tabs (Shared Folders comes from fsm/sharedfolder). --}}
+{{-- Only applies when the sun/moon switch is on dark; light mode is unchanged. --}}
+<div class="mesh-fsm-page">
+<style>
+  /* Breadcrumb: no light grey bar in dark mode, current page in gold */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .breadcrumb { background: transparent; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .breadcrumb .breadcrumb-item.active { color: #f3c35f; }
+
+  /* "+" (new folder) button */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-primary {
+    background-color: #6d4bc4 !important; border-color: #6d4bc4; color: #ffffff;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-primary:hover { background-color: #7c5cdb !important; border-color: #7c5cdb; }
+
+  /* User-Created Folders / Shared Folders tabs (sit in an .alert box) */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .alert-secondary {
+    background: #1c1340 !important; border: 1px solid #3a2768 !important; border-radius: 10px;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .nav-tabs { border-bottom-color: #3a2768; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .nav-tabs .nav-link { color: #9aa2bd; background: transparent; border-color: transparent; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .nav-tabs .nav-link:hover { color: #e8eaf4; border-color: transparent; }
+  /* #============= ORI CODE ============== */
+  /* html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .nav-tabs .nav-link.active {
+    color: #f3c35f; background: #2a1d5c; border-color: #3a2768 #3a2768 transparent;
+  } */
+  /* #================================ */
+  /* Selected tab: a lighter purple than the tab box so it stands out (never white) */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .nav-tabs .nav-link.active {
+    color: #f3c35f; background: #3d2c7d !important; border-color: #5b44a8 #5b44a8 transparent;
+  }
+  /* #================================ */
+
+  /* Cards */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .card {
+    background: #1c1340; border: 1px solid #3a2768;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .card-title[style] {
+    background-color: #2a1d5c !important; color: #f3c35f !important; border-radius: 10px !important; letter-spacing: .02em;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page hr { border-top-color: #3a2768; opacity: 1; }
+
+  /* Tables ("entries per page", "Search...", "Showing 1 to 1 of 1 entries") */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .table th { color: #c4b5fd; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .table th,
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .table td { border-bottom: 1px solid #3a2768; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .dataTable-input,
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .dataTable-selector {
+    background-color: #140d30; border-color: #3a2768; color: #e8eaf4;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .dataTable-top,
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .dataTable-bottom,
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .dataTable-table > thead > tr > th { border-color: #3a2768; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .dataTable-info { color: #9aa2bd; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .dataTable-pagination .active a { background-color: #6d4bc4; color: #ffffff; }
+
+  /* Row buttons: edit, grant access and view users gold, delete red */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-outline-primary { border-color: #f3c35f; color: #f3c35f; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-outline-primary:hover { background-color: #f3c35f; color: #1c1340; }
+  /* #============= ORI CODE ============== */
+  /* html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-outline-blue { border-color: #c4b5fd; color: #c4b5fd; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-outline-blue:hover { background-color: #c4b5fd; color: #1c1340; } */
+  /* #================================ */
+  /* Grant access / view users: gold like the edit button (only delete stays red) */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-outline-blue { border-color: #f3c35f; color: #f3c35f; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-outline-blue:hover { background-color: #f3c35f; color: #1c1340; }
+  /* #================================ */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-outline-danger { border-color: #f87171; color: #f87171; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-fsm-page .btn-outline-danger:hover { background-color: #f87171; color: #1c1340; }
+</style>
+{{-- #================================ --}}
+
 <!-- FILE STORAGE MANAGEMENT -->
 
 <div class="pagetitle">
@@ -23,6 +99,8 @@ $pagename = "fsm";
         </ol>
     </nav>
 </div><!-- End Page Title -->
+
+
 
 <div class="row mb-2">
     <div class="col-md-1">
@@ -162,6 +240,10 @@ $pagename = "fsm";
     </div>
 
 </div>
+
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-fsm-page --}}
+{{-- #================================ --}}
 
 
 

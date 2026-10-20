@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- PREVIEW ONLY: users/roles in the KKK work-flow PDF. Delete after review. -->
+  <title>Pengguna Aliran KKK</title>
+  <link href="/assets/img/logo.png" rel="icon">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0c2f5e; --navy-2: #144d8f; --gold: #f0b429; --field: #cfe2f5; --line: #a9c9e8;
+      --ink: #0f1b2d; --muted: #5b6b82; --card: #ffffff;
+      --r-sekolah: #3b7a55; --r-kerani: #144d8f; --r-kp: #7a4bc4; --r-p1: #b33a5b; --r-p2: #d9822b; --r-ku: #0c2f5e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; font-family: "Poppins", sans-serif; color: var(--ink);
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.12) 1px, transparent 1.4px),
+        radial-gradient(ellipse 900px 600px at 20% 10%, rgba(79,70,229,.35), transparent 60%),
+        radial-gradient(ellipse 800px 700px at 85% 85%, rgba(206,17,38,.18), transparent 55%),
+        linear-gradient(150deg, #0f0b2e 0%, #140f34 45%, #201a5c 100%);
+      background-size: 22px 22px, cover, cover, cover; background-attachment: fixed;
+    }
+    .banner { background: var(--gold); color: var(--navy); font-size: 13px; font-weight: 600; text-align: center; padding: 6px 16px; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 16px 48px; }
+    .card { background: var(--card); border-radius: 16px; box-shadow: 0 20px 45px rgba(4,18,40,.45); padding: 28px 32px; margin-bottom: 22px; }
+    h1 { margin: 0 0 4px; font-size: 20px; color: var(--navy); text-transform: uppercase; letter-spacing: .3px; text-align: center; }
+    h1 + .rule { width: 46px; height: 3px; background: var(--gold); border-radius: 2px; margin: 8px auto 14px; }
+    h2 { font-size: 15px; color: var(--navy); text-transform: uppercase; letter-spacing: .3px; margin: 0 0 14px; }
+    .sub { text-align: center; color: var(--muted); font-size: 14px; margin: 0; }
+
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 20px; }
+    .stat { background: var(--field); border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px; text-align: center; }
+    .stat b { display: block; font-size: 30px; color: var(--navy); line-height: 1.1; }
+    .stat span { font-size: 13px; color: var(--muted); }
+
+    .roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .role { border: 1.5px solid #e3e9f2; border-radius: 12px; padding: 14px 16px; border-top: 4px solid var(--c); }
+    .role-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .role-ico { width: 36px; height: 36px; border-radius: 10px; background: var(--c); color: #fff; display: grid; place-items: center; font-size: 17px; flex: none; }
+    .role-name { font-weight: 600; font-size: 14px; line-height: 1.25; }
+    .role-where { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+    .count { margin-left: auto; background: var(--c); color: #fff; font-weight: 700; font-size: 13px; border-radius: 999px; padding: 3px 11px; white-space: nowrap; }
+    .count.unk { background: #fff; color: var(--c); border: 1.5px dashed var(--c); }
+    .role ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: #33415a; }
+    .role li { margin: 2px 0; }
+
+    .lanes-scroll { overflow-x: auto; }
+    .lanes { display: grid; grid-template-columns: 170px repeat(8, minmax(104px, 1fr)); min-width: 1000px; font-size: 12px; }
+    .lanes .hd { font-weight: 600; color: var(--navy); text-align: center; padding: 6px 4px 10px; border-bottom: 2px solid var(--navy); }
+    .lanes .hd small { display: block; font-weight: 500; color: var(--muted); }
+    .lane-name { display: flex; align-items: center; gap: 8px; padding: 10px 8px; font-weight: 600; border-bottom: 1px solid #e3e9f2; background: #f6f9fd; }
+    .lane-name i { color: var(--c); font-size: 16px; }
+    .cell { border-bottom: 1px solid #e3e9f2; border-left: 1px dashed #e3e9f2; padding: 8px 5px; display: flex; align-items: center; justify-content: center; }
+    .chip { background: var(--c); color: #fff; border-radius: 8px; padding: 6px 8px; text-align: center; line-height: 1.3; width: 100%; position: relative; }
+    .chip .n { position: absolute; top: -8px; left: -6px; width: 20px; height: 20px; border-radius: 50%; background: var(--gold); color: var(--navy); font-weight: 700; font-size: 11px; display: grid; place-items: center; }
+    .chip.alt { background: #fff; color: var(--c); border: 1.5px solid var(--c); }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 14px; font-size: 13px; color: #33415a; }
+    .legend i { color: var(--navy-2); }
+
+    @media (max-width: 860px) { .roles, .stats { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .roles, .stats { grid-template-columns: 1fr; } .card { padding: 22px 18px; } }
+  </style>
+</head>
+<body>
+<div class="banner">PRATONTON / PREVIEW — berdasarkan "Aktiviti Kerja KKK Yang Diguna Pakai Pada Masa Ini"</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h1>Pengguna Aliran Kerja KKK</h1>
+    <div class="rule"></div>
+    <p class="sub">Aliran Penerimaan, Penyemakan serta <i>Fairview</i> Dokumen Kunci Kira-Kira</p>
+    <div class="stats">
+      <div class="stat"><b>6</b><span>jenis peranan pengguna</span></div>
+      <div class="stat"><b>16+</b><span>kakitangan UAD (8 + 5 + 1 + 1 + Kerani)</span></div>
+      <div class="stat"><b>149</b><span>sekolah — 1 kerani setiap sekolah</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Peranan &amp; Bilangan</h2>
+    <div class="roles">
+      <div class="role" style="--c: var(--r-sekolah)">
+        <div class="role-head"><div class="role-ico"><i class="bi bi-building"></i></div>
+          <div><div class="role-name">Kerani Sekolah</div><div class="role-where">Pengguna luar</div></div>
+          <span class="count">149 sekolah</span></div>
+        <ul><li>Isi borang penghantaran + memo bercop</li><li>Ambil dokumen &amp; hantar semula jika <i>Query</i></li></ul>
+      </div>
+      <div class="role" style="--c: var(--r-kerani)">
+        <div class="role-head"><div class="role-ico"><i class="bi bi-inbox"></i></div>
+          <div><div class="role-name">Kerani Pentadbiran</div><div class="role-where">UAD</div></div>
+          <span class="count unk">tidak dinyatakan</span></div>
+        <ul><li>Terima dokumen, status <b>R</b> / <b>QR</b></li><li>Stor KKK &amp; bin kad</li><li>Memo <i>Fairview</i>, status <i>Query</i></li></ul>
+      </div>
+      <div class="role" style="--c: var(--r-kp)">
+        <div class="role-head"><div class="role-ico"><i class="bi bi-shield-check"></i></div>
+          <div><div class="role-name">Ketua Pentadbiran</div><div class="role-where">UAD</div></div>
+          <span class="count">1</span></div>
+        <ul><li>Lulus pinjaman dokumen dari stor</li><li>Notifikasi MESH kepada sekolah</li><li>Data untuk Ketua Unit</li></ul>
+      </div>
+      <div class="role" style="--c: var(--r-p1)">
+        <div class="role-head"><div class="role-ico"><i class="bi bi-search"></i></div>
+          <div><div class="role-name">Pemeriksa KKK 1</div><div class="role-where">UAD</div></div>
+          <span class="count">8 orang</span></div>
+        <ul><li>Pinjam &amp; semak dokumen</li><li><i>Dispatch Query</i> kepada sekolah</li><li>Memo <i>Fairview</i></li></ul>
+      </div>
+      <div class="role" style="--c: var(--r-p2)">
+        <div class="role-head"><div class="role-ico"><i class="bi bi-search-heart"></i></div>
+          <div><div class="role-name">Pemeriksa KKK 2</div><div class="role-where">UAD</div></div>
+          <span class="count">5 orang</span></div>
+        <ul><li>Semakan kedua</li><li>Pulang ke Pemeriksa 1 (<i>Query</i>) atau hadap ke Ketua Unit</li></ul>
+      </div>
+      <div class="role" style="--c: var(--r-ku)">
+        <div class="role-head"><div class="role-ico"><i class="bi bi-patch-check"></i></div>
+          <div><div class="role-name">Ketua Unit</div><div class="role-where">UAD</div></div>
+          <span class="count">1</span></div>
+        <ul><li>Verifikasi akhir</li><li>Putuskan <i>Fairview</i> atau <i>Query</i></li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Siapa Buat Apa — Aliran Ringkas</h2>
+    <div class="lanes-scroll">
+      <div class="lanes">
+        <div class="hd"></div>
+        <div class="hd">1<small>Hantar</small></div>
+        <div class="hd">2<small>Terima</small></div>
+        <div class="hd">3<small>Pinjam</small></div>
+        <div class="hd">4<small>Lulus</small></div>
+        <div class="hd">5<small>Semak 1</small></div>
+        <div class="hd">6<small>Semak 2</small></div>
+        <div class="hd">7<small>Verifikasi</small></div>
+        <div class="hd">8<small>Keputusan</small></div>
+
+        <!-- Kerani Sekolah -->
+        <div class="lane-name" style="--c: var(--r-sekolah)"><i class="bi bi-building"></i>Kerani Sekolah</div>
+        <div class="cell" style="--c: var(--r-sekolah)"><div class="chip"><span class="n">1</span>Borang + memo cop</div></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell" style="--c: var(--r-sekolah)"><div class="chip alt">Query: ambil, betulkan, hantar semula ↺1</div></div>
+
+        <!-- Kerani Pentadbiran -->
+        <div class="lane-name" style="--c: var(--r-kerani)"><i class="bi bi-inbox"></i>Kerani Pentadbiran</div>
+        <div class="cell"></div>
+        <div class="cell" style="--c: var(--r-kerani)"><div class="chip"><span class="n">2</span>Status R / QR · stor · bin kad</div></div>
+        <div class="cell"></div>
+        <div class="cell" style="--c: var(--r-kerani)"><div class="chip alt">Keluarkan dokumen · bin kad</div></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell" style="--c: var(--r-kerani)"><div class="chip alt">Status Fairview / Query</div></div>
+
+        <!-- Ketua Pentadbiran -->
+        <div class="lane-name" style="--c: var(--r-kp)"><i class="bi bi-shield-check"></i>Ketua Pentadbiran</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell" style="--c: var(--r-kp)"><div class="chip"><span class="n">4</span>Sahkan pinjaman</div></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell" style="--c: var(--r-kp)"><div class="chip alt">Notifikasi MESH ke sekolah</div></div>
+
+        <!-- Pemeriksa 1 -->
+        <div class="lane-name" style="--c: var(--r-p1)"><i class="bi bi-search"></i>Pemeriksa KKK 1</div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="cell" style="--c: var(--r-p1)"><div class="chip"><span class="n">3</span>Borang pinjaman</div></div>
+        <div class="cell"></div>
+        <div class="cell" style="--c: var(--r-p1)"><div class="chip"><span class="n">5</span>Semak dokumen</div></div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="cell" style="--c: var(--r-p1)"><div class="chip"><span class="n">8</span>Memo Fairview / Dispatch Query</div></div>
+
+        <!-- Pemeriksa 2 -->
+        <div class="lane-name" style="--c: var(--r-p2)"><i class="bi bi-search-heart"></i>Pemeriksa KKK 2</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell" style="--c: var(--r-p2)"><div class="chip"><span class="n">6</span>Semakan kedua <br><small>Query ↺5</small></div></div>
+        <div class="cell"></div><div class="cell"></div>
+
+        <!-- Ketua Unit -->
+        <div class="lane-name" style="--c: var(--r-ku)"><i class="bi bi-patch-check"></i>Ketua Unit</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell" style="--c: var(--r-ku)"><div class="chip"><span class="n">7</span>Fairview atau Query?</div></div>
+        <div class="cell"></div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i class="bi bi-circle-fill" style="color: var(--gold)"></i> Langkah utama</span>
+      <span><i class="bi bi-square"></i> Tindakan sokongan</span>
+      <span><b>↺5</b> Pemeriksa 2 jumpa isu → pulang ke Pemeriksa 1</span>
+      <span><b>↺1</b> Query → sekolah hantar semula (status QR, kategori Query Received 1–4)</span>
+      <span><b>Fairview</b> → TAMAT</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

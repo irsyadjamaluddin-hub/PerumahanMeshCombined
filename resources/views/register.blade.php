@@ -27,7 +27,7 @@
         <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
 
         {{-- Alpine JS --}}
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <script defer src="{{ asset('vendor/alpinejs/alpine.min.js') }}"></script>
 
         {{-- Google Font Initializer --}}
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,6 +88,31 @@
     overflow: hidden;
     pointer-events: none;
 }
+
+/*============= NEWLY ADDED =========================*/
+
+/*============= BACKGROUND BLUR =========================*/
+
+
+.guide-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 9997;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.guide-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/*======================================*/
+
 
 .guide-header {
     background-color: #1a1a2e; /* header color */
@@ -876,6 +901,9 @@
         </form>
 
         
+<!-- Backdrop -->
+<div id="guideBackdrop" class="guide-backdrop hidden"></div>
+
 <!-- Popup Window -->
 <div id="guidePopup" class="guide-popup hidden">
     <div class="guide-header">
@@ -917,6 +945,7 @@
 
   onReady(() => {
     const popup = $('guidePopup');
+    const backdrop = $('guideBackdrop');
     const minimized = $('guideMinimized');
     const openBtn = $('openGuideBtn');
     const closeBtn = $('closeGuideBtn');
@@ -944,6 +973,12 @@
       // add fade-in
       popup.classList.add('fade-in');
 
+      if (backdrop) {
+        backdrop.classList.remove('hidden');
+        forceReflow(backdrop);
+        backdrop.classList.add('show');
+      }
+
       if (minimized) {
         minimized.classList.add('hidden');
         minimized.classList.remove('fade-in', 'fade-out');
@@ -955,6 +990,8 @@
       popup.classList.remove('fade-in');
       popup.classList.add('fade-out');
 
+      if (backdrop) backdrop.classList.remove('show');
+
       // after animation ends, set display none
       popup.addEventListener('animationend', function handler() {
         // only hide if fade-out completed
@@ -963,6 +1000,15 @@
         }
         popup.removeEventListener('animationend', handler);
       });
+
+      if (backdrop) {
+        backdrop.addEventListener('transitionend', function handler() {
+          if (!backdrop.classList.contains('show')) {
+            backdrop.classList.add('hidden');
+          }
+          backdrop.removeEventListener('transitionend', handler);
+        });
+      }
     }
 
     // minimize: hide then show minimized control
@@ -988,6 +1034,7 @@
     if (closeBtn) closeBtn.addEventListener('click', hidePopup);
     if (minimizeBtn) minimizeBtn.addEventListener('click', minimizePopup);
     if (minimized) minimized.addEventListener('click', showPopup);
+    if (backdrop) backdrop.addEventListener('click', minimizePopup);
 
     // Auto-open behavior (only if user hasn't dismissed during this session)
     try {

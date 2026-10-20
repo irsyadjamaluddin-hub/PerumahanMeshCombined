@@ -48,6 +48,28 @@ class EminitController extends Controller
         ->orderByDesc('id')
         ->get();
 
+        // 🔹 Get current user's department ID via Employment
+        $icNo = Auth::user()->ic_no;
+        $departmentId = Employment::where('ic_no', $icNo)->value('department_id');
+
+        // 🔹 Only show eminits where the user's department appears in 'kpd'
+        $eminits = $eminits->filter(function ($eminit) use ($departmentId, $icNo) {
+            $kpdList = is_string($eminit->kpd)
+                ? json_decode($eminit->kpd, true)
+                : (array) $eminit->kpd;
+
+            if (!$departmentId || !in_array($departmentId, $kpdList)) {
+                return false;
+            }
+
+            // 🔹 SULIT (confidential) memos are only visible to their own creator
+            if ((int) $eminit->jenis === 3 && $eminit->ic_no !== $icNo) {
+                return false;
+            }
+
+            return true;
+        })->values();
+
         $allIds = $eminits->flatMap(fn ($e) => (array) ($e->kpd ?? []))
             ->filter()->unique()->values();
 
@@ -449,7 +471,7 @@ class EminitController extends Controller
             $latestStatuses = $admins->mapWithKeys(function($admin) use ($actionsByAdmin) {
                 // 1. Already selesai?
                 if($admin->status === 'selesai') {
-                    return [$admin->eminit_id => 'selesai'];
+                    return [$admin->eminit_id => 'Completed'];
                 }
 
                 // 2. Check actions for this admin
@@ -461,11 +483,11 @@ class EminitController extends Controller
                 });
 
                 if($inProgress) {
-                    return [$admin->eminit_id => 'in-progress'];
+                    return [$admin->eminit_id => 'In Progress'];
                 }
 
-                // 3. Else, belum diterima
-                return [$admin->eminit_id => 'belum diterima'];
+                // 3. Else, not yet received
+                return [$admin->eminit_id => 'Not Received'];
             });
 
 
@@ -875,9 +897,9 @@ public function indexeminitaction()
     
         // Determine memo status
         if (strtolower($item->memo_status) === 'selesai') {
-            $item->memo_status_display = 'Selesai';
+            $item->memo_status_display = 'Completed';
         } elseif (empty($jenis)) {
-            $item->memo_status_display = 'Untuk Tindakan';
+            $item->memo_status_display = 'For Action';
         } else {
             $item->memo_status_display = 'In-Progress';
         }

@@ -1,7 +1,7 @@
 {{-- resources/views/eminit/editeminitadmin.blade.php --}}
 @extends('layouts.app-all')
 
-@section('title', 'E-Memo Tindakan')
+@section('title', 'E-Memo Action')
 
 @push('styles')
   {{-- Select2 CSS (load once) --}}
@@ -24,37 +24,37 @@
 
         {{-- ====== INFO (read-only) ====== --}}
         <div class="col profile-overview" style="border: 2px solid #012970; padding: 20px; border-radius: 25px;">
-          <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">Maklumat E-Memo</h5>
+          <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">E-Memo Information</h5>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Tarikh Diterima</div>
+            <div class="col-lg-4 label">Date Received</div>
             <div class="col-lg-8">{{ $eminit->created_at ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-              <div class="col-lg-4 label">Jenis</div>
+              <div class="col-lg-4 label">Category</div>
               <div class="col-lg-8">{{ $eminit_jenis }}</div>
           </div>
 
 
           <div class="row mt-3" hidden>
-              <div class="col-lg-4 label">Daripada</div>
+              <div class="col-lg-4 label">From</div>
               <div class="col-lg-8">{{ $eminit_daripada }}</div>
           </div>
 
           <div class="row mt-3">
-              <div class="col-lg-4 label">Memo Daripada</div>
+              <div class="col-lg-4 label">Memo From</div>
               <div class="col-lg-8">{{ $eminit->memoDepartment->label ?? '-' }}</div>
           </div>
 
 
        <div class="row mt-3">
-            <div class="col-lg-4 label">Kepada</div>
+            <div class="col-lg-4 label">To</div>
             <div class="col-lg-8">
                 @if(!empty($eminit_kepada))
                     {{ implode(', ', $eminit_kepada) }}
                 @else
-                    <span class="text-muted">Tiada Kepada</span>
+                    <span class="text-muted">No Recipient</span>
                 @endif
             </div>
         </div>
@@ -63,7 +63,7 @@
 
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Untuk Perhatian</div>
+            <div class="col-lg-4 label">For Attention</div>
             <div class="col-lg-8">
               @if(!empty($eminit->untukperhatian))
                 {{ is_array($eminit->untukperhatian) ? implode(', ', $eminit->untukperhatian) : $eminit->untukperhatian }}
@@ -74,26 +74,26 @@
           </div>
 
           <div class="row mt-3">
-              <div class="col-lg-4 label">Perkara</div>
+              <div class="col-lg-4 label">Subject</div>
               <div class="col-lg-8" style="font-weight: bold; text-transform: uppercase;">
                   {{ $eminit->perkara ?? '-' }}
               </div>
           </div>
 
-        
+
 
           <div class="row mt-3" hidden>
-            <div class="col-lg-4 label">Rujukan Persuratan</div>
+            <div class="col-lg-4 label">Correspondence Reference</div>
             <div class="col-lg-8">{{ $eminit->rujukan_tp ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Rujukan (Memo Diterima)</div>
+            <div class="col-lg-4 label">No Reference (Memo Recieved)</div>
             <div class="col-lg-8">{{ $eminit->rujukan_tp ?? '-' }}</div>
           </div>
 
           <div class="row mt-3">
-          <div class="col-lg-4 label">Muat Naik Dokumen</div>
+          <div class="col-lg-4 label">Uploaded Document</div>
           <div class="col-lg-8">
               @if(!empty($eminit->eminit_file))
                   @foreach($eminit->eminit_file as $file)
@@ -109,14 +109,14 @@
 
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Catatan</div>
+            <div class="col-lg-4 label">Remarks</div>
             <div class="col-lg-8">
               {{ $eminit->catatan ?? '-' }}
             </div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Salinan</div>
+            <div class="col-lg-4 label">CC To</div>
             <div class="col-lg-8">
               @if(!empty($eminit->salinan))
                 {{ is_array($eminit->salinan) ? implode(', ', $eminit->salinan) : $eminit->salinan }}
@@ -127,7 +127,7 @@
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Salinan Persuratan Luar</div>
+            <div class="col-lg-4 label">CC External</div>
             <div class="col-lg-8">
                @if(!empty($eminit->salinan_dokumen))
                   {{ is_array($eminit->salinan_dokumen) ? implode(', ', $eminit->salinan_dokumen) : $eminit->salinan_dokumen }}
@@ -138,7 +138,7 @@
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Muat Naik Dokumen Persuratan Luar</div>
+            <div class="col-lg-4 label">Uploaded CC External Document</div>
             <div class="col-lg-8">
                @if(!empty($eminit->salinan_kepada))
                   @foreach($eminit->salinan_kepada as $file)
@@ -147,12 +147,12 @@
                 @else
                   -
                 @endif
-            
+
             </div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 label">Rujukan Jabatan</div>
+            <div class="col-lg-4 label">Department Reference</div>
             <div class="col-lg-8">{{ $eminit->no_rujukan ?? '-' }}</div>
           </div>
         </div>
@@ -163,32 +163,32 @@
         {{-- ====== INFO (read-only) ====== --}}
         <div class="col profile-overview" style="border: 2px solid #012970; padding: 20px; border-radius: 25px;">
         <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">
-            Maklumat E-Memo Penolong/Pengarah
+            E-Memo Information (Assistant Director/Director)
         </h5>
             <div class="mt-3 p-3" style="border:1px dashed #1F4E78; border-radius: 12px;">
             {{-- Tarikh Diterima --}}
             <div class="row mt-3">
-                <div class="col-lg-4 label">Tarikh Diterima</div>
+                <div class="col-lg-4 label">Date Received</div>
                      <div class="col-lg-8">{{ $eminitadmin->created_at ?? '-' }}</div>
             </div>
 
             {{-- No Rujukan --}}
             <div class="row mt-3" hidden>
-                <div class="col-lg-4 label">No Rujukan</div>
+                <div class="col-lg-4 label">Reference No</div>
                 <div class="col-lg-8">{{ $eminitadmin->no_rujukan ?? '-' }}</div>
             </div>
 
             {{-- Catatan --}}
             <div class="row mt-3">
-                <div class="col-lg-4 label">Catatan</div>
+                <div class="col-lg-4 label">Remarks</div>
                 <div class="col-lg-8">{{ $eminitadmin->catatan ?? '-' }}
-               
+
                 </div>
             </div>
 
-            
+
             <div class="row mt-3">
-            <div class="col-lg-4 label">Kepada</div>
+            <div class="col-lg-4 label">Action To</div>
                   <div class="col-lg-8">
                       @if(!empty($tindakan_labels))
                           {{ implode(', ', $tindakan_labels) }}
@@ -197,9 +197,9 @@
                       @endif
                   </div>
               </div>
-              
+
               <div class="row mt-3">
-                  <div class="col-lg-4 label">Jenis Tindakan</div>
+                  <div class="col-lg-4 label">Action Type</div>
                   <div class="col-lg-8">
                       @if(!empty($jenis_labels))
                           {{ implode(', ', $jenis_labels) }}
@@ -218,7 +218,7 @@
 
         <div class="col profile-overview" style="border: 2px solid #012970; padding: 20px; border-radius: 25px; margin-top:20px;">
             <h5 class="card-title text-center text-white p-2" style="background-color:rgb(102, 0, 128);">
-              Maklumat E-Memo Tindakan
+              E-Memo Action Information
             </h5>
 
             @if($relatedActions->isNotEmpty())
@@ -227,7 +227,7 @@
             <div class="mt-3 p-3" style="border:1px dashed #1F4E78; border-radius: 12px;">
                 {{-- Tarikh Diterima --}}
                 <div class="row mt-3">
-                    <div class="col-lg-4 label">Tarikh Diterima</div>
+                    <div class="col-lg-4 label">Date Received</div>
                     <div class="col-lg-8">
                         {{ $relatedAction->created_at ? $relatedAction->created_at->format('d/m/Y H:i') : '-' }}
                     </div>
@@ -235,13 +235,13 @@
 
                 {{-- No Rujukan --}}
                 <div class="row mt-3" hidden>
-                    <div class="col-lg-4 label">No Rujukan</div>
+                    <div class="col-lg-4 label">Reference No</div>
                     <div class="col-lg-8">{{ $relatedAction->no_rujukan ?? '-' }}</div>
                 </div>
 
                 {{-- Tindakan Dokumen --}}
                 <div class="row mt-3">
-                    <div class="col-lg-4 label">Tindakan Dokumen</div>
+                    <div class="col-lg-4 label">Action Document</div>
                     <div class="col-lg-8">
                         @if(!empty($relatedAction->tindakan_file) && count($relatedAction->tindakan_file) > 0)
                             <ul class="list-unstyled">
@@ -262,13 +262,13 @@
 
                 {{-- Catatan --}}
                 <div class="row mt-3">
-                    <div class="col-lg-4 label">Catatan</div>
+                    <div class="col-lg-4 label">Remarks</div>
                     <div class="col-lg-8">{{ $relatedAction->catatan ?? '-' }}</div>
                 </div>
 
                 {{-- Tindakan Diperlukan --}}
                 <div class="row mt-3">
-                    <div class="col-lg-4 label">Kepada</div>
+                    <div class="col-lg-4 label">Action To</div>
                     <div class="col-lg-8">
                        @if(!empty($relatedAction->tindakan_labels))
                           <ul>
@@ -286,7 +286,7 @@
              {{-- Tindakan Daripada (only for related actions, not current action) --}}
               @if(!$loop->first)
                   <div class="row mt-3">
-                      <div class="col-lg-4 label">Tindakan Daripada</div>
+                      <div class="col-lg-4 label">Action From</div>
                       <div class="col-lg-8">
                           {{ $relatedAction->tindakan_daripada_kod ?? '-' }}
                       </div>
@@ -297,7 +297,7 @@
 
                 {{-- Jenis Tindakan --}}
                 <div class="row mt-3">
-                    <div class="col-lg-4 label">Jenis Tindakan</div>
+                    <div class="col-lg-4 label">Action Type</div>
                     <div class="col-lg-8">
                         @if(!empty($relatedAction->jenis_labels))
                             <ul>

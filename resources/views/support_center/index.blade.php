@@ -1,20 +1,26 @@
 @extends('layouts.app-all')
 
-@section('title', 'Perkhidmatan Bantuan DevOps')
+@section('title', 'DevOps Support Service')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php 
   $pagename = "SupportCenter";
 ?>
 
 <div class="pagetitle">
-  <h1>Perkhidmatan Bantuan DevOps</h1>
+  <h1>DevOps Support Service</h1>
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
       <li class="breadcrumb-item">Admin</li>
-      <li class="breadcrumb-item active">Perkhidmatan Bantuan DevOps</li>  
+      <li class="breadcrumb-item active">DevOps Support Service</li>  
     </ol>
   </nav>
 </div><!-- End Page Title -->
@@ -112,4 +118,7 @@
   </div>
 </section>
 
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

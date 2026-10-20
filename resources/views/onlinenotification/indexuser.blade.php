@@ -3,6 +3,22 @@
 @section('title', 'MESH Perkhidmatan Notifikasi')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- #============= ORI CODE ============== --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: shared styles in public/css/mesh-home-theme.css, --}}
+{{-- applied to everything inside the mesh-home-theme wrapper below. Light mode is unchanged. --}}
+{{-- <link href="{{ asset('css/mesh-home-theme.css') }}?v={{ filemtime(public_path('css/mesh-home-theme.css')) }}" rel="stylesheet"> --}}
+{{-- #================================ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" section; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+{{-- #================================ --}}
+<style>
+  /* Form outline (set inline in navy) */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .profile-overview[style*="border"] { border-color: #4a3590 !important; }
+</style>
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "OnlineNotification";
@@ -138,8 +154,16 @@ $pagename = "OnlineNotification";
             maxlength="400" 
             required 
             onkeydown="if (event.key === 'Enter') event.preventDefault();" 
-            oninput="document.getElementById('charCountVal1').innerText = this.value.length + ' / 400 aksara';"></textarea>
-        <div id="charCountVal1">0 / 400 aksara</div>
+            {{-- #============= ORI CODE ============== --}}
+            {{-- oninput="document.getElementById('charCountVal1').innerText = this.value.length + ' / 400 aksara';"></textarea> --}}
+            {{-- #================================ --}}
+            oninput="document.getElementById('charCountVal1').innerText = this.value.length + ' / 400 huruf';"></textarea>
+            {{-- #================================ --}}
+        {{-- #============= ORI CODE ============== --}}
+        {{-- <div id="charCountVal1">0 / 400 aksara</div> --}}
+        {{-- #================================ --}}
+        <div id="charCountVal1">0 / 400 huruf</div>
+        {{-- #================================ --}}
     </div>
 </div>
 
@@ -156,8 +180,16 @@ $pagename = "OnlineNotification";
             maxlength="400" 
             required 
             onkeydown="if (event.key === 'Enter') event.preventDefault();" 
-            oninput="document.getElementById('charCountVal2').innerText = this.value.length + ' / 400 aksara';"></textarea>
-        <div id="charCountVal2">0 / 400 aksara</div>
+            {{-- #============= ORI CODE ============== --}}
+            {{-- oninput="document.getElementById('charCountVal2').innerText = this.value.length + ' / 400 aksara';"></textarea> --}}
+            {{-- #================================ --}}
+            oninput="document.getElementById('charCountVal2').innerText = this.value.length + ' / 400 huruf';"></textarea>
+            {{-- #================================ --}}
+        {{-- #============= ORI CODE ============== --}}
+        {{-- <div id="charCountVal2">0 / 400 aksara</div> --}}
+        {{-- #================================ --}}
+        <div id="charCountVal2">0 / 400 huruf</div>
+        {{-- #================================ --}}
     </div>
 </div>
 
@@ -249,14 +281,25 @@ $pagename = "OnlineNotification";
 
 <script>
 function CharacterCount1(object){
-    document.getElementById("charCountVal1").innerHTML = object.value.length+' / 400 aksara';
+    // #============= ORI CODE ==============
+    // document.getElementById("charCountVal1").innerHTML = object.value.length+' / 400 aksara';
+    // #================================
+    document.getElementById("charCountVal1").innerHTML = object.value.length+' / 400 huruf';
+    // #================================
 }
 </script>
 
 <script>
 function CharacterCount2(object){
-    document.getElementById("charCountVal2").innerHTML = object.value.length+' / 400 aksara';
+    // #============= ORI CODE ==============
+    // document.getElementById("charCountVal2").innerHTML = object.value.length+' / 400 aksara';
+    // #================================
+    document.getElementById("charCountVal2").innerHTML = object.value.length+' / 400 huruf';
+    // #================================
 }
 </script>
 
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
     @endsection

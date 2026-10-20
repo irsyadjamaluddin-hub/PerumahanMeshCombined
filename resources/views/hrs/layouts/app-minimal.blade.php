@@ -19,7 +19,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
     
     <!-- Alpine.js Core -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="{{ asset('vendor/alpinejs/alpine.min.js') }}"></script>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -42,8 +42,16 @@
             display: none !important; 
         }
     </style>
+    {{-- #========== NEWLY ADDED ============ --}}
+    {{-- English / Malay switch: keeps the page hidden for a moment when BM is saved, so it doesn't flash English --}}
+    @include('inc.lang-head')
+    {{-- #================================ --}}
 </head>
 <body>
+    {{-- #========== NEWLY ADDED ============ --}}
+    {{-- English / Malay switch (floating, bottom left) -- this layout has no MESH v4 header to hold it --}}
+    @include('inc.lang-float')
+    {{-- #================================ --}}
     {{-- Navbar --}}
     <div class="fixed top-0 left-0 z-50 w-full px-10 py-4 flex items-center justify-between bg-white border-b">
         
@@ -83,5 +91,14 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{-- MESH Smart Bot --}}
+    {{-- @include('inc.smartbot') --}} {{-- SmartBot disabled temporarily --}}
+
+    {{-- #========== NEWLY ADDED ============ --}}
+    {{-- English / Malay switch: swaps the page text to Malay when BM is picked (word list inside the file) --}}
+    <script src="{{ asset('js/mesh-lang.js') }}?v={{ filemtime(public_path('js/mesh-lang.js')) }}"></script>
+    {{-- #================================ --}}
+
 </body>
 </html>

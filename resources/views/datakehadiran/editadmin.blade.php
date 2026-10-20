@@ -39,7 +39,7 @@ $pagename = "Edit_Admin_Data_kehadiran";
 </script> -->
 
 <div class="col-md-1 text-left">
-    <a href="https://mesh.moe.gov.bn/datakehadiran/indexadmin" class="btn btn-primary text-right" style="margin-bottom: 10px; height: 2.39rem;">
+    <a href="http://127.0.0.1:8000/datakehadiran/indexadmin" class="btn btn-primary text-right" style="margin-bottom: 10px; height: 2.39rem;">
     <i class="bi bi-arrow-left-circle"></i>
     </a>
 </div> 

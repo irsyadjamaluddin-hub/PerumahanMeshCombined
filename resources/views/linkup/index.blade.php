@@ -8,7 +8,12 @@
 $pagename = "LinkUP";
 ?>
 
-<div class="pagetitle">
+{{-- #============= ORI CODE ============== --}}
+{{-- <div class="pagetitle"> --}}
+{{-- #================================ --}}
+{{-- mesh-linkup-page: hook for this page's dark mode styles (see the <style> block below) --}}
+<div class="pagetitle mesh-linkup-page">
+{{-- #================================ --}}
     <h1>Mesh Kongsi Pautan</h1>
     <nav>
         <ol class="breadcrumb">
@@ -18,7 +23,79 @@ $pagename = "LinkUP";
     </nav>
 </div><!-- End Page Title -->
 
-<section class="section profile">
+{{-- #============= ORI CODE ============== --}}
+{{-- <section class="section profile"> --}}
+{{-- #================================ --}}
+<section class="section profile mesh-linkup-page">
+{{-- #================================ --}}
+
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode for this page in the Home page theme (Oct 2026): deep purple cards with violet borders, purple LinkUP bar --}}
+{{-- with gold text, lavender labels, dark purple inputs, violet Hantar button, gold links, outlined table buttons. --}}
+{{-- Only applies when the sun/moon switch is on dark; light mode is unchanged. Some elements below carry inline --}}
+{{-- styles or global !important rules (app-all's .btn-primary / .btn-success, mesh-dark.css's #main .bg-gray-200), --}}
+{{-- hence the !important here. Preview: https://claude.ai/artifact/23LpM1bn5cyVcsr5CuC6zb --}}
+<style>
+  /* Breadcrumb: no light grey bar in dark mode, current page in gold */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .breadcrumb { background: transparent; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .breadcrumb .breadcrumb-item.active { color: #f3c35f; }
+
+  /* Cards and the rounded panels inside them */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .card {
+    background: #1c1340; border: 1px solid #3a2768;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .profile-overview[style] { border-color: #3a2768 !important; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .card-title[style] {
+    background-color: #2a1d5c !important; color: #f3c35f !important; border-radius: 10px !important; letter-spacing: .02em;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page hr { border-top-color: #3a2768; opacity: 1; }
+
+  /* Form */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .profile-overview .label { color: #c4b5fd; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .form-control,
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .form-control[readonly] {
+    background-color: #140d30 !important; border-color: #3a2768; color: #e8eaf4;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .form-control:focus {
+    border-color: #6d4bc4; box-shadow: 0 0 0 3px rgba(109, 75, 196, .3);
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page input[type="file"]::file-selector-button {
+    background: #2a1d5c; color: #e8eaf4; border-right: 1px solid #3a2768;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .text-muted { color: #9aa2bd !important; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .btn-primary {
+    background-color: #6d4bc4 !important; border-color: #6d4bc4; color: #ffffff;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .btn-primary:hover { background-color: #7c5cdb !important; border-color: #7c5cdb; }
+
+  /* Table of uploaded files */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .table th { color: #c4b5fd; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .table th,
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .table td { border-bottom: 1px solid #3a2768; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .table td a { color: #f3c35f; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .dataTable-input,
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .dataTable-selector {
+    background-color: #140d30; border-color: #3a2768; color: #e8eaf4;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .btn-success {
+    background-color: transparent !important; border-color: #34d399; color: #34d399;
+  }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .btn-success:hover { background-color: rgba(52, 211, 153, .12) !important; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .btn-outline-primary { border-color: #f3c35f; color: #f3c35f; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .btn-outline-primary:hover { background-color: #f3c35f; color: #1c1340; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .btn-outline-danger { border-color: #f87171; color: #f87171; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .btn-outline-danger:hover { background-color: #f87171; color: #1c1340; }
+  /* QR codes keep a white backing so they still scan */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .qr-container svg { background: #ffffff; padding: 4px; border-radius: 4px; }
+
+  /* Delete confirmation popup */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .modal-content { background: #1c1340; border: 1px solid #3a2768; color: #e8eaf4; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .modal-header,
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .modal-footer { border-color: #3a2768; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-linkup-page .modal-header .close { color: #e8eaf4; text-shadow: none; opacity: .8; }
+</style>
+{{-- #================================ --}}
 
     <div class="col-md-12">
 
@@ -227,7 +304,7 @@ $pagename = "LinkUP";
 
         // Check if text is an absolute URL, if not, prepend the custom text
         if (!text.startsWith('http') && !text.startsWith('https')) {
-            text = "https://mesh.moe.gov.bn/" + text;
+            text = "http://127.0.0.1:8000/" + text;
         }
 
         textArea.value = text;

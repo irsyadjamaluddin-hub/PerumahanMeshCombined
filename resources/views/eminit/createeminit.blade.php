@@ -1,6 +1,6 @@
 @extends('layouts.app-all')
 
-@section('title', 'Borang E-Memo')
+@section('title', 'E-Memo Form')
 
 @section('content')
 
@@ -41,7 +41,7 @@ $pagename = "e-minit";
               <div class="row mb-3 justify-content-end">
                   <div class="col-lg-6 col-md-8 col-sm-12 d-flex justify-content-end align-items-center">
                   <label class="col-form-label me-2 text-end label">
-                      Daripada (Dihantar oleh):
+                      from Department:
                   </label>
 
                       <div class="flex-grow-1">
@@ -61,17 +61,17 @@ $pagename = "e-minit";
 
      
                 
-                <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">Borang E-Memo</h5>
+                <h5 class="card-title" style="text-align: center; color: white; padding: 10px; background-color: #1F4E78;">E-Memo Form</h5>
                 <br>
 
                 <!-- Jenis -->
                 <div class="row">
-                  <label class="col-lg-4 label">Jenis <i style="color:red;">*</i></label>
+                  <label class="col-lg-4 label">Category <i style="color:red;">*</i></label>
                   <div class="col-lg-8">
                     @php $jenisSelected = (string) old('jenis', $dispatch->jenis ?? ''); @endphp
                     <select class="form-select" name="jenis" required>
                       {{-- must be truly empty and selected only when nothing chosen --}}
-                      <option value="" {{ $jenisSelected === '' ? 'selected' : '' }}>-- Pilih Jenis --</option>
+                      <option value="" {{ $jenisSelected === '' ? 'selected' : '' }}>-- Select Category --</option>
                       @foreach ($jenis as $key => $value)
                         <option value="{{ $key }}" {{ $jenisSelected === (string) $key ? 'selected' : '' }}>
                           {{ $value }}
@@ -86,10 +86,10 @@ $pagename = "e-minit";
 
                 <!-- Memo Daripada (Choose from any Department) -->
                 <div class="row">
-                    <label class="col-lg-4 label">Memo Daripada <i style="color:red;">*</i></label>
+                    <label class="col-lg-4 label">Memo From <i style="color:red;">*</i></label>
                     <div class="col-lg-8">
                         <select class="form-control select2" id="memoDaripadaSelect" name="memo_daripada" required style="width: 100%;">
-                            <option value="">-- Pilih Memo Daripada --</option>
+                            <option value="">-- Select Memo From --</option>
                             @foreach ($departments as $dept)
                                 <option value="{{ $dept->id }}">
                                     {{ $dept->label }}
@@ -103,7 +103,7 @@ $pagename = "e-minit";
 
             <!-- Kepada -->
             <div class="row">
-                <div class="col-lg-4 label">Kepada <i style="color:red;">*</i></div>
+                <div class="col-lg-4 label">To <i style="color:red;">*</i></div>
                 <div class="col-lg-8">
                   @foreach($employments as $employment)
                     <input type="text" class="form-control" 
@@ -133,10 +133,10 @@ $pagename = "e-minit";
 
                 <!-- Untuk Perhatian -->
                 <div class="row" hidden>
-                    <label class="col-lg-4 label">Untuk Perhatian</label>
+                    <label class="col-lg-4 label">For Attention</label>
                     <div class="col-lg-8">
                          <select class="form-select" name="untukperhatian">
-                            <option value="">-- Pilih UP--</option>
+                            <option value="">-- Select FA --</option>
                             @foreach ($Eminit_Untukperhatian as $value)
                             <option value="{{ $value }}">{{ $value }}</option>
                         @endforeach
@@ -146,7 +146,7 @@ $pagename = "e-minit";
 
                <!-- Perkara -->
                   <div class="row">
-                      <label class="col-lg-4 label">Perkara<i style="color:red;">*</i></label>
+                      <label class="col-lg-4 label">Subject<i style="color:red;">*</i></label>
                       <div class="col-lg-8">
                           <input type="text" name="perkara" class="form-control" required 
                                 style="font-weight: bold; text-transform: uppercase;">
@@ -155,7 +155,7 @@ $pagename = "e-minit";
 
                 <!-- Rujukan Tuan/Puan -->
                 <div class="row">
-                    <label class="col-lg-4 label">Rujukan (Memo Diterima)</label>
+                    <label class="col-lg-4 label"> No Reference (Memo Recieved)</label>
                     <div class="col-lg-8">
                         <input type="text" name="rujukan_tp" class="form-control">
                     </div>
@@ -163,17 +163,17 @@ $pagename = "e-minit";
 
                 <!-- e-Minit Dokumen -->
                 <div class="row form-group mb-3">
-                <label class="col-lg-4 label">e-Memo Dokumen <i style="color:red;">*</i></label>
+                <label class="col-lg-4 label">e-Memo Document <i style="color:red;">*</i></label>
 
                 <div class="col-lg-8">
                     <div id="fileRows">
                     <div class="input-group mb-2 file-row">
                         <input type="file" name="eminit_file[]" class="form-control" required>
-                        <button type="button" class="btn btn-outline-danger ms-2 remove-row" disabled>Buang</button>
+                        <button type="button" class="btn btn-outline-danger ms-2 remove-row" disabled>Remove</button>
                     </div>
                     </div>
 
-                    <button type="button" id="addFileRow" class="btn btn-outline-secondary mt-2">+ Tambah fail</button>
+                    <button type="button" id="addFileRow" class="btn btn-outline-secondary mt-2">+ Add file</button>
                 </div>
                 </div>
 
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
     row.className = 'input-group mb-2 file-row';
     row.innerHTML = `
       <input type="file" name="eminit_file[]" class="form-control">
-      <button type="button" class="btn btn-outline-danger ms-2 remove-row">Buang</button>
+      <button type="button" class="btn btn-outline-danger ms-2 remove-row">Remove</button>
     `;
     container.appendChild(row);
     updateState();
@@ -221,18 +221,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 <!-- Catatan -->
                 <div class="row">
-                    <label class="col-lg-4 label">Catatan<i style="color:red;">*</i></label>
+                    <label class="col-lg-4 label">Remarks<i style="color:red;">*</i></label>
                     <div class="col-lg-8">
-                        <textarea class="form-control" name="catatan" placeholder = "Contoh: Memo Diterima pada DD-MM-YY"  style="height: 100px;" required></textarea>
+                        <textarea class="form-control" name="catatan" placeholder = "e.g.: Memo received on DD-MM-YY"  style="height: 100px;" required></textarea>
                     </div>
                 </div>
 
                 <!-- Salinan -->
                 <div class="row">
-                    <label class="col-lg-4 label">Salinan Kepada</label>
+                    <label class="col-lg-4 label">CC To</label>
                     <div class="col-lg-8">
                          <select class="form-select2" id="salinanSelect" name="salinan_kepada[]" multiple="multiple">
-                            <option value="">-- Pilih Salinan --</option>
+                            <option value="">-- Select CC Dept --</option>
                             @foreach ($kepada as $key => $value)
                         <option value="{{ $key }}">{{ $value }}</option>
                         @endforeach
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 <!-- Salinan Persuratan Luar -->
                 <div class="row">
-                    <label class="col-lg-4 label">Salinan Persuratan Luar</label>
+                    <label class="col-lg-4 label">CC External</label>
                     <div class="col-lg-8">
                         <input type="text" name="salinan" class="form-control">
                     </div>
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 <!-- Salinan Dokumen -->
                 <div class="row form-group mb-3">
-                    <label class="col-lg-4 label">Salinan Dokumen</label>
+                    <label class="col-lg-4 label">CC Document</label>
                     <div class="col-lg-8">
                         <input type="file" name="salinan_dokumen[]" class="form-control" multiple>
                     </div>
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 <!-- No Rujukan -->
                 <div class="row">
-                    <label class="col-lg-4 label">Rujukan Jabatan<i style="color:red;">*</i></label>
+                    <label class="col-lg-4 label">Department Reference<i style="color:red;">*</i></label>
                     <div class="col-lg-8">
                         <input type="text" name="no_rujukan" class="form-control" required>
                     </div>
@@ -299,19 +299,19 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     $('#salinanSelect').select2({
       width: '100%',
-      placeholder: "Pilih salinan penerima",
+      placeholder: "Select recipient copy",
       allowClear: true
     });
 
     $('#tindakanSelect').select2({
       width: '100%',
-      placeholder: "Pilih tindakan",
+      placeholder: "Select action",
       allowClear: true
     });
 
     $('#memoDaripadaSelect').select2({
       width: '100%',
-      placeholder: "Pilih memo daripada",
+      placeholder: "Select memo from",
       allowClear: true
     });
 
@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
   // 1) Init Select2
   if (window.jQuery && $.fn.select2) {
-    $('#myselect').select2({ placeholder: 'Pilih Kepada', allowClear: true, width: '100%' });
+    $('#myselect').select2({ placeholder: 'Select To', allowClear: true, width: '100%' });
   }
 
   const form      = document.querySelector('form');

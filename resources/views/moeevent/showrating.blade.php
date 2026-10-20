@@ -3,6 +3,23 @@
 @section('title', 'Rating List')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- #============= ORI CODE ============== --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: shared styles in public/css/mesh-home-theme.css, --}}
+{{-- applied to everything inside the mesh-home-theme wrapper below. Light mode is unchanged. --}}
+{{-- <link href="{{ asset('css/mesh-home-theme.css') }}?v={{ filemtime(public_path('css/mesh-home-theme.css')) }}" rel="stylesheet"> --}}
+{{-- #================================ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" section; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+{{-- #================================ --}}
+<style>
+  /* Event name, average and stars */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .large-text, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .medium-text { color: #e8eaf4; }
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .fa-star { color: #f3c35f !important; }
+</style>
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "Rating List";
@@ -245,7 +262,14 @@ $pagename = "Rating List";
 
     </div>
 </section>
-=
+{{-- #============= ORI CODE ============== --}}
+{{-- = --}}
+{{-- #================================ --}}
+{{-- Stray "=" removed: it printed a lone "=" at the bottom of the page --}}
+{{-- #================================ --}}
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection
 
 

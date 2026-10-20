@@ -190,7 +190,7 @@
 
 			<p class="col-span-3 md:col-span-1 font-semibold text-left md:text-right  {{ $errors->has('ministry_id') ? 'has-error' : '' }}">Kementerian <br> <i>Ministry</i> </p>
 			<div class="col-span-3 md:col-span-2">
-				{!! Form::text('ministry_id', $ministry->ministry_name, ['readonly' => 'true', 'class' => 'bg-gray-200 p-2 border shadow focus:outline-none ring-2 ring-black focus:ring-green-600 focus:border-transparent rounded-md w-full', 'spellcheck' => 'false','autocomplete'=>'off', 'maxlength' => '20', 'placeholder' => '', ]) !!}
+				{!! Form::text('ministry_id', optional($ministry)->ministry_name, ['readonly' => 'true', 'class' => 'bg-gray-200 p-2 border shadow focus:outline-none ring-2 ring-black focus:ring-green-600 focus:border-transparent rounded-md w-full', 'spellcheck' => 'false','autocomplete'=>'off', 'maxlength' => '20', 'placeholder' => '', ]) !!}
 				{!! $errors->first('ministry_id', '<p class="help-block">:message</p>') !!}
 			</div>
 			

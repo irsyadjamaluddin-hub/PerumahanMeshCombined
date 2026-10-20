@@ -67,4 +67,24 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return false;
     }
+
+    /* =============== NISAH =============== */
+    // Name for display only (NUR AMALINA BINTI HJ ALI -> Nur Amalina binti Hj Ali); the database keeps the stored name as-is
+    public function getDisplayNameAttribute()
+    {
+        $name = trim((string) $this->name);
+
+        if ($name === '') {
+            return $name;
+        }
+
+        $name = \Illuminate\Support\Str::title($name);
+
+        return preg_replace_callback(
+            '/\b(Bin|Binti|Binte)\b/',
+            fn ($m) => strtolower($m[1]),
+            $name
+        );
+    }
+    /* =============================================== */
 }

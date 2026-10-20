@@ -48,3 +48,4 @@ class MoeEventRegistered extends Mailable
         return $this->view('emails.notification.MOEEventRegistered');
     }
 }
+

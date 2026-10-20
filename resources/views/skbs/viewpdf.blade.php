@@ -185,12 +185,12 @@ hr {
                             @endforeach
                         </table>
 <br>
-{!! QrCode::size(50)->generate("https://mesh.moe.gov.bn/verify/$qo->emp_qo_infos_id"); !!}
+{!! QrCode::size(50)->generate("http://127.0.0.1:8000/verify/$qo->emp_qo_infos_id"); !!}
 
 @php $id = Crypt::encrypt($qo->emp_qo_infos_id); @endphp
 
 
-<img src='data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate("https://mesh.moe.gov.bn/verify/$id")) !!} '>
+<img src='data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate("http://127.0.0.1:8000/verify/$id")) !!} '>
 
                     </td>
                     <!-- letter end -->

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borang Status Jawatan</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="{{ asset('vendor/alpinejs/alpine.min.js') }}" defer></script>
     <style>
         body {
             font-family: Arial, sans-serif;

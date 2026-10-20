@@ -1,0 +1,794 @@
+/* #========== NEWLY ADDED ============ */
+/* ==========================================================================
+   MESH dark mode: shared page components (Oct 2026)
+
+   Loaded LAST in <head> by resources/views/inc/theme-head.blade.php, which is
+   included by layouts/app-all.blade.php and layouts/app-pdms.blade.php.
+
+   Turns on only when BOTH are true:
+     - html[data-mesh-theme="dark"]: the sun/moon switch in the header
+       (inc/theme-toggle.blade.php, click handler in public/js/mesh-v4.js)
+     - body.mesh-dark-ready: every page using those layouts, unless the page
+       declares @section('mesh_dark_off') to stay light.
+
+   Where the other dark styles live:
+     - Colour tokens (--mesh-d-*), header, sidebar, footer, bell panel:
+       public/css/mesh-v4.css, "Dark mode" section at the end
+     - Home greeting, service cards and service popups:
+       resources/views/inc/home-greeting.blade.php
+     - This file: Bootstrap / admin.css / plugin parts that every page shares
+       (cards, tables, DataTables, forms, popups, alerts, tabs, pagination,
+       Select2, date picker, editors, charts).
+
+   public/assets/css/admin.css is NOT changed; this file overrides it.
+   A page that writes colours inline (style="...") can't be reached from here
+   and has to be fixed in that page.
+   ========================================================================== */
+
+html[data-mesh-theme="dark"] .mesh-dark-ready {
+  --mesh-d-input: #0f1525;
+  --mesh-d-raised: #161e34;
+  --mesh-d-row-alt: rgba(255, 255, 255, .025);
+  --mesh-d-row-hover: rgba(124, 92, 219, .14);
+  --mesh-d-link: #a5b4fc;
+  --mesh-d-link-hover: #c7d2fe;
+  --mesh-d-heading: #f1f2f9;
+  --mesh-d-accent: #7c5cdb;
+}
+
+/* ---------------- Text and links ---------------- */
+/* :where() keeps these at the same strength as admin.css's bare "a" rule, so
+   classes like .svc-card or .btn still decide their own colour. */
+:where(html[data-mesh-theme="dark"] .mesh-dark-ready) a { color: var(--mesh-d-link); }
+:where(html[data-mesh-theme="dark"] .mesh-dark-ready) a:hover { color: var(--mesh-d-link-hover); }
+
+html[data-mesh-theme="dark"] .mesh-dark-ready #main { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .text-dark,
+html[data-mesh-theme="dark"] .mesh-dark-ready .text-black { color: var(--mesh-d-text) !important; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .text-muted,
+html[data-mesh-theme="dark"] .mesh-dark-ready .text-secondary { color: var(--mesh-d-muted) !important; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .bg-white,
+html[data-mesh-theme="dark"] .mesh-dark-ready .bg-light { background-color: var(--mesh-d-surface) !important; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .border,
+html[data-mesh-theme="dark"] .mesh-dark-ready .border-top,
+html[data-mesh-theme="dark"] .mesh-dark-ready .border-bottom,
+html[data-mesh-theme="dark"] .mesh-dark-ready .border-start,
+html[data-mesh-theme="dark"] .mesh-dark-ready .border-end { border-color: var(--mesh-d-border) !important; }
+html[data-mesh-theme="dark"] .mesh-dark-ready hr { border-color: var(--mesh-d-border); opacity: 1; }
+
+/* Page title + breadcrumb (admin.css .pagetitle / .breadcrumb) */
+html[data-mesh-theme="dark"] .mesh-dark-ready .pagetitle h1 { color: var(--mesh-d-heading); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .breadcrumb,
+html[data-mesh-theme="dark"] .mesh-dark-ready .breadcrumb a,
+html[data-mesh-theme="dark"] .mesh-dark-ready .breadcrumb .breadcrumb-item::before { color: var(--mesh-d-muted); }
+
+/* Layout inline helpers (layouts/app-all + app-pdms <style>) */
+html[data-mesh-theme="dark"] .mesh-dark-ready #background { background: var(--mesh-d-bg); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .labeledit { color: var(--mesh-d-muted); }
+
+/* ---------------- Cards (Bootstrap + admin.css) ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .card {
+  background-color: var(--mesh-d-surface);
+  color: var(--mesh-d-text);
+  border-color: var(--mesh-d-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .3);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .card-header,
+html[data-mesh-theme="dark"] .mesh-dark-ready .card-footer {
+  background-color: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-muted);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .card-title,
+html[data-mesh-theme="dark"] .mesh-dark-ready .profile .profile-overview .card-title { color: var(--mesh-d-heading); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .card-title span { color: var(--mesh-d-muted); }
+/* #========== NEWLY ADDED ============ */
+/* Form labels inside .profile .profile-overview (admin.css paints them dark navy rgba(1, 41, 112, .6),
+   unreadable on dark). Used by onlinenotification/indexuser and other profile-style forms. */
+html[data-mesh-theme="dark"] .mesh-dark-ready .profile .profile-overview .label { color: #aeb5cc; }
+/* #================================ */
+/* #========== NEWLY ADDED ============ */
+/* Other admin.css text that is dark navy (#012970), navy at 50-60% or grey #444 — all unreadable on dark */
+html[data-mesh-theme="dark"] .mesh-dark-ready .profile .profile-edit label { color: #aeb5cc; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .profile .profile-card h2,
+html[data-mesh-theme="dark"] .mesh-dark-ready .profile .profile-card h3,
+html[data-mesh-theme="dark"] .mesh-dark-ready .contact .info-box h3,
+html[data-mesh-theme="dark"] .mesh-dark-ready .error-404 h2 { color: var(--mesh-d-heading); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .profile .profile-card .social-links a { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .profile .profile-card .social-links a:hover { color: var(--mesh-d-heading); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-menu h4,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-menu .dropdown-footer a { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .accordion-button:not(.collapsed) { color: var(--mesh-d-link); }
+/* #================================ */
+
+/* Dashboard info cards (admin.css .dashboard ...) */
+html[data-mesh-theme="dark"] .mesh-dark-ready .dashboard .info-card h6,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dashboard .news h4 a { color: var(--mesh-d-heading); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dashboard .sales-card .card-icon { background: #232a55; color: #a5b4fc; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dashboard .revenue-card .card-icon { background: #0f2e22; color: #5ee0a0; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dashboard .customers-card .card-icon { background: #3a2312; color: #ffa463; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dashboard .recent-sales .table thead,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dashboard .top-selling .table thead { background: var(--mesh-d-raised); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .iconslist .icon { background-color: var(--mesh-d-surface); color: var(--mesh-d-heading); }
+
+/* ---------------- Tables ---------------- */
+/* Bootstrap 5.1 colours tables through --bs-table-*; the Bootstrap 4 copies
+   loaded by the layout use plain color/background, so both are set. */
+html[data-mesh-theme="dark"] .mesh-dark-ready .table {
+  --bs-table-bg: transparent;
+  --bs-table-accent-bg: transparent;
+  --bs-table-striped-color: var(--mesh-d-text);
+  --bs-table-striped-bg: var(--mesh-d-row-alt);
+  --bs-table-active-color: var(--mesh-d-text);
+  --bs-table-active-bg: var(--mesh-d-row-hover);
+  --bs-table-hover-color: var(--mesh-d-text);
+  --bs-table-hover-bg: var(--mesh-d-row-hover);
+  color: var(--mesh-d-text);
+  border-color: var(--mesh-d-border);
+  background-color: transparent;
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .table th,
+html[data-mesh-theme="dark"] .mesh-dark-ready .table td,
+html[data-mesh-theme="dark"] .mesh-dark-ready .table > :not(caption) > * > * {
+  border-color: var(--mesh-d-border);
+  color: inherit;
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .table > :not(:first-child) { border-top-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .table-striped tbody tr:nth-of-type(odd) { background-color: var(--mesh-d-row-alt); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .table-hover tbody tr:hover { background-color: var(--mesh-d-row-hover); color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .table thead th,
+html[data-mesh-theme="dark"] .mesh-dark-ready .table .thead-light th,
+html[data-mesh-theme="dark"] .mesh-dark-ready .table-light,
+html[data-mesh-theme="dark"] .mesh-dark-ready .table-light > * > * {
+  --bs-table-bg: var(--mesh-d-raised);
+  background-color: var(--mesh-d-raised);
+  color: var(--mesh-d-heading);
+  border-color: var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .table-bordered,
+html[data-mesh-theme="dark"] .mesh-dark-ready .table-bordered th,
+html[data-mesh-theme="dark"] .mesh-dark-ready .table-bordered td { border-color: var(--mesh-d-border); }
+
+/* ---------------- DataTables 1.10 (jquery.dataTables.min.css) ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable tbody tr,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.stripe tbody tr.even,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.display tbody tr.even { background-color: transparent; color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.stripe tbody tr.odd,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.display tbody tr.odd { background-color: var(--mesh-d-row-alt); }
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.hover tbody tr:hover,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.display tbody tr:hover { background-color: var(--mesh-d-row-hover); }
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.display tbody tr > .sorting_1,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.order-column tbody tr > .sorting_1,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.display tbody tr.odd > .sorting_1,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.display tbody tr.even > .sorting_1 { background-color: rgba(255, 255, 255, .03); }
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable tbody tr.selected,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable tbody tr.selected > * { background-color: #2b2470; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable thead th,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable thead td,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable tfoot th,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable tfoot td,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.no-footer,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper.no-footer .dataTables_scrollBody { border-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.row-border tbody th,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.row-border tbody td,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.display tbody th,
+html[data-mesh-theme="dark"] .mesh-dark-ready table.dataTable.display tbody td { border-top-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_length,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_filter,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_info,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_processing,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_paginate { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_filter input,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_length select {
+  background-color: var(--mesh-d-input);
+  border: 1px solid var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_paginate .paginate_button { color: var(--mesh-d-muted) !important; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text) !important;
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  background: #2b2470;
+  border-color: var(--mesh-d-accent);
+  color: #ffffff !important;
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+  background: transparent;
+  border-color: transparent;
+  color: #5b6380 !important;
+}
+/* DataTables export buttons (Copy / CSV / Excel / PDF / Print / Columns) */
+html[data-mesh-theme="dark"] .mesh-dark-ready .dt-buttons .btn,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dt-button,
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-default {
+  background: var(--mesh-d-raised);
+  border: 1px solid var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .dt-buttons .btn:hover,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dt-button:hover:not(.disabled),
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-default:hover { background: #1f2846; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready div.dt-button-collection { background: var(--mesh-d-surface); border-color: var(--mesh-d-border); }
+
+/* simple-datatables (NiceAdmin's .datatable tables) */
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-wrapper { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-input,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-selector {
+  background-color: var(--mesh-d-input);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-info { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-pagination a { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-pagination a:hover { background-color: var(--mesh-d-raised); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-pagination .active a,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-pagination .active a:hover { background-color: #2b2470; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-sorter::before { border-top-color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-sorter::after { border-bottom-color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-table > thead > tr > th,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-table > tfoot > tr > th,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-top,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dataTable-bottom { border-color: var(--mesh-d-border); }
+
+/* ---------------- Forms ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-control,
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-select,
+html[data-mesh-theme="dark"] .mesh-dark-ready .custom-select,
+html[data-mesh-theme="dark"] .mesh-dark-ready #main select,
+html[data-mesh-theme="dark"] .mesh-dark-ready #main textarea {
+  background-color: var(--mesh-d-input);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-control:focus,
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-select:focus,
+html[data-mesh-theme="dark"] .mesh-dark-ready .custom-select:focus {
+  background-color: var(--mesh-d-input);
+  border-color: var(--mesh-d-accent);
+  color: var(--mesh-d-text);
+  box-shadow: 0 0 0 .2rem rgba(124, 92, 219, .25);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-control::placeholder { color: #6b7391; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-control:disabled,
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-control[readonly],
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-select:disabled { background-color: #171d2e; color: var(--mesh-d-muted); }
+/* Bootstrap 5.1's dropdown arrow on .form-select is a dark grey SVG; swap in a light one */
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23b8bfd6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .input-group-text {
+  background-color: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-muted);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-check-input { background-color: var(--mesh-d-input); border-color: #3a4566; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-check-input:checked { background-color: var(--mesh-d-accent); border-color: var(--mesh-d-accent); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-text,
+html[data-mesh-theme="dark"] .mesh-dark-ready .col-form-label,
+html[data-mesh-theme="dark"] .mesh-dark-ready .form-label { color: var(--mesh-d-text); }
+/* Chrome autofill keeps its own pale yellow background unless painted over */
+html[data-mesh-theme="dark"] .mesh-dark-ready input:-webkit-autofill {
+  -webkit-text-fill-color: var(--mesh-d-text);
+  box-shadow: 0 0 0 1000px var(--mesh-d-input) inset;
+}
+
+/* ---------------- Buttons ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-light {
+  background-color: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-light:hover { background-color: #1f2846; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-outline-secondary,
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-outline-dark { color: #c3c9dc; border-color: #3a4566; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-outline-secondary:hover,
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-outline-dark:hover { background-color: #3a4566; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-outline-primary { color: var(--mesh-d-link); border-color: var(--mesh-d-link); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-outline-primary:hover { background-color: var(--mesh-d-link); color: #0a0e18; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+
+/* ---------------- Dropdowns (page content; header menu is in mesh-v4.css) ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-menu {
+  background-color: var(--mesh-d-raised);
+  border: 1px solid var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-item { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-item:hover,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-item:focus,
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-menu .dropdown-item:hover { background-color: #1f2846; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-divider { border-top-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-menu-arrow::before {
+  background: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropdown-menu .dropdown-footer a { color: var(--mesh-d-muted); }
+
+/* ---------------- Popups (Bootstrap modals) ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-content {
+  background-color: var(--mesh-d-surface);
+  color: var(--mesh-d-text);
+  border: 1px solid var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-header,
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-footer { border-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-title { color: var(--mesh-d-heading); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-backdrop.show { background-color: rgba(0, 0, 0, .55); }
+
+/* Announcement / news popups opened from the header bell (inc/announcement-bell-modals.blade.php,
+   classes from mesh-v4.css "Modals"). The purple cover panel is already dark and stays as is. */
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal .modal-content { border: 1px solid var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-title { color: var(--mesh-d-heading); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-header { border-bottom-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-content-text { color: #c9cde0; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-meta { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-tag { background: var(--mesh-d-raised); color: #c3c9dc; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-next,
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-footer {
+  background: #0f1525;
+  border-top-color: var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-next button { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-next button:hover { color: var(--mesh-d-link); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-modal-gallery img { border-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-icon-btn { background: var(--mesh-d-raised); color: var(--mesh-d-link); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-icon-btn-solid { background: #4f46e5; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .mesh-pill-btn {
+  background: var(--mesh-d-surface);
+  color: var(--mesh-d-link);
+  box-shadow: inset 0 0 0 1px var(--mesh-d-border);
+}
+
+/* ---------------- Alerts ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .alert-success { background-color: #0f2a1e; border-color: #1d5a3c; color: #8ee6b4; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .alert-danger { background-color: #331418; border-color: #6b2630; color: #ffadb5; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .alert-warning { background-color: #2f2510; border-color: #6a5418; color: #f6d27a; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .alert-info { background-color: #0f2633; border-color: #1d4d66; color: #8fd3f2; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .alert-primary { background-color: #1a1f4a; border-color: #343d8a; color: #b9c2ff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .alert-secondary,
+html[data-mesh-theme="dark"] .mesh-dark-ready .alert-light { background-color: var(--mesh-d-raised); border-color: var(--mesh-d-border); color: var(--mesh-d-text); }
+
+/* ---------------- Tabs, accordions, list groups ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .nav-tabs,
+html[data-mesh-theme="dark"] .mesh-dark-ready .nav-tabs-bordered { border-bottom-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .nav-tabs .nav-link { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .nav-tabs .nav-link:hover { border-color: var(--mesh-d-border); color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .nav-tabs .nav-link.active,
+html[data-mesh-theme="dark"] .mesh-dark-ready .nav-tabs .nav-item.show .nav-link {
+  background-color: var(--mesh-d-surface);
+  border-color: var(--mesh-d-border) var(--mesh-d-border) var(--mesh-d-surface);
+  color: var(--mesh-d-heading);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .nav-tabs-bordered .nav-link.active {
+  background-color: transparent;
+  color: var(--mesh-d-link);
+  border-bottom-color: var(--mesh-d-link);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .nav-pills .nav-link { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .nav-pills .nav-link.active { background-color: #4f46e5; color: #ffffff; }
+
+html[data-mesh-theme="dark"] .mesh-dark-ready .accordion-item {
+  background-color: var(--mesh-d-surface);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .accordion-button { background-color: var(--mesh-d-surface); color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .accordion-button:not(.collapsed) { background-color: var(--mesh-d-raised); color: var(--mesh-d-link); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .accordion-button::after { filter: invert(1) grayscale(100%) brightness(180%); }
+
+html[data-mesh-theme="dark"] .mesh-dark-ready .list-group-item {
+  background-color: var(--mesh-d-surface);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .list-group-item-action:hover { background-color: var(--mesh-d-raised); color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .list-group-item.active { background-color: #4f46e5; border-color: #4f46e5; color: #ffffff; }
+
+/* ---------------- Pagination (Laravel ->links()) ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .page-link {
+  background-color: var(--mesh-d-surface);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-link);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .page-link:hover { background-color: var(--mesh-d-raised); color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .page-item.active .page-link { background-color: #4f46e5; border-color: #4f46e5; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .page-item.disabled .page-link { background-color: var(--mesh-d-surface); border-color: var(--mesh-d-border); color: #5b6380; }
+
+/* ---------------- Badges ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .badge.bg-light,
+html[data-mesh-theme="dark"] .mesh-dark-ready .badge-light { background-color: var(--mesh-d-raised) !important; color: var(--mesh-d-text) !important; }
+
+/* ---------------- Tailwind classes used inside pages (layout loads the Tailwind CDN) ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .bg-gray-50,
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .bg-gray-100 { background-color: var(--mesh-d-raised); }
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .bg-gray-200 { background-color: #1f2846; }
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .text-gray-900,
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .text-gray-800,
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .text-gray-700 { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .text-gray-600,
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .text-gray-500 { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .border-gray-100,
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .border-gray-200,
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .border-gray-300,
+html[data-mesh-theme="dark"] .mesh-dark-ready #main .divide-gray-200 > * + * { border-color: var(--mesh-d-border); }
+
+/* ---------------- Select2 + bootstrap-select ---------------- */
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-selection--single,
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-selection--multiple {
+  background-color: var(--mesh-d-input);
+  border-color: var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-selection--single .select2-selection__rendered { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-selection--single .select2-selection__placeholder { color: #6b7391; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background-color: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-dropdown {
+  background-color: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-search--dropdown .select2-search__field,
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-search--inline .select2-search__field {
+  background-color: var(--mesh-d-input);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-results__option[aria-selected="true"],
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-results__option--selected { background-color: #1f2846; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-results__option--highlighted[aria-selected],
+html[data-mesh-theme="dark"] .mesh-dark-ready .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable { background-color: #4f46e5; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .bootstrap-select .dropdown-toggle {
+  background-color: var(--mesh-d-input);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+
+/* ---------------- Date pickers ---------------- */
+/* jQuery UI (smoothness theme) */
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-widget-content {
+  background: var(--mesh-d-surface);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-widget-header {
+  background: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-datepicker select.ui-datepicker-month,
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-datepicker select.ui-datepicker-year { background: var(--mesh-d-input); color: var(--mesh-d-text); border: 1px solid var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-state-default,
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-widget-content .ui-state-default {
+  background: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-state-hover,
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-widget-content .ui-state-hover { background: #1f2846; color: #ffffff; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-state-highlight,
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-widget-content .ui-state-highlight { background: #3a2f12; border-color: #7a6320; color: #f6d27a; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-state-active,
+html[data-mesh-theme="dark"] .mesh-dark-ready .ui-widget-content .ui-state-active { background: #4f46e5; border-color: #4f46e5; color: #ffffff; }
+/* bootstrap-datetimepicker */
+html[data-mesh-theme="dark"] .mesh-dark-ready .bootstrap-datetimepicker-widget.dropdown-menu { background-color: var(--mesh-d-raised); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .bootstrap-datetimepicker-widget table td.day:hover,
+html[data-mesh-theme="dark"] .mesh-dark-ready .bootstrap-datetimepicker-widget table td span:hover,
+html[data-mesh-theme="dark"] .mesh-dark-ready .bootstrap-datetimepicker-widget table thead tr:first-child th:hover { background: #1f2846; }
+/* Native date/time inputs: light calendar icon */
+html[data-mesh-theme="dark"] .mesh-dark-ready input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-mesh-theme="dark"] .mesh-dark-ready input[type="time"]::-webkit-calendar-picker-indicator,
+html[data-mesh-theme="dark"] .mesh-dark-ready input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+
+/* ---------------- Editors ---------------- */
+/* Quill */
+html[data-mesh-theme="dark"] .mesh-dark-ready .ql-toolbar.ql-snow,
+html[data-mesh-theme="dark"] .mesh-dark-ready .ql-container.ql-snow { border-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .ql-toolbar.ql-snow { background: var(--mesh-d-raised); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .ql-editor { background: var(--mesh-d-input); color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .ql-snow .ql-stroke { stroke: #c3c9dc; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .ql-snow .ql-fill { fill: #c3c9dc; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .ql-snow .ql-picker { color: #c3c9dc; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .ql-snow .ql-picker-options { background: var(--mesh-d-raised); }
+/* CKEditor 5 reads its colours from these variables */
+html[data-mesh-theme="dark"] .mesh-dark-ready {
+  --ck-color-base-background: #0f1525;
+  --ck-color-base-foreground: #161e34;
+  --ck-color-base-border: #232c45;
+  --ck-color-text: #e8eaf4;
+  --ck-color-toolbar-background: #161e34;
+  --ck-color-toolbar-border: #232c45;
+  --ck-color-button-default-hover-background: #1f2846;
+  --ck-color-button-on-background: #2b2470;
+  --ck-color-button-on-hover-background: #352c86;
+  --ck-color-dropdown-panel-background: #161e34;
+  --ck-color-dropdown-panel-border: #232c45;
+  --ck-color-input-background: #0f1525;
+  --ck-color-input-border: #232c45;
+  --ck-color-list-background: #161e34;
+  --ck-color-list-button-hover-background: #1f2846;
+  --ck-color-panel-background: #161e34;
+  --ck-color-panel-border: #232c45;
+}
+/* TinyMCE draws its editor inside an iframe, so only its frame/toolbar can be darkened from here */
+html[data-mesh-theme="dark"] .mesh-dark-ready .tox .tox-toolbar,
+html[data-mesh-theme="dark"] .mesh-dark-ready .tox .tox-toolbar__primary,
+html[data-mesh-theme="dark"] .mesh-dark-ready .tox .tox-menubar,
+html[data-mesh-theme="dark"] .mesh-dark-ready .tox .tox-statusbar { background: var(--mesh-d-raised); }
+
+/* Dropzone upload box */
+html[data-mesh-theme="dark"] .mesh-dark-ready .dropzone {
+  background: var(--mesh-d-input);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-muted);
+}
+
+/* #========== NEWLY ADDED ============ */
+/* ---------------- Service cards (svc- classes) ----------------
+   Same cards as Home, also used by superadmindashboard, admindashboard2026 and servicesdashboard, which
+   style them in their own <style> blocks. Home gets these from inc/home-greeting.blade.php; this copy
+   makes the other pages match. */
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-search-wrap input {
+  background: var(--mesh-d-surface);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-search-wrap input::placeholder { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-search-wrap input:focus { border-color: #7c5cdb; box-shadow: 0 0 0 3px rgba(124, 92, 219, .25); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-search-wrap svg { stroke: var(--mesh-d-muted); }
+
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-cat-head > i { color: color-mix(in srgb, var(--svc-accent) 45%, #ffffff); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-cat-title { color: #aeb5cc; }
+
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-card {
+  background: var(--mesh-d-card);
+  border-color: var(--mesh-d-card-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .35);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-card:hover { border-color: #6d4bc4; box-shadow: 0 10px 26px rgba(0, 0, 0, .45); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-card--disabled:hover { border-color: var(--mesh-d-card-border); box-shadow: none; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-card-icon {
+  background: color-mix(in srgb, var(--svc-accent) 30%, var(--mesh-d-card));
+  color: color-mix(in srgb, var(--svc-accent) 35%, #ffffff);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-card-title { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-card-sub,
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-card-desc { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-cta { background: transparent; padding: 0; color: var(--mesh-d-gold); font-weight: 700; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-cta::after { content: " \2192"; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .svc-card-tooltip,
+html[data-mesh-theme="dark"] .mesh-dark-ready .custom-tooltip {
+  background: var(--mesh-d-surface-hover);
+  color: var(--mesh-d-text);
+  border-color: var(--mesh-d-border);
+}
+/* Option cards inside the service popups (inline white/blue styles, hence !important) */
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-body .card.info-card {
+  background-color: var(--mesh-d-card) !important;
+  border-color: var(--mesh-d-card-border) !important;
+  box-shadow: none;
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-body .card.info-card[style*="border-left"] {
+  background-color: #241a52 !important;
+  border-left-color: var(--mesh-d-gold) !important;
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-body .card.info-card .card-body { background: transparent; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-body .card.info-card h6 { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-body .card.info-card span { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .modal-body .card-icon { background: #2a2050; color: #c4b5fd; }
+/* #================================ */
+
+/* ---------------- Charts ---------------- */
+/* ApexCharts axis labels, legends, grid and tooltips (Chart.js / ECharts draw on canvas and need
+   their own colour options per chart, so they can't be changed from CSS). */
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-text,
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-title-text,
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-datalabel-label { fill: #aeb5cc; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-legend-text { color: #c3c9dc !important; }
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-gridline,
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-xaxis-tick,
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-yaxis line,
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-xaxis line { stroke: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-tooltip.apexcharts-theme-light {
+  background: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+  background: #1f2846;
+  border-bottom-color: var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-menu {
+  background: var(--mesh-d-raised);
+  border-color: var(--mesh-d-border);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] .mesh-dark-ready .apexcharts-menu-item:hover { background: #1f2846; }
+/* #================================ */
+
+/* #========== NEWLY ADDED ============ */
+/* ==========================================================================
+   Home page theme (purple / gold), chosen Oct 2026
+
+   For app-all pages whose content is wrapped in <div class="mesh-home-theme">.
+   Same design as linkup/index, ssms/index and fsm/index (those three keep
+   their own style blocks). Only applies in dark mode, like the rest of this file.
+
+   Colours: card #1c1340 / border #3a2768, title bars #2a1d5c with gold
+   #f3c35f text, labels and table headings #c4b5fd, fields #140d30, violet
+   buttons #6d4bc4 (hover #7c5cdb), gold outlined action buttons, red outline
+   #f87171 for delete, green outline #34d399, muted text #9aa2bd.
+
+   !important is used only where pages set colours inline or app-all has
+   global !important rules (.btn-primary, .btn-success).
+   ========================================================================== */
+/* Breadcrumb: no light grey bar, current page in gold */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .breadcrumb { background: transparent; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .breadcrumb .breadcrumb-item.active,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .breadcrumb .breadcrumb-item.active a { color: #f3c35f; }
+
+/* Cards */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .card {
+  background: #1c1340; border: 1px solid #3a2768; color: #e8eaf4;
+  box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .card-header {
+  background: #2a1d5c; color: #f3c35f; border-bottom-color: #3a2768; font-weight: 700;
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .card-title { color: #f3c35f; }
+/* Title bars set inline (steel blue / green bars) */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .card-title[style*="background"] {
+  background-color: #2a1d5c !important; color: #f3c35f !important; border-radius: 10px !important; letter-spacing: .02em;
+}
+/* #============= ORI CODE ============== */
+/* html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme hr { border-top-color: #3a2768; opacity: 1; } */
+/* #================================ */
+/* Bootstrap draws this line with a background colour, so it is set too */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme hr { border-top-color: #3a2768; color: #3a2768; background-color: #3a2768; opacity: 1; }
+/* #================================ */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .text-muted { color: #9aa2bd !important; }
+
+/* Dashboard link cards (NiceAdmin info-card, blue border set inline) */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .info-card { border: 1px solid #3a2768 !important; transition: transform .15s, box-shadow .15s, border-color .15s; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme a:hover .info-card { border-color: #6d4bc4 !important; box-shadow: 0 10px 28px rgba(109,75,196,.3); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .info-card .card-icon { background: #2a1d5c; color: #f3c35f; box-shadow: inset 0 0 0 1px #4a3590; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .info-card h6 { color: #e8eaf4; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .info-card span { color: #9aa2bd; }
+
+/* Buttons */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-primary {
+  background-color: #6d4bc4 !important; border-color: #6d4bc4 !important; color: #ffffff !important;
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-primary:hover,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-primary:focus { background-color: #7c5cdb !important; border-color: #7c5cdb !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-success {
+  background-color: transparent !important; border-color: #34d399 !important; color: #34d399 !important;
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-success:hover { background-color: rgba(52,211,153,.15) !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-outline-primary { border-color: #f3c35f; color: #f3c35f; background: transparent; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-outline-primary:hover { background-color: #f3c35f; border-color: #f3c35f; color: #1c1340; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-outline-danger { border-color: #f87171; color: #f87171; background: transparent; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-outline-danger:hover { background-color: #f87171; border-color: #f87171; color: #1c1340; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-danger {
+  background-color: transparent !important; border: 1px solid #f87171 !important; color: #f87171 !important;
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-danger:hover { background-color: rgba(248,113,113,.15) !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-secondary {
+  background-color: transparent !important; border: 1px solid #9aa2bd !important; color: #e8eaf4 !important;
+}
+
+/* E-Memo pill buttons (.action-btn): Edit and View gold, Delete red */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .action-btn.btn-edit,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .action-btn.btn-view { border-color: #f3c35f; color: #f3c35f; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .action-btn.btn-edit:hover,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .action-btn.btn-view:hover { background-color: #f3c35f; color: #1c1340; box-shadow: 0 4px 10px rgba(243,195,95,.25); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .action-btn.btn-delete { border-color: #f87171; color: #f87171; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .action-btn.btn-delete:hover { background-color: #f87171; color: #1c1340; }
+
+/* Status badges and pills: soft tinted versions */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .badge.bg-success { background: rgba(52,211,153,.15) !important; color: #6ee7b7 !important; box-shadow: inset 0 0 0 1px rgba(52,211,153,.45); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .badge.bg-info { background: rgba(103,232,249,.14) !important; color: #67e8f9 !important; box-shadow: inset 0 0 0 1px rgba(103,232,249,.4); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .badge.bg-warning { background: rgba(243,195,95,.16) !important; color: #f3c35f !important; box-shadow: inset 0 0 0 1px rgba(243,195,95,.45); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .badge.bg-danger { background: rgba(248,113,113,.14) !important; color: #fca5a5 !important; box-shadow: inset 0 0 0 1px rgba(248,113,113,.45); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .badge.bg-primary { background: rgba(167,139,250,.16) !important; color: #c4b5fd !important; box-shadow: inset 0 0 0 1px rgba(167,139,250,.45); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .badge.bg-secondary { background: rgba(154,162,189,.16) !important; color: #c3cadf !important; box-shadow: inset 0 0 0 1px rgba(154,162,189,.4); }
+
+/* Tabs */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .nav-tabs,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .nav-tabs-bordered { border-bottom-color: #3a2768; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .nav-tabs .nav-link { color: #9aa2bd; background: transparent; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .nav-tabs .nav-link:hover { color: #e8eaf4; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .nav-tabs .nav-link.active { color: #f3c35f; background: transparent; border-bottom: 2px solid #f3c35f; }
+
+/* Tables and table tools (simple-datatables and jQuery DataTables) */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table { color: #e8eaf4; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table th { color: #c4b5fd; }
+/* #========== NEWLY ADDED ============ */
+/* No navy band behind the table headings */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table > thead > tr > th,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table > thead { background-color: transparent !important; }
+/* #================================ */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table th,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table td { border-bottom: 1px solid #3a2768; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTable-input,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTable-selector,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTables_filter input,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTables_length select {
+  background-color: #140d30; border-color: #3a2768; color: #e8eaf4;
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTable-top,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTable-bottom,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTable-table > thead > tr > th { border-color: #3a2768; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTable-info,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTables_info { color: #9aa2bd !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTable-pagination .active a { background-color: #6d4bc4; color: #ffffff; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTables_paginate .paginate_button.current { background: #6d4bc4 !important; border-color: #6d4bc4 !important; color: #ffffff !important; }
+
+/* Form fields */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-control,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-select {
+  background-color: #140d30; border-color: #3a2768; color: #e8eaf4; color-scheme: dark;
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-control[readonly],
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-control:disabled { background-color: #1f1548; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-control::placeholder { color: #7d84a3; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-control:hover,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-select:hover { border-color: #6d4bc4; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-control:focus,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-select:focus { border-color: #6d4bc4; box-shadow: 0 0 0 .25rem rgba(109,75,196,.3); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-control::file-selector-button { background: #2a1d5c; color: #f3c35f; border-color: #4a3590; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .col-form-label,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .form-label,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .profile-overview .label { color: #c4b5fd; }
+
+/* Popups */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .modal-content { background: #1c1340; border: 1px solid #3a2768; color: #e8eaf4; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .modal-header,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .modal-footer { border-color: #3a2768; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .modal-title { color: #f3c35f; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .modal-header .close { color: #9aa2bd; text-shadow: none; opacity: 1; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-close { filter: invert(1) grayscale(1) brightness(1.6); }
+
+/* Messages */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .alert-success { background: rgba(52,211,153,.12); color: #6ee7b7; border-color: rgba(52,211,153,.45); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .alert-danger { background: rgba(248,113,113,.12); color: #fca5a5; border-color: rgba(248,113,113,.45); }
+/* #================================ */
+
+/* #========== NEWLY ADDED ============ */
+/* Home page theme, more parts (Oct 2026, from the Super Admin pages preview). Added after the rules above so these win. */
+/* Table column headings and detail labels ("Department:", "Mesej:") in gold, like the title bars (were lavender) */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table th, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table thead th, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTable-table > thead > tr > th, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .dataTable-sorter, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme table th { color: #f3c35f !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .profile-overview .label, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .profile .label { color: #f3c35f !important; }
+/* Section titles a page marks with class="mesh-gold-title" */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .mesh-gold-title { color: #f3c35f !important; }
+/* Form outlines set inline in navy (#012970), e.g. MNS and banner forms: violet */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .profile-overview[style*="border"] { border-color: #4a3590 !important; }
+/* Delete buttons that use the outlined edit style (announcements, news): red like the other delete buttons */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-outline-primary:has(.bi-trash, .bi-trash-fill) { border-color: #f87171 !important; color: #f87171 !important; background: transparent; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .btn-outline-primary:has(.bi-trash, .bi-trash-fill):hover { background-color: #f87171 !important; color: #1c1340 !important; }
+/* .table-achiev (admin.css; MAS "Add IC No." table and others): purple header row with gold text, dark purple rows */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table-achiev th { background-color: #2a1d5c; color: #f3c35f; border: 1px solid #3a2768; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table-achiev td { border: 1px solid #3a2768; color: #e8eaf4; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table-achiev tr, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table-achiev tr:nth-child(even) { background-color: #1c1340; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table-achiev tbody tr:nth-child(even) { background-color: #211748; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .table-achiev tbody tr:hover { background-color: #2a1d5c; }
+/* Parts built with Tailwind classes (announcement boxes, SSM "Master Search" bar) */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .bg-white { background-color: #1c1340 !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .bg-gray-100, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .bg-gray-50 { background-color: #140d30 !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .shadow-md { box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .border-b-2, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .border-b, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .border-t, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .border-2, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .border-gray-200, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .border-gray-300 { border-color: #3a2768 !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .text-blue-900, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .text-blue-800 { color: #f3c35f !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .text-gray-400, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .text-gray-500 { color: #9aa2bd !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .bg-blue-500 { background-color: #6d4bc4 !important; color: #ffffff; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .bg-blue-500:hover, html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme .hover\:bg-blue-600:hover { background-color: #7c5cdb !important; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme form input[type="text"]:not(.form-control):not(.dataTable-input),
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme form input[type="search"]:not(.form-control):not(.dataTable-input) { background-color: #140d30; color: #e8eaf4; border: 1px solid #3a2768; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme input::placeholder { color: #7d84a3; }
+/* #================================ */

@@ -3,6 +3,12 @@
 @section('title', 'Tanya MOEBN')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
   <?php 
     $pagename = "Tanya MOEBN";
@@ -46,8 +52,18 @@
             @endforeach
 
             <div class="row mb-3">
-                <label class="col-lg-1 col-form-label">Perkara:</label>
-                <div class="col-lg-4">
+                {{-- #============= ORI CODE ============== --}}
+                {{-- <label class="col-lg-1 col-form-label">Perkara:</label> --}}
+                {{-- #================================ --}}
+                {{-- Wider label column so "Perkara:" / "Subject:" stays on one line --}}
+                <label class="col-lg-2 col-form-label">Perkara:</label>
+                {{-- #================================ --}}
+                {{-- #============= ORI CODE ============== --}}
+                {{-- <div class="col-lg-4"> --}}
+                {{-- #================================ --}}
+                {{-- Wider subject box so the full department name shows --}}
+                <div class="col-lg-6">
+                {{-- #================================ --}}
                     <input type="text" name="label" class="form-control" value ="{{$tanyaperkara->label}}">
               
             </div>
@@ -57,7 +73,12 @@
              <br>
 
             <div class="row mb-3">
-                <label for="inputic_no" class="col-lg-1 col-form-label">IC No:</label> 
+                {{-- #============= ORI CODE ============== --}}
+                {{-- <label for="inputic_no" class="col-lg-1 col-form-label">IC No:</label> --}}
+                {{-- #================================ --}}
+                {{-- Wider label column so "IC No:" stays on one line --}}
+                <label for="inputic_no" class="col-lg-2 col-form-label">IC No:</label>
+                {{-- #================================ --}}
                 <div class="col-lg-9">
                 <div id="icno-input-container">
                         <div class="row mb-3">
@@ -163,4 +184,7 @@
 
 </section>
 
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

@@ -39,7 +39,31 @@ class SKPerkara extends Model
                 'tarikh_bermula',
                 'tarikh_berakhir',
                 'status',
+                'shared_with',
+                'jabatan',
               ];
+
+    // Convert the 'shared_with' column to a comma-separated string when accessing it
+    public function getSharedWithAttribute($value)
+    {
+        if (is_array($value)) {
+            return implode(',', $value);
+        }
+        return $value;
+    }
+
+    // Convert the 'shared_with' attribute to a string before saving it to the database
+    public function setSharedWithAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['shared_with'] = implode(',', $value);
+        } elseif (is_string($value)) {
+            $this->attributes['shared_with'] = $value;
+        } else {
+            $this->attributes['shared_with'] = '';
+        }
+    }
+
 
     /**
      * The attributes that should be mutated to dates.

@@ -205,7 +205,7 @@ $pagename = "LinkUP";
 
         // Check if text is an absolute URL, if not, prepend the custom text
         if (!text.startsWith('http') && !text.startsWith('https')) {
-            text = "https://mesh.moe.gov.bn/" + text;
+            text = "http://127.0.0.1:8000/" + text;
         }
 
         textArea.value = text;

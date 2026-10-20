@@ -62,7 +62,7 @@
         <div class="container" style="padding-top: 20px;">
           <div class="row justify-content-center">
             <div class="col-lg-8">
-              <a href="https://mesh.moe.gov.bn/servicesdashboard" class="btn btn-primary" style="margin-bottom: 10px;">
+              <a href="http://127.0.0.1:8000/servicesdashboard" class="btn btn-primary" style="margin-bottom: 10px;">
                 <i class="bi bi-arrow-left"></i> 
               </a>
             </div>

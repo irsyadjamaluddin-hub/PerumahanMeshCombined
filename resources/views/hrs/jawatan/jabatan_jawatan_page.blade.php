@@ -762,7 +762,7 @@
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script defer src="{{ asset('vendor/alpinejs/alpine.min.js') }}"></script>
 
 <script>
 function staffManager() {

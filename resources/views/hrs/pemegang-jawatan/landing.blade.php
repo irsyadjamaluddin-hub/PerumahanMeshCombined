@@ -144,7 +144,7 @@
 
             <!-- Teaching Button + Submenu -->
             <div class="relative flex flex-col items-center">
-                <button 
+                <button
                     @click="selected = (selected === 'teaching') ? null : 'teaching'"
                     class="landing-btn-main">
                     <span class="block leading-tight">Teaching Staff</span>

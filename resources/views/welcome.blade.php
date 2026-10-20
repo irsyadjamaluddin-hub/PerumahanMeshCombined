@@ -7,8 +7,8 @@
     <title>MESH</title>
 
     <!-- Favicon -->
-    <link href="{{ asset('img/panji-panji.svg.png') }}" rel="icon">
-    <link href="{{ asset('img/panji-panji.svg.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('assets/img/logo.png') }}" rel="icon">
+    <link href="{{ asset('assets/img/logo.png') }}" rel="apple-touch-icon">
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -29,7 +29,7 @@
 
             {{-- MOE Logo --}}
             <div class="flex flex-col items-center gap-4">
-                <img src="{{ asset('img/panji-panji.svg.png') }}" class="w-20">
+                <img src="{{ asset('assets/img/logo.png') }}" class="w-20">
 
                 <div class="flex flex-col items-center leading-none uppercase">
                     <p class="text-3xl">كمنترين ڤنديديقن</p>

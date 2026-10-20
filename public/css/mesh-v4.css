@@ -1,0 +1,2095 @@
+/* ==========================================================================
+   MESH v4 visual redesign — MOE Homepage / Announcements / News
+   Scoped under .mesh-v4-sidebar / .mesh-v4-header / .mesh-v4 so it cannot
+   bleed into the ~495 other views that share layouts/app-all.blade.php.
+   Do not add bare selectors here (.sidebar, .nav-link, .header, etc.) —
+   those are owned by public/assets/css/admin.css and used everywhere else.
+   ========================================================================== */
+
+/* Palette matches resources/views/welcome-new.blade.php's inline :root —
+   same MOE brand colors, renamed to this file's --mesh-* convention so the
+   dashboard/sidebar and the public landing page read as one design system. */
+:root {
+  --mesh-bg: #eaf0fb;              /* welcome-new --paper */
+  --mesh-ink: #1c1934;             /* welcome-new --text */
+  --mesh-muted: #5b6188;           /* welcome-new --muted */
+  --mesh-faint: #949dbc;           /* midpoint of --muted/--line, same family */
+  --mesh-border: #dee7f8;          /* welcome-new --paper-alt */
+  --mesh-border-2: #cdd9f0;        /* welcome-new --line */
+  --mesh-accent: #3730a3;          /* welcome-new --indigo */
+  --mesh-accent-2: #4f46e5;        /* welcome-new --indigo-600 */
+  --mesh-accent-soft: rgba(79, 70, 229, .1); /* welcome-new's own soft-indigo formula (.service-icon bg) */
+  --mesh-yellow: #f2c245;          /* welcome-new --gold */
+  --mesh-sidebar-1: #2e1065;       /* "Twilight Indigo" — deep violet, stop 1 (top) */
+  --mesh-sidebar-2: #312e81;       /* "Twilight Indigo" — indigo, stop 2 (mid) */
+  --mesh-sidebar-3: #1d4ed8;       /* "Twilight Indigo" — dusk blue, stop 3 (bottom) */
+  --mesh-sidebar-text: rgba(255, 255, 255, .75);  /* welcome-new's on-dark body text opacity */
+  --mesh-sidebar-text-strong: #ffffff;             /* welcome-new --white (on-dark brand text) */
+  --mesh-sidebar-heading: #f2c245; /* welcome-new --gold (its on-dark eyebrow color) */
+}
+
+/* ---------------- Header ---------------- */
+
+.mesh-v4-header {
+  height: 96px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--mesh-border);
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 28px;
+}
+
+.mesh-v4-header .mesh-toggle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid #e3e4f0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #3d3f57;
+  flex: none;
+  font-size: 18px;
+}
+
+.mesh-v4-header .mesh-toggle-btn:hover {
+  background: #f2f3fa;
+}
+
+.mesh-v4-header .mesh-page-title {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--mesh-ink);
+  margin: 0;
+}
+
+.mesh-v4-header .mesh-page-subtitle {
+  font-size: 12.5px;
+  color: var(--mesh-muted);
+  margin: 0;
+}
+
+.mesh-v4-header .mesh-header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mesh-v4-header .mesh-bell-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid #e3e4f0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  color: #3d3f57;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.mesh-v4-header .mesh-bell-btn:hover {
+  background: #f2f3fa;
+}
+
+.mesh-v4-header .mesh-bell-dot {
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  background: var(--mesh-yellow);
+  border: 1.5px solid #ffffff;
+}
+
+.mesh-v4-header .mesh-user-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--mesh-bg);
+  border: 1px solid #e3e4f0;
+  border-radius: 99px;
+  padding: 4px 16px 4px 4px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.mesh-v4-header .mesh-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 99px;
+  background: var(--mesh-accent);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex: none;
+}
+
+.mesh-v4-header .mesh-user-name {
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------------- Sidebar ---------------- */
+
+.mesh-v4-sidebar {
+  /* Same gradient formula as welcome-new's .hero/.services (150deg, ink → ink-2). */
+  background: linear-gradient(150deg, var(--mesh-sidebar-1) 0%, var(--mesh-sidebar-2) 45%, var(--mesh-sidebar-3) 100%);
+  color: var(--mesh-sidebar-text);
+  /* Own stacking context so the full-height particle layer (z-index:0) can sit
+     under the brand/nav content (z-index:1) without leaking above header/backdrop. */
+  isolation: isolate;
+  width: 266px;
+  /* admin.css's .sidebar sets position:fixed/top:60px/left:0/bottom:0 — drop
+     the top offset entirely so the sidebar runs the full viewport height and
+     sits level with the header (design) instead of starting below it. */
+  top: 0;
+  transition: width .18s ease;
+  /* admin.css's .sidebar always shows a thin scrollbar via scrollbar-width/
+     scrollbar-color; keep it invisible until the sidebar is actually being
+     interacted with so a long nav list doesn't leave a permanent gray bar
+     down the right edge. Still scrollable while hidden (Firefox: 'none'
+     hides the track, not the scroll behavior; WebKit: thumb color only). */
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
+
+.mesh-v4-sidebar:hover,
+.mesh-v4-sidebar:focus-within {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .35) transparent;
+}
+
+.mesh-v4-sidebar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.mesh-v4-sidebar:hover::-webkit-scrollbar-thumb,
+.mesh-v4-sidebar:focus-within::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, .35);
+}
+
+/* Full-height moving "constellation" background — same particles.js effect
+   used on welcome-new.blade.php's hero, running behind the whole sidebar
+   (not just the old static #netmesh pattern confined to the brand strip). */
+.mesh-v4-sidebar .mesh-sidebar-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mesh-v4-sidebar .mesh-brand {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+/* =============== NISAH =============== */
+/* Brunei crest to the left of "M E S H". Stays visible (centred) when the sidebar is
+   collapsed to the icon rail, since only .mesh-brand-text is hidden there. */
+/* White-disc version (kept for switching back):
+.mesh-v4-sidebar .mesh-brand-logo {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25), 0 0 0 2px rgba(242, 194, 69, .55);
+}
+.mesh-v4-sidebar .mesh-brand-logo img {
+  width: 34px;
+  height: auto;
+  display: block;
+}
+*/
+/* No-background version: the crest sits straight on the sidebar */
+.mesh-v4-sidebar .mesh-brand-logo {
+  flex: none;
+  width: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mesh-v4-sidebar .mesh-brand-logo img {
+  width: 46px;
+  height: auto;
+  display: block;
+}
+/* =============================================== */
+
+.mesh-v4-sidebar .mesh-brand-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.mesh-v4-sidebar .mesh-brand-title {
+  font-family: 'Nunito', Helvetica, sans-serif;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.mesh-v4-sidebar .mesh-brand-sub {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--mesh-yellow);
+}
+
+.mesh-v4-sidebar .mesh-nav-heading {
+  font-family: 'Figtree', Helvetica, sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--mesh-sidebar-heading);
+  padding: 12px 22px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.mesh-v4-sidebar .mesh-nav-heading:first-of-type {
+  padding-top: 14px;
+}
+
+.mesh-v4-sidebar ul.sidebar-nav {
+  position: relative;
+  z-index: 1;
+  padding: 4px 12px 16px;
+}
+
+.mesh-v4-sidebar .nav-item {
+  list-style: none;
+}
+
+.mesh-v4-sidebar .mesh-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  color: var(--mesh-sidebar-text-strong);
+  font-family: 'Figtree', Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.mesh-v4-sidebar .mesh-nav-link:hover {
+  background: rgba(255, 255, 255, .12);
+  color: #ffffff;
+}
+
+.mesh-v4-sidebar .mesh-nav-link.mesh-active {
+  background: #ffffff;
+  color: var(--mesh-sidebar-3);
+  font-weight: 700;
+}
+
+.mesh-v4-sidebar .mesh-nav-link i {
+  font-size: 18px;
+  width: 21px;
+  text-align: center;
+  flex: none;
+  color: var(--mesh-sidebar-heading);
+}
+
+.mesh-v4-sidebar .mesh-nav-link.mesh-active i {
+  color: currentColor;
+}
+
+.mesh-v4-sidebar .mesh-nav-link .ms-auto {
+  font-size: 13px;
+  color: #8f8bd8;
+}
+
+.mesh-v4-sidebar ul.mesh-sub-nav {
+  padding-left: 16px;
+}
+
+.mesh-v4-sidebar ul.mesh-sub-nav .mesh-nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: #c9c7ef;
+  padding-left: 26px;
+}
+
+.mesh-v4-sidebar ul.mesh-sub-nav .mesh-nav-link i {
+  font-size: 8px;
+}
+
+/* Collapsed (icon rail) state */
+
+body.mesh-sidebar-collapsed .mesh-v4-sidebar {
+  width: 84px;
+}
+
+body.mesh-sidebar-collapsed .mesh-v4-sidebar .mesh-brand-text,
+body.mesh-sidebar-collapsed .mesh-v4-sidebar .mesh-nav-heading,
+body.mesh-sidebar-collapsed .mesh-v4-sidebar .mesh-nav-link .ms-auto {
+  display: none;
+}
+
+/* Visually hidden rather than display:none — the label text still forms
+   each link's accessible name for screen readers navigating the icon rail,
+   even though sighted users now get it via .mesh-nav-tooltip on hover/focus. */
+body.mesh-sidebar-collapsed .mesh-v4-sidebar .mesh-nav-link span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+body.mesh-sidebar-collapsed .mesh-v4-sidebar .mesh-brand {
+  justify-content: center;
+  padding: 0;
+}
+
+body.mesh-sidebar-collapsed .mesh-v4-sidebar .mesh-nav-link {
+  justify-content: center;
+  padding: 12px;
+}
+
+body.mesh-sidebar-collapsed .mesh-v4-sidebar ul.mesh-sub-nav {
+  padding-left: 0;
+}
+
+/* Icon-rail tooltip (collapsed state only) — appended to <body> and
+   positioned in JS via getBoundingClientRect() (see mesh-v4.js), not nested
+   inside the sidebar, because .sidebar's overflow-y:auto forces overflow-x
+   to clip too (a spec quirk: overflow-x can't stay visible once overflow-y
+   isn't), which would cut off anything popping out past the sidebar's edge. */
+.mesh-nav-tooltip {
+  position: fixed;
+  transform: translateY(-50%) translateX(-6px);
+  background: #17132e;
+  color: #ffffff;
+  font-family: 'Figtree', Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: 0 10px 24px -8px rgba(10, 8, 30, .55);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 1005;
+  transition: opacity .14s ease, transform .14s ease;
+}
+
+.mesh-nav-tooltip::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: #17132e;
+  border-left: 1px solid rgba(255, 255, 255, .12);
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.mesh-nav-tooltip.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mesh-nav-tooltip {
+    transition: opacity .14s ease;
+  }
+  .mesh-nav-tooltip.is-visible {
+    transform: translateY(-50%);
+  }
+}
+
+/* Main/footer offset — mirrors admin.css's own #main/#footer margin-left
+   pattern (keyed off the *new* mesh-sidebar-collapsed class, not the old
+   toggle-sidebar one, so both mechanisms stay fully independent). */
+
+/* admin.css's #main has margin-top:60px, sized for the old 60px header;
+   bump it to match the new 96px-tall header (this selector's specificity —
+   an id plus a class — beats the bare #main rule regardless of source
+   order, so it reliably wins here). */
+body.mesh-v4-page #main {
+  margin-top: 96px;
+}
+
+/* ---- Responsive breakpoint: 992px (Bootstrap's "lg"), used consistently
+   for the sidebar mode switch below and for row/card stacking further
+   down this file. ---- */
+
+@media (min-width: 992px) {
+  body.mesh-v4-page #main,
+  body.mesh-v4-page #footer {
+    margin-left: 266px;
+    transition: margin-left .18s ease;
+  }
+
+  body.mesh-v4-page.mesh-sidebar-collapsed #main,
+  body.mesh-v4-page.mesh-sidebar-collapsed #footer {
+    margin-left: 84px;
+  }
+
+  /* Bootstrap's .fixed-top (on the header element) sets left:0/right:0,
+     spanning the full viewport width above/behind the sidebar. Pull it in
+     from the left so it sits beside the now full-height sidebar instead —
+     matches the design, where the sidebar's brand row is level with the
+     header rather than hidden underneath it. Mirrors the #main/#footer
+     margin-left pair above, including the collapsed-rail width. */
+  .mesh-v4-header {
+    left: 266px;
+    transition: left .18s ease;
+  }
+
+  body.mesh-sidebar-collapsed .mesh-v4-header {
+    left: 84px;
+  }
+}
+
+/* ---- Below 992px: the sidebar becomes an off-canvas panel instead of a
+   permanent column. It's always rendered at full (266px) width but sits
+   off-screen via transform until opened; #main/#footer never get a
+   margin-left here, since the sidebar overlays instead of pushing. The
+   desktop-only mesh-sidebar-collapsed rail state is irrelevant below this
+   width — the header's toggle button drives a separate
+   body.mesh-sidebar-mobile-open class instead (see mesh-v4.js). ---- */
+
+@media (max-width: 991.98px) {
+  .mesh-v4-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 266px !important;
+    max-width: 84vw;
+    z-index: 1040;
+    transform: translateX(-100%);
+    transition: transform .22s ease;
+  }
+
+  body.mesh-sidebar-mobile-open .mesh-v4-sidebar {
+    transform: translateX(0);
+  }
+
+  .mesh-v4-sidebar .mesh-brand-text,
+  .mesh-v4-sidebar .mesh-nav-heading,
+  .mesh-v4-sidebar .mesh-nav-link span,
+  .mesh-v4-sidebar .mesh-nav-link .ms-auto {
+    display: initial;
+  }
+
+  .mesh-sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1039;
+    background: rgba(10, 9, 40, .5);
+  }
+
+  body.mesh-sidebar-mobile-open .mesh-sidebar-backdrop {
+    display: block;
+  }
+
+  body.mesh-sidebar-mobile-open {
+    overflow: hidden;
+  }
+}
+
+@media (min-width: 992px) {
+  .mesh-sidebar-backdrop {
+    display: none !important;
+  }
+}
+
+/* ---- Header: keep the hamburger/bell/avatar row from overflowing a
+   narrow viewport by dropping the least essential text first. ---- */
+
+@media (max-width: 575.98px) {
+  .mesh-v4-header {
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .mesh-v4-header .mesh-page-subtitle {
+    display: none;
+  }
+
+  .mesh-v4-header .mesh-user-name {
+    display: none;
+  }
+
+  .mesh-v4-header .mesh-user-chip {
+    padding: 4px;
+  }
+}
+
+/* ---------------- Homepage: hero ---------------- */
+
+.mesh-hero {
+  margin: 0 -16px;
+}
+
+.mesh-hero-frame {
+  background: #1a1780;
+  aspect-ratio: 1557 / 358;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.mesh-hero-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mesh-hero-controls {
+  padding: 16px 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.mesh-hero-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mesh-hero-dots button {
+  width: 12px;
+  height: 5px;
+  border: none;
+  padding: 0;
+  border-radius: 99px;
+  cursor: pointer;
+  background: #c9cbe0;
+}
+
+.mesh-hero-dots button.active {
+  width: 34px;
+  background: var(--mesh-accent);
+}
+
+.mesh-hero-count {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11.5px;
+  color: var(--mesh-muted);
+}
+
+.mesh-hero-arrows {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.mesh-hero-arrows button {
+  width: 40px;
+  height: 40px;
+  border-radius: 99px;
+  border: 1px solid #d3d5e6;
+  background: #ffffff;
+  color: var(--mesh-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mesh-hero-arrows button:hover {
+  background: var(--mesh-accent-soft);
+}
+
+/* ---------------- Section headers ---------------- */
+
+.mesh-section {
+  padding: 40px 4px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mesh-section-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--mesh-ink);
+  padding-bottom: 12px;
+}
+
+.mesh-section-head.mesh-section-head-light {
+  border-bottom: 1px solid var(--mesh-border-2);
+}
+
+.mesh-section-title {
+  margin: 0;
+  font-family: 'Anton', 'Figtree', sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--mesh-ink);
+}
+
+.mesh-section-accent {
+  width: 26px;
+  height: 4px;
+  background: var(--mesh-yellow);
+  align-self: center;
+  margin-bottom: 11px;
+  flex: none;
+}
+
+.mesh-section-tag {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--mesh-faint);
+  padding-bottom: 8px;
+}
+
+.mesh-section-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 6px;
+}
+
+.mesh-pill-btn {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--mesh-accent);
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px #d7d9e8;
+  border-radius: 99px;
+  padding: 9px 15px;
+  text-decoration: none;
+}
+
+.mesh-pill-btn:hover {
+  box-shadow: inset 0 0 0 1px var(--mesh-accent);
+  background: var(--mesh-accent-soft);
+  color: var(--mesh-accent);
+}
+
+.mesh-view-all {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--mesh-accent);
+  text-decoration: none;
+}
+
+.mesh-view-all:hover {
+  color: var(--mesh-accent-2);
+}
+
+/* ---------------- Announcements list ---------------- */
+
+.mesh-announce-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: #e8e9f2;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.mesh-announce-row {
+  text-align: left;
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  background: #ffffff;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  padding: 22px 26px;
+  color: inherit;
+  width: 100%;
+  text-decoration: none;
+}
+
+.mesh-announce-row:hover {
+  background: #fbfbfe;
+}
+
+.mesh-announce-thumb {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 4px;
+  background: #f1f2f8;
+}
+
+.mesh-announce-thumb.mesh-lightbox-trigger {
+  cursor: zoom-in;
+}
+
+.mesh-announce-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mesh-zoom-badge {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 99px;
+  background: rgba(20, 21, 43, .74);
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.mesh-announce-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mesh-announce-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mesh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 99px;
+}
+
+.mesh-badge-info { background: var(--mesh-accent-soft); color: var(--mesh-accent); }
+.mesh-badge-maintenance { background: #fff3cc; color: #7a5c00; }
+.mesh-badge-update { background: #e9ecf5; color: #41435c; }
+.mesh-badge-urgent { background: #fbe1de; color: #9c2b15; }
+
+.mesh-mono-date {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--mesh-faint);
+}
+
+.mesh-announce-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  color: var(--mesh-ink);
+}
+
+.mesh-announce-desc {
+  margin: 0;
+  font-size: 14px;
+  color: var(--mesh-muted);
+  line-height: 1.6;
+  max-width: 74ch;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mesh-announce-source {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #a0a2b8;
+}
+
+.mesh-announce-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mesh-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 99px;
+  background: #f4f5fa;
+  color: var(--mesh-accent);
+  flex: none;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.mesh-icon-btn-solid {
+  background: var(--mesh-accent);
+  color: #ffffff;
+}
+
+@media (max-width: 700px) {
+  .mesh-announce-row {
+    grid-template-columns: 84px minmax(0, 1fr);
+    grid-template-areas:
+      "thumb body"
+      "actions actions";
+    row-gap: 14px;
+    padding: 18px 16px;
+  }
+
+  .mesh-announce-row .mesh-announce-thumb { grid-area: thumb; }
+  .mesh-announce-row .mesh-announce-body { grid-area: body; }
+  .mesh-announce-row .mesh-announce-actions { grid-area: actions; justify-content: flex-end; }
+
+  .mesh-announce-desc {
+    -webkit-line-clamp: 3;
+  }
+}
+
+.mesh-section-footer {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+}
+
+/* ---------------- News grid ---------------- */
+
+.mesh-news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+}
+
+@media (max-width: 992px) {
+  .mesh-news-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .mesh-news-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mesh-news-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: transparent;
+  border-radius: 6px;
+  padding: 14px;
+}
+
+.mesh-news-thumb {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 3px;
+  background: #f1f2f8;
+  display: flex;
+  align-items: center;
+}
+
+.mesh-news-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mesh-news-meta {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--mesh-faint);
+}
+
+.mesh-news-title {
+  margin: 0;
+  font-size: 16.5px;
+  font-weight: 700;
+  line-height: 1.32;
+  color: var(--mesh-ink);
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mesh-news-byline {
+  font-size: 13px;
+  color: var(--mesh-muted);
+}
+
+.mesh-news-footer {
+  margin-top: auto;
+  text-align: right;
+  padding-top: 4px;
+}
+
+.mesh-news-footer a {
+  color: var(--mesh-accent);
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.mesh-news-footer a:hover {
+  color: var(--mesh-accent-2);
+}
+
+.mesh-empty-box {
+  height: 8rem;
+  background: #ffffff;
+  border: 1px solid var(--mesh-border-2);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Figtree', Helvetica, sans-serif;
+  color: var(--mesh-muted);
+}
+
+/* ---------------- Section footer (announcements "show more") ---------------- */
+
+.mesh-showing-count {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--mesh-faint);
+}
+
+.mesh-show-more-btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 99px;
+  background: var(--mesh-accent);
+  color: #ffffff;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.mesh-show-more-btn:hover {
+  background: var(--mesh-accent-2);
+  color: #ffffff;
+}
+
+/* ---------------- Site footer ---------------- */
+
+.mesh-v4-footer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 22px 30px;
+  background: #ffffff;
+  border-top: 1px solid var(--mesh-border);
+}
+
+.mesh-v4-footer img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex: none;
+}
+
+.mesh-v4-footer .mesh-footer-text {
+  font-size: 13px;
+  color: var(--mesh-muted);
+}
+
+.mesh-v4-footer .mesh-footer-version {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11.5px;
+  color: var(--mesh-accent);
+  background: var(--mesh-accent-soft);
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+
+/* ---------------- Archive pages (News index) ---------------- */
+
+.mesh-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--mesh-faint);
+}
+
+.mesh-breadcrumb a {
+  color: var(--mesh-faint);
+}
+
+.mesh-breadcrumb a:hover {
+  color: var(--mesh-accent);
+}
+
+.mesh-breadcrumb .mesh-breadcrumb-current {
+  color: var(--mesh-accent);
+}
+
+.mesh-archive-title {
+  margin: 0;
+  font-family: 'Anton', 'Figtree', sans-serif;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--mesh-ink);
+}
+
+.mesh-archive-sub {
+  font-size: 14.5px;
+  color: var(--mesh-muted);
+}
+
+.mesh-filter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background: var(--mesh-bg);
+  padding: 14px 4px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--mesh-border-2);
+}
+
+.mesh-search-input {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--mesh-ink);
+  background: #ffffff;
+  border: none;
+  box-shadow: inset 0 0 0 1px #e0e2ee;
+  border-radius: 99px;
+  padding: 10px 18px;
+  width: 250px;
+  max-width: 100%;
+}
+
+.mesh-search-input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--mesh-accent);
+}
+
+.mesh-year-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #41435c;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px #e0e2ee;
+  border-radius: 99px;
+  padding: 10px 16px;
+}
+
+.mesh-year-btn:hover {
+  box-shadow: inset 0 0 0 1px var(--mesh-accent);
+  color: var(--mesh-accent);
+}
+
+.mesh-year-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 12;
+  width: 220px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 14px 40px rgba(20, 18, 122, .18), inset 0 0 0 1px var(--mesh-border);
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mesh-year-option {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 9px 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #41435c;
+  text-decoration: none;
+}
+
+.mesh-year-option:hover {
+  background: #f4f5fa;
+}
+
+.mesh-year-option.active {
+  color: var(--mesh-ink);
+}
+
+.mesh-year-option .mesh-year-count {
+  margin-left: auto;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10.5px;
+  color: #a0a2b8;
+}
+
+.mesh-year-clear {
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--mesh-accent);
+  text-decoration: none;
+  display: block;
+}
+
+.mesh-year-clear:hover {
+  background: #f4f5fa;
+  color: var(--mesh-accent-2);
+}
+
+.mesh-year-group-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 34px 4px 10px;
+}
+
+.mesh-year-group-header .mesh-year-label {
+  font-family: 'Anton', 'Figtree', sans-serif;
+  font-size: 24px;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--mesh-ink);
+}
+
+.mesh-year-group-header .mesh-year-line {
+  flex: 1;
+  height: 1px;
+  background: #e4e6f0;
+}
+
+.mesh-archive-row {
+  text-align: left;
+  width: 100%;
+  border: none;
+  border-top: 1px solid #e4e6f0;
+  background: transparent;
+  padding: 22px 4px;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  display: grid;
+  grid-template-columns: 176px minmax(0, 1fr) 90px;
+  gap: 22px;
+  align-items: center;
+}
+
+.mesh-archive-row:hover {
+  background: #ffffff;
+  color: var(--mesh-accent);
+}
+
+.mesh-archive-thumb {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 2px;
+  background: #f1f2f8;
+  display: flex;
+  align-items: center;
+}
+
+.mesh-archive-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mesh-archive-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.mesh-archive-meta .mesh-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 99px;
+  background: #c3c5d6;
+  flex: none;
+}
+
+.mesh-archive-date {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #41435c;
+}
+
+.mesh-archive-byline {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #a0a2b8;
+  text-transform: uppercase;
+}
+
+.mesh-archive-title-row {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: inherit;
+}
+
+.mesh-archive-desc {
+  margin: 0;
+  font-size: 14px;
+  color: var(--mesh-muted);
+  line-height: 1.55;
+  max-width: 76ch;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mesh-archive-read {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: #a0a2b8;
+  text-align: right;
+}
+
+@media (max-width: 700px) {
+  .mesh-archive-row {
+    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-areas:
+      "thumb body"
+      "read read";
+    row-gap: 10px;
+  }
+
+  .mesh-archive-row .mesh-archive-thumb { grid-area: thumb; }
+  .mesh-archive-row > span:nth-child(2) { grid-area: body; }
+  .mesh-archive-read { grid-area: read; text-align: left; }
+}
+
+.mesh-archive-footer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-top: 1px solid #e4e6f0;
+  padding: 26px 4px 0;
+  margin-top: 8px;
+}
+
+.mesh-load-more-btn {
+  border: 1px solid var(--mesh-accent);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 11px 24px;
+  border-radius: 99px;
+  background: transparent;
+  color: var(--mesh-accent);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.mesh-load-more-btn:hover {
+  background: var(--mesh-accent);
+  color: #ffffff;
+}
+
+/* ---------------- Announcement archive: filter pills + detail view ---------------- */
+
+.mesh-filter-pill {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mesh-muted);
+  padding: 9px 16px;
+  border-radius: 99px;
+  background: transparent;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.mesh-filter-pill:hover {
+  color: var(--mesh-accent);
+  background: var(--mesh-accent-soft);
+}
+
+.mesh-filter-pill.active {
+  font-weight: 700;
+  color: var(--mesh-accent);
+  background: var(--mesh-accent-soft);
+}
+
+.mesh-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 36px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .mesh-detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.mesh-detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--mesh-border-2);
+}
+
+.mesh-detail-poster {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: #f1f2f8;
+  cursor: zoom-in;
+  border: none;
+  padding: 0;
+}
+
+.mesh-detail-poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mesh-detail-poster-tag {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 99px;
+  background: rgba(20, 21, 43, .76);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mesh-detail-attach-panel {
+  background: #ffffff;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mesh-detail-attach-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #a0a2b8;
+}
+
+.mesh-detail-attach-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mesh-accent);
+}
+
+.mesh-detail-attach-item:hover {
+  color: var(--mesh-accent-2);
+}
+
+.mesh-detail-attach-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 99px;
+  background: var(--mesh-accent-soft);
+  flex: none;
+}
+
+/* Poster shown in-flow below the body text (single-column announcement detail
+   layout) rather than in a side panel — see .mesh-detail-poster above for the
+   sidebar version this replaces. */
+.mesh-detail-poster-inline {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  max-height: 360px;
+  margin-top: 22px;
+  border: none;
+  padding: 0;
+  border-radius: 8px;
+  background: var(--mesh-border-2);
+  cursor: zoom-in;
+}
+
+.mesh-detail-poster-inline img {
+  display: block;
+  max-width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+}
+
+/* ---------------- Modals ---------------- */
+
+/* =============== NISAH =============== */
+/* Bake the dark tint into background-color directly (like .guide-backdrop
+   in register.blade.php) and force full opacity on .show, instead of
+   depending on Bootstrap's own opacity:.5 fade — matches register's
+   working technique so the blur actually renders at full strength. */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+}
+/* =============================================== */
+
+.mesh-modal-grid {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+}
+
+.mesh-modal-grid.mesh-modal-grid-wide {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 760px) {
+  .mesh-modal-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.mesh-modal-image-panel {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  min-height: 220px;
+  background-color: #1a1670;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image .1s ease;
+}
+
+/* The grid's default align-items:stretch would otherwise force this column
+   to match the (variable-length) text column's height, which is what made
+   the contained photo render at a different size on every article — fixing
+   the aspect-ratio above only helps once the column stops being stretched. */
+.mesh-modal-grid > :first-child {
+  align-self: start;
+}
+
+.mesh-modal-image-panel.mesh-lightbox-trigger {
+  cursor: zoom-in;
+}
+
+/* ---- Multi-image carousel (News modal poster, when a news item has more
+   than one photo) — arrows/counter overlay the image panel itself, dots
+   sit in their own row underneath. See data-mesh-carousel-* wiring in
+   mesh-v4.js. ---- */
+.mesh-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 99px;
+  border: none;
+  background: rgba(20, 21, 43, .55);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.mesh-carousel-arrow:hover {
+  background: rgba(20, 21, 43, .8);
+}
+
+.mesh-carousel-arrow.mesh-carousel-prev { left: 10px; }
+.mesh-carousel-arrow.mesh-carousel-next { right: 10px; }
+
+.mesh-carousel-counter {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  background: rgba(20, 21, 43, .55);
+  padding: 4px 9px;
+  border-radius: 99px;
+  z-index: 2;
+}
+
+.mesh-carousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  padding: 12px;
+  background: #1a1670;
+}
+
+.mesh-carousel-dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, .35);
+  cursor: pointer;
+}
+
+.mesh-carousel-dot.active {
+  width: 16px;
+  background: var(--mesh-yellow);
+}
+
+.mesh-modal-cover {
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  background: linear-gradient(150deg, #241f9e 0%, #4b39d6 100%);
+  color: #ffffff;
+  padding: 30px 26px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+
+.mesh-modal-cover-pattern {
+  position: absolute;
+  top: -18%;
+  left: -16%;
+  width: 136%;
+  height: 150%;
+  color: rgba(255, 255, 255, .26);
+  pointer-events: none;
+}
+
+.mesh-modal-cover-tag {
+  position: relative;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  color: var(--mesh-yellow);
+}
+
+.mesh-modal-cover-title {
+  position: relative;
+  font-family: 'Anton', 'Figtree', sans-serif;
+  font-size: 28px;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.mesh-modal-cover-meta {
+  position: relative;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, .75);
+}
+
+.mesh-modal-text-panel {
+  padding: 30px 32px;
+  overflow-y: auto;
+  max-height: 78vh;
+}
+
+.mesh-modal-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+}
+
+.mesh-modal-tag {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #41435c;
+  background: #f1f2f8;
+  padding: 6px 12px;
+  border-radius: 99px;
+}
+
+.mesh-modal-next {
+  border-top: 1px solid var(--mesh-border);
+  background: #fbfbfe;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mesh-modal-next span:first-child {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #a0a2b8;
+  flex: none;
+}
+
+.mesh-modal-next button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--mesh-ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mesh-modal-next button:hover {
+  color: var(--mesh-accent);
+}
+
+.mesh-modal-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 32px;
+  border-top: 1px solid var(--mesh-border);
+  background: #fbfbfe;
+}
+
+.mesh-modal .modal-content {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* admin.css's global .btn-close rule shrinks the "x" glyph to background-size:25%,
+   which (combined with this button's padded pill wrapper) makes it nearly invisible
+   here — restore Bootstrap's own default sizing, scoped to these modals only. */
+.mesh-modal .btn-close {
+  background-size: 1em auto;
+}
+
+.mesh-modal-header {
+  padding: 26px 30px 14px;
+  border-bottom: 1px solid var(--mesh-border);
+}
+
+.mesh-modal-title {
+  margin: 0 0 8px;
+  font-family: 'Anton', 'Figtree', sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: var(--mesh-ink);
+}
+
+.mesh-modal-meta {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--mesh-faint);
+}
+
+.mesh-modal-body {
+  padding: 24px 30px 28px;
+}
+
+.mesh-modal-content-text {
+  font-size: 15.5px;
+  color: #3c3e57;
+  line-height: 1.75;
+}
+
+.mesh-modal-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.mesh-modal-gallery img {
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--mesh-border-2);
+  cursor: zoom-in;
+}
+
+/* ---------------- Poster lightbox ---------------- */
+
+.mesh-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(15, 14, 52, .82);
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.mesh-lightbox.show {
+  display: flex;
+}
+
+.mesh-lightbox-inner {
+  position: relative;
+  max-width: min(760px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mesh-lightbox-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.mesh-lightbox-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.mesh-lightbox-meta {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, .62);
+}
+
+.mesh-lightbox-close {
+  margin-left: auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, .16);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.mesh-lightbox-close:hover {
+  background: rgba(255, 255, 255, .3);
+}
+
+.mesh-lightbox-image {
+  display: block;
+  max-width: 100%;
+  max-height: 80vh;
+  min-width: 240px;
+  min-height: 240px;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 3px;
+}
+
+/* #============= ORI CODE ============== */
+/* =============== NISAH =============== */
+/* ---------------- Dark mode (Oct 2026) ----------------
+   Turned on by html[data-mesh-theme="dark"] (set from localStorage 'mesh-theme' in the
+   layout <head>, toggled by #meshThemeToggle in mesh-v4.js), and ONLY on pages whose body has
+   .mesh-dark-ready (pages that declare @section('mesh_dark_ready'), Home for now), so the other
+   pages sharing layouts/app-all.blade.php are never half-dark. Homepage content (greeting,
+   service cards, popups) is styled in inc/home-greeting.blade.php. */
+/* (closing line of this section was: =============================================== ) */
+/* #================================ */
+/* ---------------- Dark mode (Oct 2026) ----------------
+   Turned on by html[data-mesh-theme="dark"] (set from localStorage 'mesh-theme' by
+   inc/theme-head.blade.php, toggled by #meshThemeToggle from inc/theme-toggle.blade.php,
+   click handler in mesh-v4.js), on pages whose body has .mesh-dark-ready (every page using
+   layouts/app-all or app-pdms, unless the page declares @section('mesh_dark_off')).
+   This section: colour tokens (--mesh-d-*), switch icon, header, bell panel, sidebar, footer.
+   Shared page parts (cards, tables, forms, popups, plugins): public/css/mesh-dark.css.
+   Homepage content (greeting, service cards, service popups): inc/home-greeting.blade.php. */
+
+/* Sun/moon switch, sits left of the bell and reuses .mesh-bell-btn's box.
+   Sun shows in light mode, moon in dark mode. */
+.mesh-v4-header .mesh-theme-btn .mesh-theme-moon { display: none; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-theme-btn .mesh-theme-sun { display: none; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-theme-btn .mesh-theme-moon { display: inline-block; }
+
+html[data-mesh-theme="dark"] body.mesh-dark-ready {
+  --mesh-d-bg: #0a0e18;
+  --mesh-d-surface: #121829;
+  --mesh-d-surface-hover: #161e34;
+  --mesh-d-card: #1c1340;
+  --mesh-d-card-border: #3a2768;
+  --mesh-d-text: #e8eaf4;
+  --mesh-d-muted: #9aa2bd;
+  --mesh-d-border: #232c45;
+  --mesh-d-gold: #f3c35f;
+  color-scheme: dark;
+  background: var(--mesh-d-bg);
+  color: var(--mesh-d-text);
+}
+
+/* Header */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header {
+  background: var(--mesh-d-surface);
+  border-bottom-color: var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-page-title { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-page-subtitle { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-toggle-btn,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-bell-btn {
+  background: transparent;
+  border-color: var(--mesh-d-border);
+  color: #b8bfd6;
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-toggle-btn:hover,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-bell-btn:hover {
+  background: var(--mesh-d-surface-hover);
+  color: var(--mesh-d-text);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-user-chip {
+  background: var(--mesh-d-surface);
+  border-color: var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-user-name { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-user-avatar {
+  background: linear-gradient(135deg, #6d28d9, #4338ca);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .dropdown-menu {
+  background: var(--mesh-d-surface-hover);
+  border: 1px solid var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .dropdown-item { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .dropdown-item:hover { background: #1c2540; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .dropdown-divider { border-top-color: var(--mesh-d-border); }
+
+/* Header bell's announcements panel (inc/announcement-bell.blade.php) */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-count { border-color: var(--mesh-d-surface); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-panel {
+  background: var(--mesh-d-surface);
+  border-color: var(--mesh-d-border);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .5);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-head { border-bottom-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-title,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-item { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-markall,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-panel .mesh-view-all { color: #c4b5fd; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-item {
+  background: var(--mesh-d-surface);
+  border-bottom-color: #1b2238;
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-item.is-unread { background: #161d33; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-item:hover { background: #1c2540; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-preview,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-empty,
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-link { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-link:hover { color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-annbell-thumb { background: var(--mesh-d-surface-hover); }
+
+/* Sidebar: deeper violet gradient; active link becomes a gold-tinted row with a gold edge */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-sidebar {
+  background: linear-gradient(190deg, #140c33 0%, #2e1a5c 100%);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-sidebar .mesh-nav-link { color: #ddd6f5; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-sidebar .mesh-nav-link i { color: currentColor; opacity: .85; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-sidebar .mesh-nav-link:hover {
+  background: rgba(255, 255, 255, .07);
+  color: #ffffff;
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-sidebar .mesh-nav-link.mesh-active {
+  background: rgba(243, 195, 95, .14);
+  color: #ffffff;
+  box-shadow: inset 3px 0 0 var(--mesh-d-gold);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-sidebar ul.mesh-sub-nav .mesh-nav-link { color: #b4a8d9; }
+
+/* Footer */
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-footer {
+  background: var(--mesh-d-surface);
+  border-top-color: var(--mesh-d-border);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-footer .mesh-footer-text { color: var(--mesh-d-muted); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-footer .mesh-footer-version {
+  color: #c4b5fd;
+  background: rgba(196, 181, 253, .12);
+}
+html[data-mesh-theme="dark"] body.mesh-dark-ready .back-to-top { background: #6d28d9; }
+/* #================================ */
+
+/* #========== NEWLY ADDED ============ */
+/* ---------------- Language switch (Oct 2026) ----------------
+   EN / BM switch in the header, left of the sun/moon button (inc/lang-toggle.blade.php,
+   script public/js/mesh-lang.js). Same 40px height and 12px corners as the other header buttons. */
+.mesh-v4-header .mesh-lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 40px;
+  padding: 3px;
+  flex: none;
+  border: 1px solid #e3e4f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+.mesh-v4-header .mesh-lang-toggle button {
+  height: 32px;
+  min-width: 34px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  cursor: pointer;
+  font-family: 'Figtree', Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--mesh-muted);
+}
+.mesh-v4-header .mesh-lang-toggle button:hover { background: #f2f3fa; color: var(--mesh-ink); }
+.mesh-v4-header .mesh-lang-toggle button[aria-pressed="true"] { background: var(--mesh-accent); color: #ffffff; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-lang-toggle { background: transparent; border-color: var(--mesh-d-border); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-lang-toggle button { color: #b8bfd6; }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-lang-toggle button:hover { background: var(--mesh-d-surface-hover); color: var(--mesh-d-text); }
+html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-v4-header .mesh-lang-toggle button[aria-pressed="true"] { background: rgba(243, 195, 95, .16); color: var(--mesh-d-gold); }
+@media (max-width: 575.98px) {
+  .mesh-v4-header .mesh-lang-toggle button { min-width: 30px; padding: 0 6px; }
+}
+/* #================================ */

@@ -1,20 +1,26 @@
 @extends('layouts.app-all')
 
-@section('title', 'Devops Request')
+@section('title', 'DevOps Request Form')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
   <?php 
     $pagename = "DevopsRequest";
   ?>
 
     <div class="pagetitle">
-      <h1>Devops Requests</h1>
+      <h1>DevOps Request Form</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
           <li class="breadcrumb-item">Users</li>
-          <li class="breadcrumb-item active">DRF</li>  
+          <li class="breadcrumb-item active">DevOps Request Form</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -108,4 +114,7 @@
 
 </section>
 
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

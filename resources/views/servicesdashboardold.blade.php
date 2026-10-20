@@ -147,7 +147,7 @@
         </div>
 
         <!-- <div class="col-lg-4">
-          <a href="https://mesh.moe.gov.bn/borangpermohonanperanan">
+          <a href="http://127.0.0.1:8000/borangpermohonanperanan">
           <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue;">
             <div class="card-body" style="padding: 15px;">
                   <div class="d-flex align-items-center">
@@ -186,7 +186,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
                           <div class="modal-body">
-                            <a href="https://mesh.moe.gov.bn/borangpermohonanperanan">
+                            <a href="http://127.0.0.1:8000/borangpermohonanperanan">
                               <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                                 <div class="card-body" style="padding: 10px;">
                                       <div class="d-flex align-items-center">
@@ -201,7 +201,7 @@
                               </div>
                             </a>
             
-              <a href="https://mesh.moe.gov.bn/moeevent">
+              <a href="http://127.0.0.1:8000/moeevent">
                 <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                   <div class="card-body" style="padding: 10px;">
                         <div class="d-flex align-items-center">
@@ -216,7 +216,7 @@
                 </div>
               </a>
 
-              <a href="https://mesh.moe.gov.bn/borangaduanssm">
+              <a href="http://127.0.0.1:8000/borangaduanssm">
               <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                   <div class="card-body" style="padding: 10px;">
                         <div class="d-flex align-items-center">
@@ -231,7 +231,7 @@
                 </div>
               </a>
 
-              <a href="https://mesh.moe.gov.bn/sk">
+              <a href="http://127.0.0.1:8000/sk">
               <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                   <div class="card-body" style="padding: 10px;">
                         <div class="d-flex align-items-center">
@@ -246,7 +246,7 @@
                 </div>
               </a>
 
-              <!-- <a href="https://mesh.moe.gov.bn/pdt">
+              <!-- <a href="http://127.0.0.1:8000/pdt">
               <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                   <div class="card-body" style="padding: 10px;">
                         <div class="d-flex align-items-center">
@@ -261,7 +261,7 @@
                 </div>
               </a> -->
 
-              <a href="https://mesh.moe.gov.bn/drf">
+              <a href="http://127.0.0.1:8000/drf">
               <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                   <div class="card-body" style="padding: 10px;">
                         <div class="d-flex align-items-center">
@@ -276,7 +276,7 @@
                 </div>
               </a>
 
-              <!-- <a href="https://mesh.moe.gov.bn/tanyamoebn">
+              <!-- <a href="http://127.0.0.1:8000/tanyamoebn">
               <div class="card info-card sales-card" style="padding: 0px; border: 1px solid blue; margin-bottom: 20px;">
                   <div class="card-body" style="padding: 10px;">
                         <div class="d-flex align-items-center">

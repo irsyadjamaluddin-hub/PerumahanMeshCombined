@@ -5,7 +5,7 @@
 
 @section('content')
 
-    @php $pagename = "newsadmin"; @endphp
+    @php $pagename = "News Admin"; @endphp
 
     {{-- Breadcrumbs / Page Title --}}
     <div class="pagetitle">

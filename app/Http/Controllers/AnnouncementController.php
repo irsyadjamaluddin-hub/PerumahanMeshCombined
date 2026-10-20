@@ -40,17 +40,35 @@ class AnnouncementController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function announcementindex()
+    public function announcementindex(Request $request)
     {
         $user = Auth::user();
 
         // Check if there are any records in the SrNews table
         $announcementExist = Announcement::exists();
 
-        $announcements = Announcement::orderBy('created_at', 'DESC')->paginate(5);
+        $search = $request->query('q');
+        $kind = $request->query('kind');
 
-        return view('announcement.announcementindex',compact('user', 'announcements','announcementExist'));
-    }  
+        $query = Announcement::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('announcement_title', 'like', '%' . $search . '%')
+                  ->orWhere('announcement_content', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($kind && in_array($kind, ['urgent', 'info', 'update', 'maintenance'])) {
+            $query->where('announcement_icon', 'like', '%"' . $kind . '"%');
+        }
+
+        $announcements = $query->orderBy('created_at', 'DESC')
+            ->paginate(5)
+            ->appends($request->query());
+
+        return view('announcement.announcementindex', compact('user', 'announcements', 'announcementExist', 'search', 'kind'));
+    }
 
      public function announcementadmin()
     {
@@ -118,6 +136,7 @@ class AnnouncementController extends Controller
         $destinationPath = public_path('announcement');
         $file->move($destinationPath, $filename);
 
+        $path = 'announcement/' . $filename;
         $announcement->announcement_file = $filename;
         $announcement->announcement_file_path = $path;
     }
@@ -157,7 +176,7 @@ class AnnouncementController extends Controller
 
             // Store the file name and path in the respective arrays
             $pdfFileNames[] = $filename;
-            $pdfFilePaths[] = $path;
+            $pdfFilePaths[] = 'announcement/' . $filename;
         }
 
         // Save the pdf_file names and paths as arrays in the Announcement model
@@ -188,7 +207,7 @@ class AnnouncementController extends Controller
         // Handle image file synchronization
         if ($request->hasFile('announcement_file')) {
             $announcementease->announcement_file = $announcement->announcement_file;
-            $announcement->announcement_file_path = 'announcement/' . $filename;
+            $announcementease->announcement_file_path = $path;
         }
 
         // Handle uploaded pdf synchronization
@@ -291,10 +310,17 @@ class AnnouncementController extends Controller
     public function announcementupdate(Request $request, $created_at)
 {
     try {
-        $createdAt = Carbon::parse($created_at)->format('Y-m-d H:i');
-        // Fetch both announcement and announcementease records
-        $announcement = Announcement::whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') = ?", [$createdAt])->first();
-        $announcementease = Announcement2::whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') = ?", [$createdAt])->first();
+        $createdAt = Carbon::parse($created_at);
+        // Fetch both announcement and announcementease records. Announcement's
+        // "mysql"-named connection actually resolves to the sqlsrv driver (see
+        // config/database.php), so DATE_FORMAT (MySQL-only) can't be used here —
+        // whereBetween works on both drivers. Announcement2 genuinely runs on
+        // MySQL (the "ease" connection), so its DATE_FORMAT call stays as-is.
+        $announcement = Announcement::whereBetween('created_at', [
+            $createdAt->copy()->second(0),
+            $createdAt->copy()->second(59)
+        ])->first();
+        $announcementease = Announcement2::whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') = ?", [$createdAt->format('Y-m-d H:i')])->first();
         
         // Generate a unique ID for filenames
         $uniqueId = uniqid();
@@ -340,12 +366,13 @@ class AnnouncementController extends Controller
 
             $filename = $uniqueId . '.' . $file->getClientOriginalExtension();
             $destinationPath = public_path('announcement');
-            $file->move($destinationPath, $filename);       
+            $file->move($destinationPath, $filename);
 
             if ($announcement->announcement_file_path) {
                 Storage::delete($announcement->announcement_file_path);
             }
 
+            $path = 'announcement/' . $filename;
             $announcement->announcement_file = $filename;
             $announcement->announcement_file_path = $path;
         }
@@ -425,7 +452,7 @@ class AnnouncementController extends Controller
                 $announcementease->announcement_file_path = null;
             } elseif ($request->hasFile('announcement_file')) {
                 $announcementease->announcement_file = $announcement->announcement_file;
-                $announcement->announcement_file_path = 'announcement/' . $filename;
+                $announcementease->announcement_file_path = $path;
             }
 
             // Handle pdf files for announcementease
@@ -467,11 +494,18 @@ class AnnouncementController extends Controller
      public function announcementdestroy($created_at)
 {
     try {
-        $createdAt = Carbon::parse($created_at)->format('Y-m-d H:i');
-        
-        // Retrieve the announcement and announcementease records
-        $announcement = Announcement::whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') = ?", [$createdAt])->first();
-        $announcementease = Announcement2::whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') = ?", [$createdAt])->first();
+        $createdAt = Carbon::parse($created_at);
+
+        // Retrieve the announcement and announcementease records. Announcement's
+        // "mysql"-named connection actually resolves to the sqlsrv driver (see
+        // config/database.php), so DATE_FORMAT (MySQL-only) can't be used here —
+        // whereBetween works on both drivers. Announcement2 genuinely runs on
+        // MySQL (the "ease" connection), so its DATE_FORMAT call stays as-is.
+        $announcement = Announcement::whereBetween('created_at', [
+            $createdAt->copy()->second(0),
+            $createdAt->copy()->second(59)
+        ])->first();
+        $announcementease = Announcement2::whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') = ?", [$createdAt->format('Y-m-d H:i')])->first();
 
         // Check if the announcement record exists
         if ($announcement) {

@@ -3,6 +3,12 @@
 @section('title', 'Review Message')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "Online Notification Service";
@@ -104,4 +110,7 @@ $pagename = "Online Notification Service";
 
   
 </section>
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

@@ -28,7 +28,7 @@
     @endif
 
     <div class="col-md-1 text-left">
-        <a href="https://mesh.moe.gov.bn/datakehadiran/indexlist" class="btn btn-primary text-right" style="margin-bottom: 10px; height: 2.39rem;">
+        <a href="http://127.0.0.1:8000/datakehadiran/indexlist" class="btn btn-primary text-right" style="margin-bottom: 10px; height: 2.39rem;">
         <i class="bi bi-arrow-left-circle"></i>
         </a>
     </div> 

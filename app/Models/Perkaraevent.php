@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Biodata;  //======================= NEWLY ADDED ================
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,7 +47,7 @@ class Perkaraevent extends Model
         'created_at',
         'updated_at',
         'email'
-      
+
               ];
 			  
 			   /**
@@ -74,7 +76,8 @@ class Perkaraevent extends Model
 
     public function Department()
     {
-        return $this->belongsTo('App\Models\Department','jabatan');
+        // return $this->belongsTo('App\Models\Department','jabatan');
+        return $this->belongsTo(Department::class, 'jabatan', 'id');
     }
 
   
@@ -99,5 +102,11 @@ class Perkaraevent extends Model
     public function participant()
     {
         return $this->belongsTo(moeevent::class, 'id', 'id');
+    }
+
+
+    public function biodata()
+    {
+    return $this->belongsTo(Biodata::class, 'icno', 'ic_no');
     }
 }

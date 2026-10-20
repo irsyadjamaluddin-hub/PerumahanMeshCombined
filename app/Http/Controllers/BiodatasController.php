@@ -143,6 +143,10 @@ class BiodatasController extends Controller
 						->where('ic_no', $icNos)
 						->first();
 
+			if (!$biodata) {
+				return redirect()->route('biodatas.biodata.create');
+			}
+
 			$biodatas = Biodata::all()
 						->where('ic_no', '=', $id);
 

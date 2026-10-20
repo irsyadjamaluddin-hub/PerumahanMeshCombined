@@ -102,20 +102,17 @@ class TeacherController extends Controller
         ));
     }
 
-   /**
- /**
- * Export filtered teachers to Excel
- */
-public function export(Request $request)
+// Shared by export() and the dashboard report: applies the same
+// filters used for the teaching staff export to a base query.
+private function buildFilteredTeachersQuery(Request $request)
 {
-    
     $jawatan = $request->get('jawatan');
     $jantina = $request->get('jantina');
     $tempatBertugas = $request->get('tempat_bertugas');
     $daerah = $request->get('daerah');
     $kelulusan = $request->get('kelulusan');
     $status = $request->get('status');
-    
+
     $query = PemegangJawatanTeach::select(
         'Nama',
         DB::raw('[No Kad Pintar] as noKadPintar'),
@@ -131,6 +128,7 @@ public function export(Request $request)
         DB::raw('[Kelulusan Tertnggi] as kelulusan'),
         'tatatertib',
         'tarikhBersaraOverride',
+        DB::raw('[Tarikh Lahir] as tarikhLahir'),
         DB::raw('DATEDIFF(YEAR, [Tarikh Lahir], GETDATE()) as umur')
     );
 
@@ -317,8 +315,23 @@ public function export(Request $request)
                 ->whereRaw('tarikhBersaraOverride <= CAST(GETDATE() AS DATE)');
         }
     }
-    
-    $teachers = $query->get();
+
+    return $query;
+}
+
+/**
+ * Export filtered teachers to Excel
+ */
+public function export(Request $request)
+{
+    $jawatan = $request->get('jawatan');
+    $jantina = $request->get('jantina');
+    $tempatBertugas = $request->get('tempat_bertugas');
+    $daerah = $request->get('daerah');
+    $kelulusan = $request->get('kelulusan');
+    $status = $request->get('status');
+
+    $teachers = $this->buildFilteredTeachersQuery($request)->get();
 
     $filename = 'teaching-staff';
     $filters = [];
@@ -350,6 +363,159 @@ public function export(Request $request)
         new TeachersExport($teachers, $jawatan, $jantina, $tempatBertugas, $daerah, $kelulusan, $status),
         $filename
     );
+}
+
+// ---------------------------------------------------------------
+// Teaching Dashboard Report (same filters as the Export Excel
+// modal, rendered as summary counts + charts instead of a download)
+// ---------------------------------------------------------------
+public function report()
+{
+    $jawatanOptions = PemegangJawatanTeach::select(
+        DB::raw("CASE
+            WHEN LOWER([Jawatan di Sekolah]) LIKE '%guru besar%' THEN 'Guru Besar'
+            ELSE [Jawatan di Sekolah]
+        END as jawatan")
+    )->whereNotNull('Jawatan di Sekolah')->where('Jawatan di Sekolah', '!=', '')
+        ->distinct()->pluck('jawatan')->unique()->sort()->values();
+
+    $tempatBertugasOptions = PemegangJawatanTeach::select(DB::raw('[Sekolah Tempat Bertugas] as tempatBertugas'))
+        ->whereNotNull('Sekolah Tempat Bertugas')->where('Sekolah Tempat Bertugas', '!=', '')
+        ->distinct()->pluck('tempatBertugas')->unique()->sort()->values();
+
+    $daerahOptions = ['Brunei Muara', 'Tutong', 'Kuala Belait', 'Temburong'];
+    $kelulusanOptions = ['PhD', 'PGCE', 'Master', 'Degree', 'Higher Diploma', 'BTEC', 'Diploma', 'ND', 'Certificate', 'O Level', 'A Level'];
+
+    return view('hrs.pemegang-jawatan.reportteach', compact(
+        'jawatanOptions',
+        'tempatBertugasOptions',
+        'daerahOptions',
+        'kelulusanOptions'
+    ));
+}
+
+public function reportData(Request $request)
+{
+    $teachers = $this->buildFilteredTeachersQuery($request)->get();
+
+    $total = $teachers->count();
+    $avgAge = $total ? round($teachers->pluck('umur')->filter(fn($v) => $v !== null)->avg(), 1) : 0;
+
+    $countBy = function (string $field, ?int $limit = null) use ($teachers) {
+        $counts = $teachers
+            ->groupBy(fn($t) => trim((string) ($t->{$field} ?? '')) !== '' ? $t->{$field} : 'Unknown')
+            ->map->count()
+            ->sortDesc();
+
+        return $limit ? $counts->take($limit) : $counts;
+    };
+
+    $statusCounts = ['Active' => 0, 'Retired' => 0, 'Inactive' => 0, 'Unknown' => 0];
+    $ageBuckets = ['<30' => 0, '30-39' => 0, '40-49' => 0, '50-59' => 0, '60+' => 0, 'Unknown' => 0];
+    $retireBuckets = ['Within 1 year' => 0, '1-2 years' => 0, '2-5 years' => 0, '5+ years' => 0, 'Unknown' => 0];
+    $now = \Carbon\Carbon::now();
+
+    foreach ($teachers as $teacher) {
+        $umur = $teacher->umur ?? null;
+        $tatatertib = $teacher->tatatertib ?? 0;
+        $override = $teacher->tarikhBersaraOverride ?? null;
+
+        // Standardize free-text kelulusan into the same buckets used by
+        // the non-teaching report, since teacher records don't have a
+        // precomputed standardized column.
+        $teacher->kelulusan_std = $this->standardizeKelulusan($teacher->kelulusan ?? '');
+
+        // Effective retirement date: tatatertib override if it's still in the
+        // future (matches the Active/Retired logic used by export()'s SQL filters),
+        // otherwise birth date + 60 years.
+        $tarikhBersara = null;
+        if ($tatatertib == 1 && $override) {
+            $tarikhBersara = $override;
+        } elseif ($teacher->tarikhLahir) {
+            try {
+                $tarikhBersara = \Carbon\Carbon::parse($teacher->tarikhLahir)->addYears(60)->format('Y-m-d');
+            } catch (\Exception $e) {
+                $tarikhBersara = null;
+            }
+        }
+
+        // ---- Status ----
+        if ($umur === null) {
+            $statusCounts['Unknown']++;
+        } elseif ($tatatertib == 1 && $override && $this->isPastDate($override)) {
+            $statusCounts['Inactive']++;
+        } elseif ($umur >= 60) {
+            $statusCounts['Retired']++;
+        } else {
+            $statusCounts['Active']++;
+        }
+
+        // ---- Age bucket ----
+        if ($umur === null) $ageBuckets['Unknown']++;
+        elseif ($umur < 30) $ageBuckets['<30']++;
+        elseif ($umur < 40) $ageBuckets['30-39']++;
+        elseif ($umur < 50) $ageBuckets['40-49']++;
+        elseif ($umur < 60) $ageBuckets['50-59']++;
+        else $ageBuckets['60+']++;
+
+        // ---- Upcoming retirement timeline ----
+        if (!$tarikhBersara) {
+            $retireBuckets['Unknown']++;
+            continue;
+        }
+        try {
+            $months = $now->diffInMonths(\Carbon\Carbon::parse($tarikhBersara), false);
+            if ($months < 0) $retireBuckets['Unknown']++;
+            elseif ($months <= 12) $retireBuckets['Within 1 year']++;
+            elseif ($months <= 24) $retireBuckets['1-2 years']++;
+            elseif ($months <= 60) $retireBuckets['2-5 years']++;
+            else $retireBuckets['5+ years']++;
+        } catch (\Exception $e) {
+            $retireBuckets['Unknown']++;
+        }
+    }
+
+    return response()->json([
+        'total' => $total,
+        'avgAge' => $avgAge,
+        'statusCounts' => $statusCounts,
+        'ageBuckets' => $ageBuckets,
+        'retireBuckets' => $retireBuckets,
+        'byJantina' => $countBy('jantina'),
+        'byJawatan' => $countBy('jawatan', 10),
+        'byKelulusan' => $countBy('kelulusan_std'),
+        'byTempatBertugas' => $countBy('tempatBertugas', 10),
+        'byDaerah' => $countBy('daerah'),
+    ]);
+}
+
+private function standardizeKelulusan(string $kelulusan): string
+{
+    $kel = strtolower(trim($kelulusan));
+
+    if ($kel === '') return 'Unknown';
+    if (preg_match('/\b(phd|doctor of|doktor falsafah|dphil)\b/', $kel)) return 'PhD';
+    if (preg_match('/\b(pgce|pgde|postgraduate certificate)\b/', $kel)) return 'PGCE';
+    if (preg_match('/\b(master|m\.?ed\b|m\.?sc\b|m\.?a\b|mphil|m\.?phil|sarjana(?!\s*muda))\b/', $kel)) return 'Master';
+    if (preg_match('/\b(bachelor|b\.?a\b|b\.?ed\b|b\.?eng\b|b\.?sc\b|b\.?tech|degree|sarjana muda|ijazah)\b/', $kel)) return 'Degree';
+    if (preg_match('/\b(higher\s*diploma|higher\s*national\s*diploma|hnd|bdtvec)\b/', $kel)) return 'Higher Diploma';
+    if (preg_match('/\bbtec\b/', $kel)) return 'BTEC';
+    if (preg_match('/\bdiploma\b/', $kel)) return 'Diploma';
+    if (preg_match('/\b(national diploma)\b/', $kel)) return 'ND';
+    if (preg_match('/\b(sijil|certificate)\b/', $kel)) return 'Certificate';
+    if (preg_match('/\b(o[-\s]?level|gce o)\b/', $kel)) return 'O Level';
+    if (preg_match('/\b(a[-\s]?level|gce a)\b/', $kel)) return 'A Level';
+
+    return 'Other';
+}
+
+private function isPastDate($date): bool
+{
+    try {
+        return \Carbon\Carbon::parse($date)->isPast();
+    } catch (\Exception $e) {
+        return false;
+    }
 }
 
 /**

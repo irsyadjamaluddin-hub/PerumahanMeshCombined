@@ -3,6 +3,12 @@
 @section('title', 'Perkhidmatan Sesi Soal Jawab')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "Soalan Yang Diajukan";
@@ -36,7 +42,7 @@ $pagename = "Soalan Yang Diajukan";
             <div class="col-md-10">
             </div>  
             <div class="col-md-2" style="text-align:center;">
-                <a href="https://mesh.moe.gov.bn/Q&A" target="_blank" class= "btn btn-primary">
+                <a href="http://127.0.0.1:8000/Q&A" target="_blank" class= "btn btn-primary">
                     <i class="bi bi-link"></i>
                 </a>
                 <a href="/assets/img/qrcode/SoalanAjukan.jpg" target="_blank" class= "btn btn-primary">
@@ -192,4 +198,7 @@ $pagename = "Soalan Yang Diajukan";
 </div>
 </div><!-- End Recent Sales -->
 
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
     @endsection

@@ -231,6 +231,49 @@
                   </div>
                 </div>
 
+                @if(Auth::user()->role == 'admin')
+
+
+                <!-- ===================== NEWLY ADDED =========================-->
+
+
+                <div class="row mb-3">
+                    <label class="col-lg-4 col-form-label">
+                        CC IC Number:
+                    </label>
+
+                    <div class="col-lg-8">
+
+                        <select 
+                            class="form-select"
+                            name="cc_ic[]"
+                            id="cc_ic"
+                            multiple>
+
+                            @foreach($biodatas as $biodata)
+
+                                <option value="{{ $biodata->ic_no }}">
+                                    {{ $biodata->ic_no }} - {{ $biodata->nama }}
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                        <small class="text-muted">
+                            Select user IC number to CC this event
+                        </small>
+
+                    </div>
+                </div>
+
+                @endif
+
+
+                <!--====================================================-->
+
+
+
                 <div class="row mb-3">
                   <label for="inputHurai" class="col-lg-4 col-form-label">Catatan:</label>
                   <div class="col-lg-8">
@@ -276,6 +319,7 @@
       allowClear: true
     });
   </script>
+
     <script>
     $('#myselect2').select2({
       width: '100%',
@@ -283,7 +327,18 @@
       allowClear: true
     });
   </script>
+
+  <!--===================== NEWLY ADDED =========================-->
+
+  </script>
+    $('#cc_ic').select2({
+    width:'100%',
+    placeholder:"Search IC Number",
+    allowClear:true
+});
+  </script>
   
+  <!--====================================================-->
 </section>
 
    

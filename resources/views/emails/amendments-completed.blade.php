@@ -67,7 +67,7 @@
 
                         <!-- Add clickable button/link to MESH -->
                         <div style="text-align: center; margin: 2em 0;">
-                            <a href="https://mesh.moe.gov.bn" 
+                            <a href="http://127.0.0.1:8000" 
                                style="display: inline-block; 
                                       padding: 12px 30px; 
                                       background-color: {{ $purple }}; 
@@ -81,7 +81,7 @@
 
                         <p style="text-align: center; color: #666; font-size: 13px;">
                             atau salin pautan ini: 
-                            <a href="https://mesh.moe.gov.bn" style="color: {{ $purple }};">https://mesh.moe.gov.bn</a>
+                            <a href="http://127.0.0.1:8000" style="color: {{ $purple }};">http://127.0.0.1:8000</a>
                         </p>
 
                         <div style="margin-top: 3em;">

@@ -30,10 +30,18 @@
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.css') }}">
   
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-  
-  
+
+
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- English / Malay switch: keeps the page hidden for a moment when BM is saved, so it doesn't flash English --}}
+@include('inc.lang-head')
+{{-- #================================ --}}
 </head>
 <body class="hold-transition skin-blue sidebar-collapse" style="width: 80%; margin:auto;">
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- English / Malay switch (floating, bottom left) -- this layout has no MESH v4 header to hold it --}}
+@include('inc.lang-float')
+{{-- #================================ --}}
 	<div class="wrapper">   
 		
 		
@@ -129,6 +137,17 @@
 </script>
 
 	</div>
-	
+
+    {{-- @include('inc.smartbot') --}} {{-- SmartBot disabled temporarily --}}
+
+
+    @includeIf('inc.pwa-register')
+
+    @includeIf('inc.pwa-install-banner')
+
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- English / Malay switch: swaps the page text to Malay when BM is picked (word list inside the file) --}}
+<script src="{{ asset('js/mesh-lang.js') }}?v={{ filemtime(public_path('js/mesh-lang.js')) }}"></script>
+{{-- #================================ --}}
 </body>
 </html>

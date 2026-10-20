@@ -43,7 +43,32 @@ class ServicesDashboardController extends Controller
 
     public function servicesdashboard()
     {
-        return view('/servicesdashboard');
+        $user = Auth::user();
+        $icNo = $user->ic_no ?? null;
+
+        // Get tindakan IDs that belong to this user
+        $tindakanIds = DB::table('eminit_tindakandiperlukan')
+            ->where('ic_no', $icNo)
+            ->pluck('id')
+            ->toArray();
+
+        // Get actions for this user
+        $actions = DB::table('eminit_action as ea')
+            ->whereIn('ea.tindakanby_diperlukan', $tindakanIds)
+            ->get();
+
+        // Count only actions where jenis_tindakan is empty
+        $totalEmemoTindakan = $actions->filter(function ($item) {
+            $vals = json_decode($item->jenis_tindakan, true);
+
+            if (!is_array($vals)) {
+                $vals = [];
+            }
+
+            return empty($vals);
+        })->count();
+
+        return view('/servicesdashboard', compact('totalEmemoTindakan'));
     }
 
 	public function welcome(){

@@ -101,8 +101,8 @@
                             
                             <p style="margin-top: 2em; text-align: center;">
                                 Layari portal kami di 
-                                <a href="https://mesh.moe.gov.bn/" style="color: {{ $purple }}; font-weight: bold; text-decoration: none;">
-                                    https://mesh.moe.gov.bn/
+                                <a href="http://127.0.0.1:8000/" style="color: {{ $purple }}; font-weight: bold; text-decoration: none;">
+                                    http://127.0.0.1:8000/
                                 </a>
                             </p>
 

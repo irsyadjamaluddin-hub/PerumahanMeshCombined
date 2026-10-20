@@ -32,17 +32,45 @@ class NewsController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function newsindex()
+    public function newsindex(Request $request)
     {
         $user = Auth::user();
 
         // Check if there are any records in the News table
         $newsExist = News::exists();
 
-        $news = News::orderBy('created_at', 'DESC')->paginate(8);
+        $search = $request->query('q');
+        $year = $request->query('year');
 
-        return view('news.newsindex',compact('user', 'news','newsExist'));
-    }  
+        $query = News::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('news_title', 'like', '%' . $search . '%')
+                  ->orWhere('news_content', 'like', '%' . $search . '%')
+                  ->orWhere('news_name', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($year) {
+            $query->whereYear('news_date', $year);
+        }
+
+        $news = $query->orderBy('news_date', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(8)
+            ->appends($request->query());
+
+        // Real distinct years + article counts, used to build the year filter
+        // (replaces any hardcoded year list) - always computed off the full,
+        // unfiltered table so counts stay stable while a filter is active.
+        $availableYears = News::selectRaw('YEAR(news_date) as yr, COUNT(*) as cnt')
+            ->groupBy(DB::raw('YEAR(news_date)'))
+            ->orderByDesc('yr')
+            ->pluck('cnt', 'yr');
+
+        return view('news.newsindex', compact('user', 'news', 'newsExist', 'search', 'year', 'availableYears'));
+    }
 
     public function newsadmin()
     {

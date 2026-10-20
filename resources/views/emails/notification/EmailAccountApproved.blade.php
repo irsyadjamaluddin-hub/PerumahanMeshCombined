@@ -97,7 +97,7 @@ style="
 
                             <!-- Button -->
                             <div style="margin: 2em auto 0em auto;">
-                                <a href= "https://mesh.moe.gov.bn" style="text-decoration: none;">
+                                <a href= "http://127.0.0.1:8000" style="text-decoration: none;">
                                     <p style="
                                         display: block;
                                         padding: 12px 24px;

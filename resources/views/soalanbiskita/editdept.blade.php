@@ -3,6 +3,12 @@
 @section('title', 'Edit Jabatan List')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php 
     $pagename = "Tanya MOEBN";
@@ -48,7 +54,12 @@
                     <div class="profile-overview pt-3">
 
                         
-                        <h3 class="card-title">Edit Senarai Jabatan</h3>
+                        {{-- #============= ORI CODE ============== --}}
+                        {{-- <h3 class="card-title">Edit Senarai Jabatan</h3> --}}
+                        {{-- #================================ --}}
+                        {{-- Title centred; gold in dark mode (mesh-gold-title, public/css/mesh-dark.css) --}}
+                        <h3 class="card-title mesh-gold-title" style="text-align: center;">Edit Senarai Jabatan</h3>
+                        {{-- #================================ --}}
 
                         <form class="" method="post" action="{{ route('soalanbiskita.soalanbiskita.updatedept') }}" enctype="multipart/form-data"> 
                         @csrf
@@ -104,4 +115,7 @@
 
 
     </section>
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

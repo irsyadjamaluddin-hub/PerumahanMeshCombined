@@ -30,6 +30,13 @@
 				  </div>
 			  @endif
 
+			  @if(Session::has('warning_message'))
+				  <div class="alert alert-warning">
+					  <i class="fas fa-fw fa-exclamation-triangle"></i>
+					  {!! session('warning_message') !!}
+				  </div>
+			  @endif
+
 			  <div class="row mb-6 align-items-center">
     <div class="col-md-6">
         <div class="col-md-2">

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="_ds/industry-f4d377a7-37c6-49e1-b88c-7a2195c2fb6e/styles.css" />
+<script src="_ds/industry-f4d377a7-37c6-49e1-b88c-7a2195c2fb6e/_ds_bundle.js"></script>
+<style>
+  body { margin: 0; }
+  :root {
+    --color-bg: #f5f5fa;
+    --color-surface: #edecf6;
+    --color-text: #191631;
+    --color-accent: #332c7a;
+    --color-accent-2: #462957;
+    --color-divider: color-mix(in srgb, #191631 16%, transparent);
+    --color-accent-100: #eceaf7;
+    --color-accent-200: #d5d1ec;
+    --color-accent-300: #b0a9db;
+    --color-accent-400: #7f75bd;
+    --color-accent-500: #332c7a;
+    --color-accent-600: #2c2668;
+    --color-accent-700: #2a2466;
+    --color-accent-800: #1e1a4e;
+    --color-accent-900: #140f36;
+    --color-accent-2-100: #f2eaf3;
+    --color-accent-2-700: #5b3570;
+    --color-accent-2-900: #2b1545;
+    --mesh-gold: #f2c245;
+    --mesh-gold-ink: #7a5a06;
+    --mesh-header: linear-gradient(105deg, #241e6a 0%, #140f36 52%, #462957 100%);
+  }
+  a { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent-800); }
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)">
+
+  <header class="nav" style="padding:16px 26px;border-bottom:3px solid var(--mesh-gold);align-items:baseline;gap:16px;flex-wrap:wrap;background:var(--mesh-header);color:#fff">
+    <span class="nav-brand" style="font-size:23px;margin-right:0;flex:none;white-space:nowrap;color:#fff">Pengurusan Perumahan</span>
+    <span style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;margin-right:auto;min-width:0;color:var(--mesh-gold)">Sistem rekod RS &amp; IQ</span>
+    <span class="tag" style="border:1px solid rgba(255,255,255,0.55);color:#fff;background:transparent">Demo</span>
+  </header>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:stretch;flex:1">
+
+    <nav style="flex:0 0 236px;min-width:200px;padding:22px 14px 40px;display:flex;flex-direction:column;gap:22px;background:var(--color-accent-900);color:#fff">
+      <button type="button" class="btn btn-primary blueprint" onClick="{{ goNewAny }}" style="width:100%;padding:11px 12px;background:var(--mesh-gold);border-color:var(--mesh-gold);color:#241e6a" style-hover="background:#ffd05e;border-color:#ffd05e">
+        <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+          <i class="corner tl"></i>
+          <i class="corner tr"></i>
+          <i class="corner bl"></i>
+          <i class="corner br"></i>
+        </sc-if>
+        + Rekod Baharu
+      </button>
+      <sc-for list="{{ navGroups }}" as="group" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <h6 style="margin:0 0 8px 6px;color:rgba(255,255,255,0.55);letter-spacing:0.12em">{{ group.title }}</h6>
+          <sc-for list="{{ group.items }}" as="item" hint-placeholder-count="6">
+            <button type="button" onClick="{{ item.go }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;font-family:var(--font-body);font-size:14px;padding:10px 12px;cursor:pointer;background:{{ item.bg }};color:{{ item.ink }};border:0;border-left:3px solid {{ item.bar }};transition:background .15s ease" style-hover="background:rgba(255,255,255,0.09)">
+              <span>{{ item.label }}</span>
+              <span style="font-size:11px;font-variant-numeric:tabular-nums;opacity:0.6">{{ item.count }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </nav>
+
+    <main style="flex:1 1 580px;min-width:0;padding:26px 30px 64px;display:flex;flex-direction:column;gap:22px">
+
+      <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:26px">
+          <div>
+            <h6 class="text-muted" style="margin:0 0 2px">Papan Utama</h6>
+            <h1 style="font-size:38px;margin:0 0 4px">Ringkasan Rekod</h1>
+            <p class="text-muted" style="max-width:60ch;margin:0">Pemohon, pemilik dan penghuni rumah sewa (RS), kuarters kerajaan (IQ) serta senarai menunggu.</p>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px">
+            <sc-for list="{{ stats }}" as="stat" hint-placeholder-count="4">
+              <div class="card blueprint" style="padding:16px;gap:3px;background:var(--color-surface);box-shadow:var(--shadow-sm);transition:box-shadow .18s ease,transform .18s ease" style-hover="box-shadow:var(--shadow-md);transform:translateY(-2px)">
+                <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+                  <i class="corner tl"></i>
+                  <i class="corner tr"></i>
+                  <i class="corner bl"></i>
+                  <i class="corner br"></i>
+                </sc-if>
+                <span class="card-kicker">{{ stat.kicker }}</span>
+                <span style="font-family:var(--font-heading);font-size:42px;line-height:1;font-variant-numeric:tabular-nums">{{ stat.n }}</span>
+                <span class="card-meta">{{ stat.note }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;align-items:start">
+
+            <div class="card blueprint" style="padding:0;gap:0;background:var(--color-surface);box-shadow:var(--shadow-sm)">
+              <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+                <i class="corner tl"></i>
+                <i class="corner tr"></i>
+                <i class="corner bl"></i>
+                <i class="corner br"></i>
+              </sc-if>
+              <div style="padding:13px 16px;border-bottom:1px solid var(--color-divider)">
+                <span style="font-family:var(--font-heading);font-size:16px">Rekod Terkini</span>
+              </div>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ recent }}" as="item" hint-placeholder-count="5">
+                  <button type="button" onClick="{{ item.go }}" style="display:flex;align-items:baseline;gap:10px;text-align:left;background:transparent;border:0;border-bottom:1px solid color-mix(in srgb, var(--color-text) 8%, transparent);padding:11px 16px;cursor:pointer;font-family:var(--font-body);color:var(--color-text)" style-hover="background:var(--color-accent-100)">
+                    <span style="flex:1;min-width:0;font-size:14px">{{ item.name }}</span>
+                    <span class="text-muted" style="font-size:11px;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap">{{ item.type }}</span>
+                    <span class="text-muted" style="font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap">{{ item.date }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div class="card blueprint" style="padding:16px;gap:12px;background:var(--color-surface);box-shadow:var(--shadow-sm)">
+                <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+                  <i class="corner tl"></i>
+                  <i class="corner tr"></i>
+                  <i class="corner bl"></i>
+                  <i class="corner br"></i>
+                </sc-if>
+                <span style="font-family:var(--font-heading);font-size:16px">Status Permohonan</span>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ dist }}" as="bar" hint-placeholder-count="4">
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                      <div style="display:flex;justify-content:space-between;gap:8px;font-size:13px">
+                        <span>{{ bar.label }}</span>
+                        <span class="text-muted" style="font-variant-numeric:tabular-nums">{{ bar.n }}</span>
+                      </div>
+                      <div style="height:7px;border:1px solid var(--color-divider)">
+                        <div style="height:100%;background:var(--color-accent);width:{{ bar.pct }}%"></div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div class="card blueprint" style="padding:16px;gap:10px;background:var(--color-surface);box-shadow:var(--shadow-sm)">
+                <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+                  <i class="corner tl"></i>
+                  <i class="corner tr"></i>
+                  <i class="corner bl"></i>
+                  <i class="corner br"></i>
+                </sc-if>
+                <span style="font-family:var(--font-heading);font-size:16px">Tindakan Pantas</span>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ quickItems }}" as="item" hint-placeholder-count="3">
+                    <button type="button" class="btn btn-secondary" onClick="{{ item.go }}" style="justify-content:space-between;width:100%;padding:9px 12px">
+                      <span>{{ item.label }}</span>
+                      <span class="text-muted">+</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isNew }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div>
+            <h6 class="text-muted" style="margin:0 0 2px">Rekod Baharu</h6>
+            <h1 style="font-size:34px;margin:0">Pilih Jenis Rekod</h1>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px">
+            <sc-for list="{{ newItems }}" as="item" hint-placeholder-count="6">
+              <button type="button" class="card blueprint" onClick="{{ item.go }}" style="align-items:flex-start;text-align:left;cursor:pointer;padding:16px;gap:4px;min-height:104px" style-hover="background:color-mix(in srgb, var(--color-accent) 7%, transparent)">
+                <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+                  <i class="corner tl"></i>
+                  <i class="corner tr"></i>
+                  <i class="corner bl"></i>
+                  <i class="corner br"></i>
+                </sc-if>
+                <span class="card-kicker">Borang</span>
+                <span class="card-title" style="font-size:19px">{{ item.label }}</span>
+                <span class="card-meta" style="margin-top:auto">{{ item.meta }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isChoose }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:22px;max-width:720px">
+          <button type="button" class="btn btn-ghost" onClick="{{ goBackList }}" style="align-self:flex-start;gap:8px">&larr; Senarai Pemohon</button>
+          <h1 style="font-size:34px;margin:0">Jenis Permohonan</h1>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+            <sc-for list="{{ chooseItems }}" as="item" hint-placeholder-count="2">
+              <button type="button" class="card blueprint" onClick="{{ item.go }}" style="align-items:flex-start;text-align:left;cursor:pointer;padding:20px;gap:6px" style-hover="background:color-mix(in srgb, var(--color-accent) 7%, transparent)">
+                <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+                  <i class="corner tl"></i>
+                  <i class="corner tr"></i>
+                  <i class="corner bl"></i>
+                  <i class="corner br"></i>
+                </sc-if>
+                <span class="card-kicker">Borang baharu</span>
+                <span class="card-title" style="font-size:22px">{{ item.label }}</span>
+                <p class="card-body" style="margin:0">{{ item.meta }}</p>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px">
+            <div style="margin-right:auto">
+              <h6 class="text-muted" style="margin:0 0 2px">Senarai</h6>
+              <h1 style="font-size:34px;margin:0">{{ listTitle }}</h1>
+            </div>
+            <button type="button" class="btn btn-primary blueprint" onClick="{{ goNew }}" style="padding:10px 18px">
+              <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+                <i class="corner tl"></i>
+                <i class="corner tr"></i>
+                <i class="corner bl"></i>
+                <i class="corner br"></i>
+              </sc-if>
+              + Tambah Rekod
+            </button>
+          </div>
+          <div class="card blueprint" style="padding:0;gap:0;overflow:hidden;background:var(--color-surface);box-shadow:var(--shadow-sm)">
+            <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+              <i class="corner tl"></i>
+              <i class="corner tr"></i>
+              <i class="corner bl"></i>
+              <i class="corner br"></i>
+            </sc-if>
+            <div style="display:flex;align-items:baseline;gap:10px;padding:12px 16px;border-bottom:1px solid var(--color-divider)">
+              <span style="font-family:var(--font-heading);font-size:15px">{{ listCount }} rekod</span>
+              <span class="text-muted" style="font-size:12px;margin-right:auto">Klik satu baris untuk melihat rekod penuh</span>
+              <input class="input" type="search" value="{{ query }}" onChange="{{ setQuery }}" placeholder="Cari nama, daerah…" style="width:auto;max-width:230px;min-height:36px" />
+            </div>
+            <div style="overflow-x:auto">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <sc-for list="{{ listCols }}" as="col" hint-placeholder-count="4">
+                      <th style="padding:10px 16px;white-space:nowrap">{{ col.h }}</th>
+                    </sc-for>
+                    <th style="padding:10px 16px">Status</th>
+                    <th style="padding:10px 16px"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <sc-for list="{{ listRows }}" as="row" hint-placeholder-count="5">
+                    <tr onClick="{{ row.go }}" style="cursor:pointer;transition:background .15s ease" style-hover="background:var(--color-accent-100)">
+                      <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="4">
+                        <td style="padding:11px 16px">{{ cell.v }}</td>
+                      </sc-for>
+                      <td style="padding:11px 16px"><span class="tag tag-accent">{{ row.status }}</span></td>
+                      <td style="padding:11px 16px;text-align:right"><span class="text-muted" style="font-size:12px">Lihat &rarr;</span></td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+              <sc-if value="{{ listEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:38px 16px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center">
+                  <span style="font-family:var(--font-heading);font-size:19px">Tiada rekod ditemui</span>
+                  <span class="text-muted" style="font-size:13px">Cuba kata carian lain, atau kosongkan ruang carian.</span>
+                  <button type="button" class="btn btn-secondary" onClick="{{ clearQuery }}" style="padding:8px 16px;font-size:13px;margin-top:2px">Kosongkan Carian</button>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:20px;max-width:1000px">
+          <button type="button" class="btn btn-ghost" onClick="{{ goBackList }}" style="align-self:flex-start;gap:8px">&larr; {{ listTitle }}</button>
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px">
+            <div style="margin-right:auto">
+              <h6 class="text-muted" style="margin:0 0 2px">{{ recordKicker }}</h6>
+              <h1 style="font-size:34px;margin:0">{{ recordName }}</h1>
+            </div>
+            <span class="tag tag-accent" style="padding:6px 12px">{{ recordStatus }}</span>
+            <button type="button" class="btn btn-secondary" onClick="{{ goEdit }}" style="padding:10px 16px">Sunting</button>
+          </div>
+          <sc-for list="{{ detailSections }}" as="section" hint-placeholder-count="4">
+            <section style="display:flex;flex-direction:column;gap:10px">
+              <h6 style="margin:0;color:var(--color-accent-700)">{{ section.title }}</h6>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1px;background:var(--color-divider);border:1px solid var(--color-divider)">
+                <sc-for list="{{ section.fields }}" as="field" hint-placeholder-count="6">
+                  <div style="background:var(--color-bg);padding:10px 12px;display:flex;flex-direction:column;gap:2px">
+                    <span class="text-muted" style="font-size:11px;letter-spacing:0.04em">{{ field.label }}</span>
+                    <span style="font-size:15px;line-height:1.35">{{ field.value }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </section>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isForm }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:22px;max-width:900px">
+          <button type="button" class="btn btn-ghost" onClick="{{ goBackList }}" style="align-self:flex-start;gap:8px">&larr; {{ listTitle }}</button>
+          <div>
+            <h6 class="text-muted" style="margin:0 0 2px">{{ formKicker }}</h6>
+            <h1 style="font-size:34px;margin:0">{{ formTitle }}</h1>
+          </div>
+          <sc-for list="{{ formSections }}" as="section" hint-placeholder-count="4">
+            <section class="card blueprint" style="padding:18px;gap:14px">
+              <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+                <i class="corner tl"></i>
+                <i class="corner tr"></i>
+                <i class="corner bl"></i>
+                <i class="corner br"></i>
+              </sc-if>
+              <sc-if value="{{ section.showTitle }}" hint-placeholder-val="{{ true }}">
+                <h6 style="margin:0;color:var(--color-accent-700)">{{ section.title }}</h6>
+              </sc-if>
+              <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px 14px">
+                <sc-for list="{{ section.fields }}" as="field" hint-placeholder-count="6">
+                  <div class="field" style="grid-column:span {{ field.span }}">
+                    <label>{{ field.label }}</label>
+                    <sc-if value="{{ field.isArea }}" hint-placeholder-val="{{ false }}">
+                      <textarea class="input" key="{{ field.key }}" defaultValue="{{ field.value }}" placeholder="{{ field.placeholder }}"></textarea>
+                    </sc-if>
+                    <sc-if value="{{ field.isText }}" hint-placeholder-val="{{ true }}">
+                      <input class="input" type="text" key="{{ field.key }}" defaultValue="{{ field.value }}" placeholder="{{ field.placeholder }}" />
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </section>
+          </sc-for>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+            <button type="button" class="btn btn-primary blueprint" onClick="{{ save }}" style="padding:12px 30px;font-size:15px">
+              <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+                <i class="corner tl"></i>
+                <i class="corner tr"></i>
+                <i class="corner bl"></i>
+                <i class="corner br"></i>
+              </sc-if>
+              Simpan
+            </button>
+            <button type="button" class="btn btn-secondary" onClick="{{ goBackList }}" style="padding:12px 20px">Batal</button>
+            <span class="text-muted" style="font-size:12px">Data demo &mdash; tiada rekod sebenar disimpan</span>
+          </div>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <sc-if value="{{ showDialog }}" hint-placeholder-val="{{ false }}">
+    <div class="dialog-backdrop">
+      <div class="dialog blueprint" style="text-align:center;align-items:center;padding:34px 30px;background:var(--color-bg)">
+        <sc-if value="{{ marks }}" hint-placeholder-val="{{ true }}">
+          <i class="corner tl"></i>
+          <i class="corner tr"></i>
+          <i class="corner bl"></i>
+          <i class="corner br"></i>
+        </sc-if>
+        <div style="width:44px;height:44px;border:1px solid var(--color-accent);display:grid;place-items:center;color:var(--color-accent-700);font-size:22px;font-family:var(--font-heading)">&#10003;</div>
+        <div class="dialog-title" style="font-size:26px">Rekod Berjaya Disimpan</div>
+        <div class="dialog-body" style="margin:0">{{ dialogBody }}</div>
+        <button type="button" class="btn btn-primary" onClick="{{ closeDialog }}" style="padding:11px 34px;margin-top:6px">Balik</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;cornerMarks&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Rupa&quot;},&quot;formLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Bahagian&quot;,&quot;Satu lajur&quot;],&quot;default&quot;:&quot;Bahagian&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Borang&quot;},&quot;sampleRecords&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:5,&quot;min&quot;:2,&quot;max&quot;:5,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Data demo&quot;}}">
+const P = {
+  nama: ['Ahmad Fauzi bin Ismail', 'Nurul Huda binti Rahman', 'Lim Wei Sheng', 'Mohd Razif bin Othman', 'Sarah Anne Joseph'],
+  pasangan: ['Siti Aminah binti Yusof', 'Kamarul Zaman bin Ali', 'Tan Mei Ling', 'Noraini binti Hassan', 'Daniel Joseph'],
+  alamat: ['No. 12, Jalan Seri Mahkota 3, Kuantan', 'Lot 88, Taman Bukit Indah, Alor Setar', 'No. 5A, Lorong Pandan 2, Johor Bahru', 'No. 31, Jalan Tanjung Chat, Kota Bharu', 'No. 7, Taman Sri Damai, Seremban'],
+  daerah: ['Kuantan', 'Kota Setar', 'Johor Bahru', 'Kota Bharu', 'Seremban'],
+  mukim: ['Mukim Beserah', 'Mukim Sungai Petani', 'Mukim Tebrau', 'Mukim Kubang Kerian', 'Mukim Labu'],
+  jawatan: ['Penolong Jurutera', 'Pembantu Tadbir', 'Jurutera Awam', 'Penolong Akauntan', 'Pegawai Tadbir'],
+  tempat: ['JKR Daerah Kuantan', 'Pejabat Tanah Kota Setar', 'JKR Negeri Johor', 'Hospital Kota Bharu', 'Pejabat Daerah Seremban'],
+  status: ['Aktif', 'Dalam Proses', 'Diluluskan', 'Menunggu', 'Selesai'],
+  kpp: ['820304-06-5123', '900712-02-5478', '780925-01-6011', '851130-03-5299', '930418-05-5140'],
+  tel: ['019-334 5678', '012-778 1290', '017-445 9821', '013-990 2274', '011-2088 3345'],
+  tarikh: ['14.03.2023', '02.07.2024', '25.09.2022', '30.11.2024', '18.04.2025'],
+  lahir: ['04.03.1982', '12.07.1990', '25.09.1978', '30.11.1985', '18.04.1993'],
+  bersara: ['04.03.2042', '12.07.2050', '25.09.2038', '30.11.2045', '18.04.2053'],
+  kelas: ['Kelas C', 'Kelas D', 'Kelas E', 'Kelas C', 'Kelas D'],
+  gaji: ['JA29', 'N19', 'J41', 'W27', 'N28'],
+  taraf: ['Berkahwin', 'Bujang', 'Berkahwin', 'Berkahwin', 'Bujang'],
+  tanggungan: ['3', '1', '2', '4', '0']
+};
+
+const sec = (title, specs) => ({
+  title: title,
+  fields: specs.map(function (s) {
+    const p = s.split('|');
+    return { label: p[0], w: p[1] || 'f', kind: p[2] || 'text' };
+  })
+});
+
+const SCHEMAS = {
+  'Rumah Sewa(RS)': [
+    sec('Maklumat Pemilik', ['Nama Pemilik / Geran tanah', 'No. KPP Pemilik|h', 'No. Perhubungan|h', 'Alamat Persuratan']),
+    sec('Rumah Sewa Ditawarkan', ['Alamat Rumah sewa ditawarkan', 'Tarikh Kesiapan Rumah|h', 'Jenis Rumah|h', 'Jumlah Tandas|h', 'Syarat-Syarat Tanah|h']),
+    sec('Takziran JKR', ['Takziran JKR|f|area', 'Kelas|h', 'Sewa Sebulan|h']),
+    sec('Sokongan', ['Sokongan|f|area', 'Kelas|h', 'Sewa Sebulan|h']),
+    sec('Status Rekod', ['Status|h', 'Muat Naik Dokumen|h'])
+  ],
+  'Mendapatkan Perumahan': [
+    sec('Maklumat Pemohon', ['Nama Penuh Pemohon', 'No. KPP Pemohon / Warna|h', 'No. Perhubungan|h', 'Tarikh Lahir|h', 'Tarikh Bersara|h', 'Taraf Kelamin|h', 'Tanggungan|h', 'Alamat Persuratan', 'Alamat Tempat Tinggal']),
+    sec('Perkhidmatan', ['Tempat Bertugas Pemohon', 'Jawatan|h', 'Bahagian|h', 'Tanggagaji|h', 'Gaji Terkini|h', 'Tarikh Lantikan|h', 'Status Lantikan|h', 'Tempat Ditetapkan Jawatan']),
+    sec('Maklumat Pasangan', ['Nama Penuh Pasangan', 'No. KPP Pemohon / Warna|h', 'Tempat Bertugas Pasangan|h', 'Kementerian|h', 'Kemudahan Kerajaan (Jika ada)|h']),
+    sec('Permohonan', ['Tarikh Permohonan|h', 'Status Permohonan|h', 'Muat Naik Dokumen'])
+  ],
+  'pemilik-rs': [
+    sec('Rujukan', ['Rujukan Fail: DA / AKR…|h', 'Status|h']),
+    sec('Maklumat Pemilik', ['Nama Penuh Pemilik', 'No. KPP Pemilik|h', 'No. Perhubungan|h', 'Alamat Persuratan', 'Alamat Rumah Sewa', 'Mukim|h', 'Daerah|h']),
+    sec('Sewaan', ['Sewa Sebulan|h', 'Sewa Perabot Sebulan|h', 'Tarikh Mula Disewa|h', 'Tarikh Penyambungan TA|h', 'Tarikh Mansuh TA|h']),
+    sec('Penghuni', ['Nama Penghuni', 'Tarikh Mula Mendiami|h', 'Tarikh Mengosongkan|h']),
+    sec('Dokumen', ['Muat Naik Dokumen|h', 'Status Permohonan|h', 'Muat Naik Dokumen|h'])
+  ],
+  'penghuni-rs': [
+    sec('Maklumat Penghuni', ['Nama Penuh Penghuni', 'No. KPP Penghuni / Warna|h', 'No. Perhubungan|h', 'Tarikh Lahir|h', 'Tarikh Bersara|h', 'Taraf Kelamin|h', 'Tempat Bertugas|h']),
+    sec('Perkhidmatan', ['Jawatan|h', 'Bahagian|h', 'Tanggagaji|h', 'Gaji Terkini|h', 'Tarikh Lantikan|h', 'Status Lantikan|h', 'Tarikh Ditetapkan Jawatan']),
+    sec('Maklumat Pasangan', ['Nama Penuh Pasangan', 'No. KPP Pemohon / Warna|h', 'Tempat Bertugas Pasangan|h', 'Kementerian|h', 'Kemudahan Kerajaan (Jika ada)|h']),
+    sec('Rumah Sewa', ['Alamat Rumah Sewa', 'Daerah|h', 'Nama Pemilik|h', 'Kelas|t', 'Sewa Sebulan|t', 'Sewa Sebulan Perabot|t', 'Tarikh Mula Mendiami|h', 'Tarikh Mengosongkan|h', 'Status|h'])
+  ],
+  'iq': [
+    sec('Rujukan', ['Rujukan Fail: DA / AKR…|h', 'Status|h']),
+    sec('Maklumat Perumahan (IQ)', ['Alamat Perumahan Kerajaan (IQ)', 'Daerah|h', 'Blok|h', 'Kelas|h', 'Jenis IQ|h', 'Sewa Sebulan|h', 'Pembekalan Perabot|h', 'Jumlah Bilik|h', 'Jumlah Tandas|h']),
+    sec('Penghuni', ['Nama Penuh Penghuni', 'No. KPP Penghuni / Warna|h', 'Jawatan|h', 'Tempat Bertugas|h', 'Taraf Kelamin|h', 'Tanggungan|h', 'Tarikh Mula Mendiami|h', 'Tarikh Mengosongkan|h']),
+    sec('Dokumen', ['Muat Naik Dokumen'])
+  ],
+  'penghuni-iq': [
+    sec('Maklumat Penghuni', ['Nama Penuh Penghuni', 'No. KPP Penghuni / Warna|h', 'No. Perhubungan|h', 'Tarikh Lahir|h', 'Tarikh Bersara|h', 'Taraf Kelamin|h', 'Tanggungan|h', 'Tempat Bertugas']),
+    sec('Perkhidmatan', ['Jawatan|h', 'Bahagian|h', 'Tanggagaji|h', 'Gaji Terkini|h', 'Tarikh Lantikan|h', 'Status Lantikan|h', 'Tarikh Ditetapkan Jawatan']),
+    sec('Maklumat Pasangan', ['Nama Penuh Pasangan', 'No. KPP Pemohon / Warna|h', 'Tempat Bertugas Pasangan|h', 'Kementerian|h', 'Kemudahan Kerajaan (Jika ada)|h']),
+    sec('Perumahan Kerajaan', ['Alamat Perumahan Kerajaan (IQ)', 'Daerah|h', 'Kelas|h', 'Bayaran Sebulan|t', 'Dibekal Perabot|t', 'Status|t', 'Tarikh Mula Mendiami|h', 'Tarikh Mengosongkan|h'])
+  ],
+  'menunggu': [
+    sec('Maklumat Pemohon', ['Nama Penuh Pemohon', 'No. KPP Pemohon / Warna|h', 'No. Perhubungan|h', 'Tarikh Lahir|h', 'Tarikh Bersara|h', 'Taraf Kelamin|h', 'Tanggungan|h', 'Alamat Persuratan', 'Alamat Tempat Tinggal']),
+    sec('Perkhidmatan', ['Tempat Bertugas Pemohon', 'Jawatan|h', 'Bahagian|h', 'Tanggagaji|h', 'Gaji Terkini|h', 'Tarikh Lantikan|h', 'Status Lantikan|h', 'Tarikh Ditetapkan Jawatan']),
+    sec('Maklumat Pasangan', ['Nama Penuh Pasangan', 'No. KPP Pemohon / Warna|h', 'Tempat Bertugas Pasangan|h', 'Kementerian|h', 'Kemudahan Kerajaan (Jika ada)|h']),
+    sec('Permohonan', ['Tarikh Permohonan|h', 'Status Permohonan|h', 'Daerah|h', 'Kelayakan Perumahan|h', 'Kelas|h', 'Tarikh Diterima|h', 'Muat Naik Dokumen'])
+  ]
+};
+
+const TYPES = {
+  'pemohon': {
+    title: 'Senarai Pemohon', short: 'Pemohon', kicker: 'Pemohon',
+    nameField: 'Nama',
+    cols: [{ h: 'Nama', f: 'Nama' }, { h: 'Jenis Permohonan', f: 'Jenis Permohonan' }, { h: 'Tarikh Permohonan', f: 'Tarikh Permohonan' }, { h: 'Daerah', f: 'Daerah' }],
+    rows: [
+      { 'Nama': 'Ahmad Fauzi bin Ismail', 'Jenis Permohonan': 'Mendapatkan Perumahan', 'Tarikh Permohonan': '14.03.2025', _s: 'Dalam Proses' },
+      { 'Nama': 'Hjh. Rokiah binti Salleh', 'Jenis Permohonan': 'Rumah Sewa(RS)', 'Tarikh Permohonan': '02.02.2025', _s: 'Diluluskan' },
+      { 'Nama': 'Lim Wei Sheng', 'Jenis Permohonan': 'Mendapatkan Perumahan', 'Tarikh Permohonan': '19.01.2025', _s: 'Menunggu' },
+      { 'Nama': 'Mohd Razif bin Othman', 'Jenis Permohonan': 'Mendapatkan Perumahan', 'Tarikh Permohonan': '28.11.2024', _s: 'Diluluskan' },
+      { 'Nama': 'Chandran a/l Murugan', 'Jenis Permohonan': 'Rumah Sewa(RS)', 'Tarikh Permohonan': '05.10.2024', _s: 'Aktif' }
+    ]
+  },
+  'pemilik-rs': {
+    title: 'Senarai Pemilik RS', short: 'Pemilik RS', kicker: 'Pemilik rumah sewa',
+    nameField: 'Nama Penuh Pemilik',
+    cols: [{ h: 'Rujukan Fail', f: 'Rujukan Fail: DA / AKR…' }, { h: 'Nama Penuh Pemilik', f: 'Nama Penuh Pemilik' }, { h: 'Mukim', f: 'Mukim' }, { h: 'Sewa Sebulan', f: 'Sewa Sebulan' }],
+    rows: [
+      { 'Nama Penuh Pemilik': 'Hjh. Rokiah binti Salleh', 'Sewa Sebulan': 'RM 850.00', _s: 'Aktif' },
+      { 'Nama Penuh Pemilik': 'Chandran a/l Murugan', 'Sewa Sebulan': 'RM 720.00', _s: 'Aktif' },
+      { 'Nama Penuh Pemilik': 'Wong Kok Meng', 'Sewa Sebulan': 'RM 1,100.00', _s: 'Selesai' },
+      { 'Nama Penuh Pemilik': 'Zulkifli bin Mat Daud', 'Sewa Sebulan': 'RM 640.00', _s: 'Aktif' },
+      { 'Nama Penuh Pemilik': 'Puan Sri Halimah Yusof', 'Sewa Sebulan': 'RM 980.00', _s: 'Dalam Proses' }
+    ]
+  },
+  'penghuni-rs': {
+    title: 'Senarai Penghuni RS', short: 'Penghuni RS', kicker: 'Penghuni rumah sewa',
+    nameField: 'Nama Penuh Penghuni',
+    cols: [{ h: 'Nama Penuh Penghuni', f: 'Nama Penuh Penghuni' }, { h: 'No. KPP', f: 'No. KPP Penghuni / Warna' }, { h: 'Alamat Rumah Sewa', f: 'Alamat Rumah Sewa' }, { h: 'Tarikh Mula Mendiami', f: 'Tarikh Mula Mendiami' }],
+    rows: [
+      { 'Nama Penuh Penghuni': 'Ahmad Fauzi bin Ismail', _s: 'Aktif' },
+      { 'Nama Penuh Penghuni': 'Nurul Huda binti Rahman', _s: 'Aktif' },
+      { 'Nama Penuh Penghuni': 'Lim Wei Sheng', _s: 'Selesai' },
+      { 'Nama Penuh Penghuni': 'Mohd Razif bin Othman', _s: 'Aktif' },
+      { 'Nama Penuh Penghuni': 'Sarah Anne Joseph', _s: 'Dalam Proses' }
+    ]
+  },
+  'iq': {
+    title: 'Senarai IQ', short: 'IQ', kicker: 'Perumahan kerajaan',
+    nameField: 'Alamat Perumahan Kerajaan (IQ)',
+    cols: [{ h: 'Rujukan Fail', f: 'Rujukan Fail: DA / AKR…' }, { h: 'Alamat Perumahan (IQ)', f: 'Alamat Perumahan Kerajaan (IQ)' }, { h: 'Kelas', f: 'Kelas' }, { h: 'Jenis IQ', f: 'Jenis IQ' }],
+    rows: [
+      { 'Alamat Perumahan Kerajaan (IQ)': 'Blok B-04, Kuarters JKR Kuantan', 'Jenis IQ': 'Kuarters Kelas C', _s: 'Didiami' },
+      { 'Alamat Perumahan Kerajaan (IQ)': 'Blok A-11, Kuarters Kerajaan Alor Setar', 'Jenis IQ': 'Kuarters Kelas D', _s: 'Didiami' },
+      { 'Alamat Perumahan Kerajaan (IQ)': 'Blok C-02, Kuarters Hospital Kota Bharu', 'Jenis IQ': 'Kuarters Kelas E', _s: 'Kosong' },
+      { 'Alamat Perumahan Kerajaan (IQ)': 'Blok D-07, Kuarters Pejabat Tanah Seremban', 'Jenis IQ': 'Kuarters Kelas C', _s: 'Didiami' },
+      { 'Alamat Perumahan Kerajaan (IQ)': 'Blok B-19, Kuarters JKR Johor Bahru', 'Jenis IQ': 'Kuarters Kelas D', _s: 'Dalam Proses' }
+    ]
+  },
+  'penghuni-iq': {
+    title: 'Senarai Penghuni IQ', short: 'Penghuni IQ', kicker: 'Penghuni kuarters',
+    nameField: 'Nama Penuh Penghuni',
+    cols: [{ h: 'Nama Penuh Penghuni', f: 'Nama Penuh Penghuni' }, { h: 'Jawatan', f: 'Jawatan' }, { h: 'Alamat Perumahan (IQ)', f: 'Alamat Perumahan Kerajaan (IQ)' }, { h: 'Tarikh Mula Mendiami', f: 'Tarikh Mula Mendiami' }],
+    rows: [
+      { 'Nama Penuh Penghuni': 'Nurul Huda binti Rahman', 'Alamat Perumahan Kerajaan (IQ)': 'Blok B-04, Kuarters JKR Kuantan', _s: 'Aktif' },
+      { 'Nama Penuh Penghuni': 'Mohd Razif bin Othman', 'Alamat Perumahan Kerajaan (IQ)': 'Blok A-11, Kuarters Kerajaan Alor Setar', _s: 'Aktif' },
+      { 'Nama Penuh Penghuni': 'Sarah Anne Joseph', 'Alamat Perumahan Kerajaan (IQ)': 'Blok D-07, Kuarters Pejabat Tanah Seremban', _s: 'Aktif' },
+      { 'Nama Penuh Penghuni': 'Ahmad Fauzi bin Ismail', 'Alamat Perumahan Kerajaan (IQ)': 'Blok B-19, Kuarters JKR Johor Bahru', _s: 'Selesai' },
+      { 'Nama Penuh Penghuni': 'Lim Wei Sheng', 'Alamat Perumahan Kerajaan (IQ)': 'Blok C-02, Kuarters Hospital Kota Bharu', _s: 'Dalam Proses' }
+    ]
+  },
+  'menunggu': {
+    title: 'Senarai Menunggu', short: 'Menunggu', kicker: 'Senarai menunggu',
+    nameField: 'Nama Penuh Pemohon',
+    cols: [{ h: 'Nama Penuh Pemohon', f: 'Nama Penuh Pemohon' }, { h: 'Kelayakan Perumahan', f: 'Kelayakan Perumahan' }, { h: 'Tarikh Permohonan', f: 'Tarikh Permohonan' }, { h: 'Daerah', f: 'Daerah' }],
+    rows: [
+      { 'Nama Penuh Pemohon': 'Lim Wei Sheng', 'Kelayakan Perumahan': 'Kelas C', 'Tarikh Permohonan': '19.01.2025', _s: 'Menunggu' },
+      { 'Nama Penuh Pemohon': 'Siti Zaleha binti Anuar', 'Kelayakan Perumahan': 'Kelas D', 'Tarikh Permohonan': '11.12.2024', _s: 'Menunggu' },
+      { 'Nama Penuh Pemohon': 'Gopal a/l Ramasamy', 'Kelayakan Perumahan': 'Kelas D', 'Tarikh Permohonan': '30.11.2024', _s: 'Dalam Proses' },
+      { 'Nama Penuh Pemohon': 'Faridah binti Hamzah', 'Kelayakan Perumahan': 'Kelas C', 'Tarikh Permohonan': '05.10.2024', _s: 'Menunggu' },
+      { 'Nama Penuh Pemohon': 'Tan Boon Hock', 'Kelayakan Perumahan': 'Kelas E', 'Tarikh Permohonan': '22.08.2024', _s: 'Diluluskan' }
+    ]
+  }
+};
+
+const ORDER = ['pemohon', 'pemilik-rs', 'penghuni-rs', 'iq', 'penghuni-iq', 'menunggu'];
+const GROUPS = [
+  { title: 'Permohonan', keys: ['pemohon', 'menunggu'] },
+  { title: 'Rumah Sewa (RS)', keys: ['pemilik-rs', 'penghuni-rs'] },
+  { title: 'Kuarters (IQ)', keys: ['iq', 'penghuni-iq'] }
+];
+const SPAN = { f: 6, h: 3, t: 2 };
+
+class Component extends DCLogic {
+  state = { view: 'menu', type: null, row: null, jenis: null, dialog: false, q: '' };
+
+  auto(label, i) {
+    const has = function (s) { return label.toLowerCase().indexOf(s.toLowerCase()) > -1; };
+    if (has('Rujukan Fail')) return 'DA/AKR/' + (2021 + i) + '/0' + (14 + i * 3);
+    if (has('No. KPP')) return P.kpp[i];
+    if (has('No. Perhubungan')) return P.tel[i];
+    if (has('Nama Penuh Pasangan')) return P.pasangan[i];
+    if (has('Nama Pemilik') || has('Nama Penghuni') || has('Nama')) return P.nama[i];
+    if (has('Alamat Rumah') || has('Alamat Tempat Tinggal') || has('Alamat Perumahan')) return P.alamat[(i + 2) % 5];
+    if (has('Alamat')) return P.alamat[i];
+    if (has('Tarikh Lahir')) return P.lahir[i];
+    if (has('Tarikh Bersara')) return P.bersara[i];
+    if (has('Tarikh Mengosongkan')) return '—';
+    if (has('Tarikh')) return P.tarikh[i];
+    if (has('Daerah')) return P.daerah[i];
+    if (has('Mukim')) return P.mukim[i];
+    if (has('Tempat Bertugas') || has('Tempat Ditetapkan')) return P.tempat[i];
+    if (has('Jawatan')) return P.jawatan[i];
+    if (has('Bahagian')) return 'Bahagian Pembangunan';
+    if (has('Tanggagaji')) return P.gaji[i];
+    if (has('Gaji Terkini')) return 'RM 4,320.00';
+    if (has('Sewa Perabot') || has('Sewa Sebulan Perabot')) return 'RM 120.00';
+    if (has('Sewa Sebulan') || has('Bayaran Sebulan')) return 'RM 780.00';
+    if (has('Kelayakan Perumahan')) return P.kelas[i];
+    if (has('Kelas')) return P.kelas[i];
+    if (has('Status Lantikan')) return 'Tetap';
+    if (has('Status Permohonan')) return P.status[i];
+    if (has('Status')) return P.status[i];
+    if (has('Taraf Kelamin')) return P.taraf[i];
+    if (has('Tanggungan')) return P.tanggungan[i];
+    if (has('Jenis Rumah')) return 'Teres Setingkat';
+    if (has('Jenis IQ')) return 'Kuarters ' + P.kelas[i];
+    if (has('Blok')) return 'Blok ' + 'BACDB'[i];
+    if (has('Jumlah Bilik')) return '3';
+    if (has('Jumlah Tandas')) return '2';
+    if (has('Kementerian')) return 'Kementerian Kerja Raya';
+    if (has('Kemudahan Kerajaan')) return 'Tiada';
+    if (has('Muat Naik Dokumen')) return 'borang-permohonan.pdf';
+    if (has('Syarat-Syarat Tanah')) return 'Tiada sekatan kepentingan';
+    if (has('Takziran JKR')) return 'Nilaian JKR RM 780 sebulan, kelas C';
+    if (has('Sokongan')) return 'Disokong oleh Pejabat Daerah';
+    if (has('Perabot')) return 'Ya';
+    return '—';
+  }
+
+  val(row, label, i) {
+    if (label === 'Status' && row._s) return row._s;
+    if (row && row[label]) return row[label];
+    return this.auto(label, i);
+  }
+
+  schemaFor(type, row) {
+    if (type !== 'pemohon') return SCHEMAS[type];
+    const j = (row && row['Jenis Permohonan']) || this.state.jenis || 'Mendapatkan Perumahan';
+    return SCHEMAS[j];
+  }
+
+  go(patch) {
+    this.setState(Object.assign({ dialog: false, q: '' }, patch));
+    if (typeof window !== 'undefined') window.scrollTo(0, 0);
+  }
+
+  renderVals() {
+    const self = this;
+    const st = this.state;
+    const marks = this.props.cornerMarks !== false;
+    const flat = (this.props.formLayout || 'Bahagian') === 'Satu lajur';
+    const limit = this.props.sampleRecords || 5;
+    const t = st.type ? TYPES[st.type] : null;
+    const rows = t ? t.rows.slice(0, limit) : [];
+    const row = t && st.row !== null ? t.rows[st.row] : null;
+    const idx = st.row === null ? 0 : st.row;
+
+    const openList = function (k) { return function () { self.go({ view: 'list', type: k, row: null }); }; };
+    const openNew = function (k) { return function () { self.go({ view: k === 'pemohon' ? 'choose' : 'form', type: k, row: null }); }; };
+
+    const navGroups = [{
+      title: 'Papan Utama',
+      items: [{ key: 'menu', label: 'Utama', count: '', go: function () { self.go({ view: 'menu', type: null, row: null }); } }]
+    }].concat(GROUPS.map(function (g) {
+      return {
+        title: g.title,
+        items: g.keys.map(function (k) {
+          return { key: k, label: TYPES[k].title, count: String(Math.min(TYPES[k].rows.length, limit)), go: openList(k) };
+        })
+      };
+    }));
+    navGroups.forEach(function (g) {
+      g.items.forEach(function (it) {
+        const active = (it.key === 'menu' && st.view === 'menu') || (it.key === st.type && st.view !== 'menu');
+        it.bg = active ? 'rgba(255,255,255,0.13)' : 'transparent';
+        it.ink = active ? '#fff' : 'rgba(255,255,255,0.82)';
+        it.bar = active ? 'var(--mesh-gold)' : 'transparent';
+      });
+    });
+
+    const count = function (k, s) {
+      return TYPES[k].rows.slice(0, limit).filter(function (r) { return r._s === s; }).length;
+    };
+    const stats = [
+      { kicker: 'Permohonan', n: Math.min(TYPES.pemohon.rows.length, limit), note: 'Pemohon RS & perumahan' },
+      { kicker: 'Rumah Sewa (RS)', n: count('penghuni-rs', 'Aktif'), note: 'unit sedang didiami' },
+      { kicker: 'Kuarters (IQ)', n: count('iq', 'Didiami'), note: 'daripada ' + Math.min(TYPES.iq.rows.length, limit) + ' unit IQ' },
+      { kicker: 'Menunggu', n: Math.min(TYPES.menunggu.rows.length, limit), note: 'dalam senarai menunggu' }
+    ];
+
+    const tally = {};
+    ['pemohon', 'menunggu'].forEach(function (k) {
+      TYPES[k].rows.slice(0, limit).forEach(function (r) {
+        const s = r._s || 'Aktif';
+        tally[s] = (tally[s] || 0) + 1;
+      });
+    });
+    const total = Object.keys(tally).reduce(function (a, k) { return a + tally[k]; }, 0) || 1;
+    const dist = Object.keys(tally).map(function (k) {
+      return { label: k, n: tally[k], pct: Math.round(tally[k] / total * 100) };
+    });
+
+    const recent = [];
+    ['pemohon', 'menunggu'].forEach(function (k) {
+      TYPES[k].rows.slice(0, limit).forEach(function (r, i) {
+        recent.push({
+          name: self.val(r, TYPES[k].nameField, i),
+          type: TYPES[k].short,
+          date: self.val(r, 'Tarikh Permohonan', i),
+          sort: self.val(r, 'Tarikh Permohonan', i).split('.').reverse().join(''),
+          go: function () { self.go({ view: 'detail', type: k, row: i }); }
+        });
+      });
+    });
+    recent.sort(function (a, b) { return a.sort < b.sort ? 1 : -1; });
+    const recentTop = recent.slice(0, 6);
+
+    const newItems = ORDER.map(function (k) {
+      return { label: TYPES[k].short, meta: 'Borang ' + TYPES[k].kicker.toLowerCase(), go: openNew(k) };
+    });
+    const quickItems = [
+      { label: 'Tambah Pemohon', go: openNew('pemohon') },
+      { label: 'Tambah Penghuni RS', go: openNew('penghuni-rs') },
+      { label: 'Tambah Penghuni IQ', go: openNew('penghuni-iq') }
+    ];
+
+    const chooseItems = [
+      { label: 'Rumah Sewa(RS)', meta: 'Pemilik menawarkan rumah untuk disewa oleh kerajaan.', go: function () { self.go({ view: 'form', type: 'pemohon', row: null, jenis: 'Rumah Sewa(RS)' }); } },
+      { label: 'Mendapatkan Perumahan', meta: 'Pemohon memohon rumah sewa atau kuarters kerajaan.', go: function () { self.go({ view: 'form', type: 'pemohon', row: null, jenis: 'Mendapatkan Perumahan' }); } }
+    ];
+
+    const qq = (st.q || '').trim().toLowerCase();
+    const listRows = rows.map(function (r, i) {
+      return {
+        _hay: t.cols.map(function (c) { return self.val(r, c.f, i); }).join(' ').toLowerCase(),
+        cells: t.cols.map(function (c) { return { v: self.val(r, c.f, i) }; }),
+        status: r._s || P.status[i % 5],
+        go: function () { self.go({ view: 'detail', type: st.type, row: i }); }
+      };
+    }).filter(function (r) { return !qq || r._hay.indexOf(qq) > -1; });
+
+    const schema = t ? this.schemaFor(st.type, row) : [];
+    const detailSections = (row ? schema : []).map(function (s) {
+      return {
+        title: s.title,
+        fields: s.fields.map(function (f) { return { label: f.label, value: self.val(row, f.label, idx) }; })
+      };
+    });
+
+    let formSections = [];
+    if (t) {
+      const src = schema.map(function (s) {
+        return {
+          title: s.title, showTitle: !flat,
+          fields: s.fields.map(function (f, fi) {
+            return {
+              label: f.label, span: flat ? 6 : SPAN[f.w],
+              isArea: f.kind === 'area', isText: f.kind !== 'area',
+              placeholder: 'Isi ' + f.label.toLowerCase().replace('…', ''),
+              key: st.type + '-' + (st.row === null ? 'new' : st.row) + '-' + s.title + '-' + f.label + '-' + fi,
+              value: row ? self.val(row, f.label, idx) : ''
+            };
+          })
+        };
+      });
+      formSections = flat
+        ? [{ title: '', showTitle: false, fields: src.reduce(function (a, s) { return a.concat(s.fields); }, []) }]
+        : src;
+    }
+
+    const jenisLabel = st.type === 'pemohon' ? ((row && row['Jenis Permohonan']) || st.jenis || 'Mendapatkan Perumahan') : '';
+
+    return {
+      marks: marks,
+      navGroups: navGroups,
+      stats: stats,
+      dist: dist,
+      recent: recentTop,
+      newItems: newItems,
+      quickItems: quickItems,
+      chooseItems: chooseItems,
+      isMenu: st.view === 'menu',
+      isNew: st.view === 'new',
+      goNewAny: function () { self.go({ view: 'new', type: null, row: null }); },
+      isChoose: st.view === 'choose',
+      isList: st.view === 'list',
+      isDetail: st.view === 'detail',
+      isForm: st.view === 'form',
+      listTitle: t ? t.title : '',
+      listCount: listRows.length,
+      listEmpty: listRows.length === 0,
+      query: st.q || '',
+      setQuery: function (e) { self.setState({ q: e.target.value }); },
+      clearQuery: function () { self.setState({ q: '' }); },
+      listCols: t ? t.cols : [],
+      listRows: listRows,
+      recordName: row ? this.val(row, t.nameField, idx) : '',
+      recordKicker: t ? (st.type === 'pemohon' ? jenisLabel : t.kicker) : '',
+      recordStatus: row ? (row._s || P.status[idx % 5]) : '',
+      detailSections: detailSections,
+      formTitle: !t ? '' : (st.type === 'pemohon' ? jenisLabel : (row ? t.short : 'Tambah ' + t.short)),
+      formKicker: row ? 'Sunting rekod' : 'Rekod baharu',
+      formSections: formSections,
+      showDialog: st.dialog,
+      dialogBody: t ? 'Rekod ' + t.short + ' telah dikemaskini dalam sistem.' : '',
+      save: function () { self.setState({ dialog: true }); },
+      closeDialog: function () { self.go({ view: 'list', row: null }); },
+      goNew: function () { self.go({ view: st.type === 'pemohon' ? 'choose' : 'form', row: null }); },
+      goEdit: function () { self.go({ view: 'form' }); },
+      goBackList: function () { self.go({ view: 'list', row: null }); }
+    };
+  }
+}
+
+</script>
+</body>
+</html>

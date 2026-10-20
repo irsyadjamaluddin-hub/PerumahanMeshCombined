@@ -65,7 +65,7 @@
                     <h6>1. General</h6>
                     <p style="text-align:justify; text-indent: 30px;">
                       1.1 This page tells you the Terms and Conditions of Use on which you may make use 
-                      of this Portal https://mesh.moe.gov.bn  (hereinafter referred to as the  "Portal"), 
+                      of this Portal http://127.0.0.1:8000  (hereinafter referred to as the  "Portal"), 
                       whether as a applicant, staff or company user. This Portal is owned and operated by the Government
                        of His Majesty The Sultan and Yang Di-Pertuan of Brunei Darussalam under Ministry of Education (hereinafter referred to as "the Government"). 
                        Please read these Terms and Conditions of Use carefully before you start to use the Portal. By using the Portal, you indicate that you accept these 
@@ -126,7 +126,7 @@
     <br>
     <h6>4. Links to this Portal</h6>
     <p style="text-align:justify;">Those wishing to place a link to this Portal on other sites may do so only to the
-       home page of the site https://mesh.moe.gov.bn and shall not do so without prior permission. 
+       home page of the site http://127.0.0.1:8000 and shall not do so without prior permission. 
        Deep linking (i.e. links to specific pages within the site) requires the express permission of the Government. 
        To find out more please contact us by email at devops@moe.gov.bn or sending request to: </p>
 

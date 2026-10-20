@@ -10,7 +10,7 @@ class UrlMaskingController extends Controller
     {
         // Define your mapping for masked URLs here
         $urlMappings = [
-            'postup' => 'https://mesh.moe.gov.bn/postup',
+            'postup' => 'http://127.0.0.1:8000/postup',
             // Add more mappings as needed
         ];
 

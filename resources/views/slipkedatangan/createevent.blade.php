@@ -3,6 +3,12 @@
 @section('title', 'Create Event')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "Event";
@@ -28,8 +34,13 @@ $pagename = "Event";
   <div class="card pt-3">
     <div class="card-body overflow-auto">
 
-        <h5 class="card-title">Perkara Baru</h5>
-        
+        {{-- #============= ORI CODE ============== --}}
+        {{-- <h5 class="card-title">Perkara Baru</h5> --}}
+        {{-- #================================ --}}
+        {{-- Title centred --}}
+        <h5 class="card-title" style="text-align: center;">Perkara Baru</h5>
+        {{-- #================================ --}}
+
         <form class="" method="post" action="{{ route('sk.slipkedatangan.storeperkara') }}" enctype="multipart/form-data">
             @csrf
             <div class="row mb-3">
@@ -48,14 +59,14 @@ $pagename = "Event";
                     <input class="form-control" type="datetime-local" name="tarikh_bermula" id="tarikh_bermula">
                 </div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-lg-4 label d-flex align-items-center">Tarikh Berakhir</div>
                 <div class="col-lg-8">
                     <input class="form-control" type="datetime-local" name="tarikh_berakhir" id="tarikh_berakhir">
                 </div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-lg-4 label d-flex align-items-center">Status</div>
                 <div class="col-lg-8">
@@ -74,16 +85,16 @@ $pagename = "Event";
           </div>
 
         </form>
-        
+
     </div>
 </div>
-  
+
   <div class="card recent-sales">
 
     <div class="card-body">
-  
-        
-        
+
+
+
       <div class="profile-overview pt-3">
 
           {{-- <h5 class="card-title">Perkara Baru</h5>
@@ -97,7 +108,7 @@ $pagename = "Event";
                             {!! $errors->first('nama', '<p class="help-block text-danger">:message</p>')!!}
                     </div>
                 </div>
-  
+
                 <div class="row mb-3">
                   <label class="col-lg-1 col-form-label">Status:</label>
                   <div class="col-lg-3">
@@ -107,27 +118,27 @@ $pagename = "Event";
                               <option value="{{ $status }}">{{ $status }}</option>
                           @endforeach
                       </select>
-                      
+
                           {!! $errors->first('status', '<p class="help-block text-danger">:message</p>')!!}
                   </div>
               </div>
-  
+
               <div class="row mb-3">
                   <label for="tarikh_bermula" class="col-lg-1 col-form-label">Tarikh Bermula:</label>
                   <div class="col-lg-3">
                       <input type="datetime-local" name="tarikh_bermula" id="tarikh_bermula" class="form-control">
-                      
+
                           {!! $errors->first('tarikh_bermula', '<p class="help-block text-danger">:message</p>')!!}
                   </div>
               </div>
-  
+
               <div class="row mb-3">
                   <label for="tarikh_berakhir" class="col-lg-1 col-form-label">Tarikh Berakhir:</label>
                   <div class="col-lg-3">
                       <input type="datetime-local" name="tarikh_berakhir" id="tarikh_berakhir" class="form-control">
-                      
+
                           {!! $errors->first('tarikh_berakhir', '<p class="help-block text-danger">:message</p>')!!}
-                          
+
                   </div>
               </div>
               <div >
@@ -135,13 +146,13 @@ $pagename = "Event";
                       Add
                    </button>
               </div>
-  
+
             </form> --}}
           </div>
-  
+
           <div class="card-body overflow-auto">
-  
-  
+
+
                       <table class="table table-borderless datatable mt-3">
                           <thead>
                               <tr>
@@ -151,25 +162,25 @@ $pagename = "Event";
                               </tr>
                           </thead>
                           <tbody>
-  
-                             
-                          
+
+
+
                           @if(count($skperkaras) == null)
                               <tr class="text-center">
                                   <td colspan="8">
                                       <h5>No records found</h5>
                                   </td>
                               </tr>
-  
+
                           @else
-                           @foreach($skperkaras as $skp)   
-  
+                           @foreach($skperkaras as $skp)
+
                               <tr>
-                                  
+
                                   <td>{{ $skp->label }}</td>
                                   <td>{{ $skp->created_at }}</td>
                                   <td>
-                                      <div class="btn-group gap-2" role="group" aria-label="Basic example"> 
+                                      <div class="btn-group gap-2" role="group" aria-label="Basic example">
                                           <!----Delete Button----->
                                           <form method="post" onclick="return confirm('Are you sure?')" action="{{ route('sk.slipkedatangan.destroy', $skp->id ) }}">
                                               @csrf
@@ -180,22 +191,22 @@ $pagename = "Event";
                                           </form>
                                       </div>
                                   </td>
-  
+
                               </tr>
                               @endforeach
                               @endif
-  
-                              
-                             
-  
+
+
+
+
                           </tbody>
                       </table>
-                      
+
                   </div>
       </div>
-  
+
     </div>
-  
+
     </div>
 
     <script>
@@ -227,6 +238,9 @@ $pagename = "Event";
 
 
 
-  
+
 </section>
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

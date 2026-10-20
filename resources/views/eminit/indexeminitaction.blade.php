@@ -1,22 +1,83 @@
 @extends('layouts.app-all')
 
-@section('title', 'E-Memo Tindakan')
+@section('title', 'E-Memo Action')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- #============= ORI CODE ============== --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: shared styles in public/css/mesh-home-theme.css, --}}
+{{-- applied to everything inside the mesh-home-theme wrapper below. Light mode is unchanged. --}}
+{{-- <link href="{{ asset('css/mesh-home-theme.css') }}?v={{ filemtime(public_path('css/mesh-home-theme.css')) }}" rel="stylesheet"> --}}
+{{-- #================================ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" section; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+{{-- #================================ --}}
+<style>
+  /* Blue line after the Code column becomes gold */
+  html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme th[style*="border-right"], html[data-mesh-theme="dark"] body.mesh-dark-ready .mesh-home-theme td[style*="border-right"] { border-right-color: #f3c35f !important; }
+</style>
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "E-Memo Action";
 ?>
 
 
-<style>                
+<style>
 .dataTable-info{
     color: white;
+}
+
+/* Elegant action buttons */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1.5px solid transparent;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    background-color: transparent;
+    transition: all 0.2s ease-in-out;
+}
+.action-btn:hover {
+    transform: translateY(-1px);
+}
+.action-btn.btn-view {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+.action-btn.btn-view:hover {
+    background-color: #2563eb;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(37,99,235,0.25);
+}
+.action-btn.btn-edit {
+    border-color: #d97706;
+    color: #d97706;
+}
+.action-btn.btn-edit:hover {
+    background-color: #d97706;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(217,119,6,0.25);
+}
+.action-btn.btn-delete {
+    border-color: #dc2626;
+    color: #dc2626;
+}
+.action-btn.btn-delete:hover {
+    background-color: #dc2626;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(220,38,38,0.25);
 }
 </style>
 <div class="col-12 mb-2 mt-2" style="text-align: left;">
         <button type="button" class="btn btn-primary" onclick="window.history.back()">
-            <i class="bi bi-arrow-left-circle"></i> Kembali
+            <i class="bi bi-arrow-left-circle"></i> Back
         </button>
     </div>
 <section class="section">
@@ -37,7 +98,7 @@ $pagename = "E-Memo Action";
             
 
             <br>
-            <h5 class="card-title" style="text-align: center; color: white; padding: 10px; border-radius: 0px; background-color: #4682B4;">E-Memo Tindakan</h5>
+            <h5 class="card-title" style="text-align: center; color: white; padding: 10px; border-radius: 0px; background-color: #4682B4;">E-Memo Action</h5>
 
 
             <div class="card-body overflow-auto">
@@ -47,18 +108,18 @@ $pagename = "E-Memo Action";
               
                     <thead>
                         <tr>
-                            <th scope="col">Jenis</th>
-                            <th scope="col">Memo Daripada</th>
-                            <th scope="col">Perkara</th>
-                            <th scope="col">Rujukan (Memo Diterima)</th>
-                            <th scope="col">Dokumen</th>
-                            <th scope="col">Pengarah Menerima</th>
-                            <th scope="col">Pengarah Catatan</th>
-                            <th scope="col" style="border-right: 2px solid blue;">Kod</th>
-                            <th scope="col">Catatan</th>
-                            <th scope="col">Tindakan Status</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Memo From</th>
+                            <th scope="col">Subject</th>
+                            <th scope="col">No Reference (Memo Recieved)</th>
+                            <th scope="col">Document</th>
+                            <th scope="col">Director Received</th>
+                            <th scope="col">Director Remarks</th>
+                            <th scope="col" style="border-right: 2px solid blue;">Code</th>
+                            <th scope="col">Remarks</th>
+                            <th scope="col">Action Status</th>
                             <th scope="col">Memo Status</th>
-                            <th scope="col">Tindakan</th>
+                            <th scope="col">Action</th>
                             
 
                         </tr>
@@ -92,7 +153,7 @@ $pagename = "E-Memo Action";
                                 @endphp
 
                                 @if(!empty($files))
-                                    <div class="btn-group flex-wrap gap-1" role="group" aria-label="Dokumen">
+                                    <div class="btn-group flex-wrap gap-1" role="group" aria-label="Document">
                                         @foreach($files as $i => $file)
                                             <a href="{{ $file['url'] }}" target="_blank"
                                               class="btn btn-success btn-sm"
@@ -103,7 +164,7 @@ $pagename = "E-Memo Action";
                                         @endforeach
                                     </div>
                                 @else
-                                    <span class="text-muted">Tiada dokumen</span>
+                                    <span class="text-muted">No documents</span>
                                 @endif
                             </td>
 
@@ -130,15 +191,15 @@ $pagename = "E-Memo Action";
                                         {{ implode(', ', $action->jenis_tindakan_labels) }}
                                     @else
                                     <span class="badge rounded-pill bg-warning text-dark">
-                                        Untuk Tindakan
+                                        For Action
                                     </span>
                                     @endif
                                 </td>
 
 
                                 <td>
-    <span class="badge rounded-pill 
-        {{ $action->memo_status_display == 'Selesai' ? 'bg-success' : ($action->memo_status_display == 'In-Progress' ? 'bg-info text-dark' : 'bg-warning text-dark') }}">
+    <span class="badge rounded-pill
+        {{ $action->memo_status_display == 'Completed' ? 'bg-success' : ($action->memo_status_display == 'In-Progress' ? 'bg-info text-dark' : 'bg-warning text-dark') }}">
         {{ $action->memo_status_display }}
     </span>
 </td>
@@ -154,17 +215,17 @@ $pagename = "E-Memo Action";
 
                               
                               <td>
-                                  <div class="btn-group" role="group">
+                                  <div class="d-flex gap-2">
                                       <form method="get" action="{{ route('eminit.eminit.editeminitaction', $action->action_id) }}">
                                           @csrf
-                                          <button type="submit" class="btn btn-outline-primary"  title="Kemaskini">
-                                              <i class="bi bi-pencil-fill"></i>
+                                          <button type="submit" class="action-btn btn-edit">
+                                              Edit
                                           </button>
                                       </form>
                                       <form method="get" action="{{ route('eminit.eminit.vieweminitaction', $action->action_id) }}">
                                           @csrf
-                                          <button type="submit" class="btn btn-outline-primary"  title="Lihat">
-                                              <i class="bi bi-eye-fill"></i>
+                                          <button type="submit" class="action-btn btn-view">
+                                              View
                                           </button>
                                       </form>
                                   </div>
@@ -187,4 +248,7 @@ $pagename = "E-Memo Action";
 
 </div>
 </section>
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

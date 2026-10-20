@@ -8,6 +8,10 @@ use Hash;
 use App\Models\Banner;
 use App\Models\Announcement;
 use App\Models\News;
+/* =============== NISAH =============== */
+// Needed for the E-Memo "to act" count shown on the homepage's D Flow service card
+use Illuminate\Support\Facades\DB;
+/* =============================================== */
 
 class HomeController extends Controller
 {
@@ -40,8 +44,38 @@ class HomeController extends Controller
         // Check if there are any records in the SrNews table
         $newsExist = News::exists();
 
-        return view('/home', compact('banners','announcements','announcementExist','news','newsExist'));
+        /* =============== NISAH =============== */
+        // New homepage (Sept 2026) shows the services sections, so it needs the E-Memo action count.
+        // The query moved into ememoActionCount() below (29 Sept 2026) so PDMS Home can use it too.
+        $totalEmemoTindakan = $this->ememoActionCount();
+
+        return view('/home', compact('banners','announcements','announcementExist','news','newsExist','totalEmemoTindakan'));
+        /* =============================================== */
     }
+
+    /* =============== NISAH =============== */
+    // E-Memo "to act" count for the D Flow service card, used by MESH Home and PDMS Home
+    // (inc/home-services.blade.php). Same query as ServicesDashboardController@servicesdashboard, copied as-is.
+    private function ememoActionCount()
+    {
+        $icNo = Auth::user()->ic_no ?? null;
+        $tindakanIds = DB::table('eminit_tindakandiperlukan')
+            ->where('ic_no', $icNo)
+            ->pluck('id')
+            ->toArray();
+        $actions = DB::table('eminit_action as ea')
+            ->whereIn('ea.tindakanby_diperlukan', $tindakanIds)
+            ->get();
+
+        return $actions->filter(function ($item) {
+            $vals = json_decode($item->jenis_tindakan, true);
+            if (!is_array($vals)) {
+                $vals = [];
+            }
+            return empty($vals);
+        })->count();
+    }
+    /* =============================================== */
 
     public function pdmsindex()
     {
@@ -58,7 +92,12 @@ class HomeController extends Controller
         // Check if there are any records in the SrNews table
         $newsExist = News::exists();
 
-                return view('/pdmshome', compact('banners','announcements','announcementExist','news','newsExist'));
+        /* =============== NISAH =============== */
+        // PDMS Home now shows the MESH services too (inc/home-services.blade.php), which need the E-Memo action count
+        $totalEmemoTindakan = $this->ememoActionCount();
+
+        return view('/pdmshome', compact('banners','announcements','announcementExist','news','newsExist','totalEmemoTindakan'));
+        /* =============================================== */
     }
 
 	public function welcome(){

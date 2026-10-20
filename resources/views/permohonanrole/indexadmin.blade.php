@@ -37,7 +37,7 @@
             <div class="col-md-10">
             </div>
             <div class="col-md-2" style="text-align:center;">
-                <a href="https://mesh.moe.gov.bn/borangpermohonanperanan"  target="_blank" class= "btn btn-primary">
+                <a href="http://127.0.0.1:8000/borangpermohonanperanan"  target="_blank" class= "btn btn-primary">
                     <i class="bi bi-link"></i>
                 </a>
                 <a href="/assets/img/qrcode/permohonanperanan.jpg"  target="_blank" class= "btn btn-primary text-right">

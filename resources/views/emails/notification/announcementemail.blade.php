@@ -5,7 +5,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #edf2f7; border-radius: 4px;">
     <tr>
         <td align="center">
-            <a href="https://https://mesh.moe.gov.bn">
+            <a href="https://http://127.0.0.1:8000">
                 <img src="{{ asset('img/newmoelogo.png') }}" class="d-block" style="height:200px" alt="img">
             </a>
         </td>

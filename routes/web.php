@@ -424,8 +424,28 @@ Route::get('/perasmiannext', function() {
      return view('perasmiannext');
 });
 
-Route::get('/sk', 'SKController@isiborang')
-->name('slipkehadiran');
+# ==========swap comment with ori/copy=========
+#==== ORI CODE ====
+// Route::get('/sk', 'SKController@isiborang')
+// ->name('slipkehadiran');
+
+# ==========swap comment with ori/copy=========
+#==== NEWLY ADDED ====
+Route::get('/sk', function () {
+     $currentDate = \Carbon\Carbon::now();
+     $skperkaras = \App\Models\SKPerkara::where('tarikh_berakhir', '>=', $currentDate)->get();
+     $departments = \App\Models\Department::all();
+     $peranans = [
+          'Pengerusi',
+          'Ahli',
+          'Setiausaha',
+          'Urusetia',
+          'Ketua Jabatan',
+          'Wakil Jabatan',
+          'Hadir'
+     ];
+     return view('slipkedatangan-new', compact('departments', 'skperkaras', 'peranans'));
+})->name('slipkehadiran');
 
 //SK Page
 Route::group(
@@ -444,13 +464,24 @@ Route::group(
           ->name('sk.slipkedatangan.updateslip')
           ->where('id', '[0-9]+');
 
-          Route::get('/createevent', 'SKController@createevent')
-          ->name('sk.slipkedatangan.createevent');
+          # ==========swap comment with ori/copy=========
+          #==== ORI CODE (route to the actual original file, not used) ====
+          // Route::get('/createevent', 'SKController@createevent')
+          // ->name('sk.slipkedatangan.createevent');
+
+          # ==========swap comment with ori/copy=========
+          #==== NEWLY ADDED (routes to the copy file; copy's design undone to match original) ====
+          Route::get('/createevent', function () {
+               $skperkaras = \App\Models\SKPerkara::all();
+               $statuses = ['active', 'inactive'];
+               return view('slipkedatangan.createevent-new', compact('skperkaras', 'statuses'));
+          })->name('sk.slipkedatangan.createevent');
 
           Route::post('/store', 'SKController@store')
           ->name('sk.slipkedatangan.store');
-
           
+          Route::get('/moeevent/cc/{id}', [\App\Http\Controllers\MoeeventController::class, 'cc'])
+          ->name('moeevent.moeevent.cc');
 
           Route::post('/storeperkara', 'SKController@storeperkara')
           ->name('sk.slipkedatangan.storeperkara');
@@ -458,7 +489,35 @@ Route::group(
           Route::delete('{skp}/deleteperkarask', 'SKController@destroyperkara')
                ->name('sk.slipkedatangan.destroy')
                ->where('id', '[0-9]+');
-     
+
+          #====== NEWLY ADDED ========
+          # SHARE PERKARA WITH SOMEONE USING THEIR IC NO. (the "cc by IC" feature)
+          # Grants other users read access to a Perkara's slip records by IC number.
+          # Views: slipkedatangan/accessske.blade.php, slipkedatangan/access_users.blade.php,
+          #        slipkedatangan/sharedperkara.blade.php
+          # Controller: SKController@grantAccess / storeAccess / showAccessUsers / revokeAccess /
+          #             checkIcExists / sharedWithMe
+          # Triggered from: slipkedatangan/indexadmin.blade.php ("Add IC No." + "Shared With Me" buttons)
+
+          Route::post('/grant-access/{skperkara}', 'SKController@grantAccess')
+               ->name('sk.slipkedatangan.accessske');
+
+          Route::post('/store-access/{skperkara}', 'SKController@storeAccess')
+               ->name('sk.slipkedatangan.storeAccess');
+
+          Route::get('/show-access-users/{skperkara}', 'SKController@showAccessUsers')
+               ->name('sk.slipkedatangan.showAccessUsers');
+
+          Route::post('/revoke-access/{skperkara}/{icNo}', 'SKController@revokeAccess')
+               ->name('sk.slipkedatangan.revokeAccess');
+
+          Route::get('/check-ic-exists', 'SKController@checkIcExists')
+               ->name('sk.slipkedatangan.checkIcExists');
+
+          Route::get('/shared-with-me', 'SKController@sharedWithMe')
+               ->name('sk.slipkedatangan.sharedwithme');
+          #====== ========.
+
      });
 
 // SK Raya 2025 Page
@@ -946,7 +1005,9 @@ Route::group(
 
      Route::controller(DevopsRequestController::class)->group(function() {
           Route::get('/devops-request/indexadmin', 'DevopsRequestController@indexadmin')->name('devops-request.indexadmin');
-          Route::get('/drf', 'DevopsRequestController@create')->name('devops-request.addrequest');
+          # ==========swap comment with ori/copy=========
+          // === ORI CODE ===
+          // Route::get('/drf', 'DevopsRequestController@create')->name('devops-request.addrequest');
           Route::post('/devops-request/store', 'DevopsRequestController@store')->name('devops-request.store');
           Route::get('/devops-request/download-template', 'DevopsRequestController@downloadTemplate')->name('devops-request.download-template');
           Route::get('/devops-request/{devopsRequest}/editadmin', 'DevopsRequestController@editadmin')->name('devops-request.editadmin');
@@ -954,6 +1015,19 @@ Route::group(
           Route::get('/devops-request/{drfDocument}/download-document', 'DevopsRequestController@downloadUploadedFile')->name('devops-request.uploadedfile-download');
 
           Route::post('/devops-request/{devopsRequest}/updateadmin', 'DevopsRequestController@updateadmin')->name('devops-request.updateadmin');
+     });
+
+     # ==========swap comment with ori/copy=========
+     #==== NEWLY ADDED ===
+     Route::get('/drf', function () {
+          $departments = \App\Models\Department::all();
+          return view('devopsrequest.drf-create-new', compact('departments'));
+     })->name('devops-request.addrequest');
+
+     #==== NEWLY ADDED ===
+     Route::get('/drf-new', function () {
+          $departments = \App\Models\Department::all();
+          return view('devopsrequest.drf-create-new', compact('departments'));
      });
 
      Route::controller(DevopsAdminEmailController::class)->group(function() {
@@ -969,7 +1043,17 @@ Route::group(
           //NEW UMMI 22/08/2025
 
           // Custom route for /dsd
-          Route::get('/dsd', [SupportCenterController::class, 'create'])->name('support-center.create');
+          # ==========swap comment with ori/copy=========
+          // === ORI CODE ===
+          // Route::get('/dsd', [SupportCenterController::class, 'create'])->name('support-center.create');
+
+          # ==========swap comment with ori/copy=========
+          #======= NEWLY ADDED =====
+          Route::get('/dsd', function () {
+               $departments = \App\Models\Department::orderBy('label', 'asc')->get();
+               $pagename = "SupportCenter";
+               return view('support_center.create-new', compact('departments', 'pagename'));
+          })->name('support-center.create');
 
           Route::prefix('support-center')->name('support-center.')->group(function () {
               // Requests
@@ -1011,7 +1095,13 @@ Route::get('/genai_stats',  [GenAIController::class, 'stats'])->name('genai.stat
 Route::get('/genai/public', [GenAIController::class, 'publicProxy'])->name('genai.public');
 
 
+//MESH Smart Bot (disabled temporarily — uncomment to restore)
+// use App\Http\Controllers\SmartBotController;
 
+// Route::post('/smartbot/chat', [SmartBotController::class, 'chat'])
+//     ->middleware(['auth', 'throttle:' . config('meshbot.rate_limit')])
+//     ->name('smartbot.chat');
+    
           
            // e-minit
 
@@ -1627,8 +1717,20 @@ Route::get('/download', function () {
 });
 
 
+# ==========swap comment with ori/copy=========
+// === ORI CODE ===
+// Route::get('/', function () {
+// return view('welcome');
+// });
+
+# ==========swap comment with ori/copy=========
+#=======NEWLY ADDED/MODIFIED======
 Route::get('/', function () {
-return view('welcome');
+return redirect('/welcome-new');
+});
+
+Route::get('/welcome-new', function () {
+return view('welcome-new');
 });
 
 Route::get('/services', function() {
@@ -3528,8 +3630,19 @@ Route::group(
                Route::post('/storeRateopenform', 'MoeeventController@storeRateopenform')
                     ->name('moeevent.moeevent.storeRateopenform');
 
-               Route::get('/createevent', 'MoeeventController@createevent')
-                    ->name('moeevent.moeevent.createevent');
+               # ==========swap comment with ori/copy=========
+               #==== ORI CODE ====
+               // Route::get('/createevent', 'MoeeventController@createevent')
+               //      ->name('moeevent.moeevent.createevent');
+
+               # ==========swap comment with ori/copy=========
+               #==== NEWLY ADDED ====
+               Route::get('/createevent', function () {
+                    $icNos = \Auth::user()->ic_no;
+                    $employments = \App\Models\Employment::all()->where('ic_no', '=', $icNos);
+                    $biodatas = \App\Models\Biodata::all()->where('ic_no', '=', $icNos);
+                    return view('moeevent.createevent-new', compact('employments', 'biodatas'));
+               })->name('moeevent.moeevent.createevent');
 
                Route::post('/storeevent', 'MoeeventController@storeevent')
                     ->name('moeevent.moeevent.storeevent');
@@ -4841,6 +4954,126 @@ Route::group(
 
 // end perumahan live nov25
 
+#==============NEW==================
+// Housing 2 records module (combined from laravel_perumahan design, 2026-09-08;
+// renamed to Housing 2 and finished 2026-09-09).
+// Fully independent from the "daperumahan" module above: its own RS/IQ applicant,
+// owner, occupant and waiting-list registers, backed by the `housing2_rekods`
+// table (see config/housing2.php). Does not touch or replace daperumahan.
+use App\Http\Controllers\Housing2RekodController;
+use App\Http\Controllers\Housing2ZoneController;
+
+Route::prefix('housing2')->group(function () {
+    Route::get('/lang/{locale}', function (string $locale) {
+        session(['housing2_locale' => in_array($locale, ['en', 'ms']) ? $locale : 'ms']);
+
+        return back();
+    })->name('housing2.lang');
+
+    Route::get('/theme/{mode}', function (string $mode) {
+        session(['housing2_theme' => in_array($mode, ['light', 'dark']) ? $mode : 'light']);
+
+        return back();
+    })->name('housing2.theme');
+
+    Route::get('/mod/{mode}', function (string $mode) {
+        session(['housing2_view_mode' => in_array($mode, ['user', 'admin']) ? $mode : 'user']);
+
+        return back();
+    })->name('housing2.view-mode');
+
+    Route::get('/', [Housing2RekodController::class, 'index'])->name('housing2.index');
+
+    Route::prefix('zon')->group(function () {
+        Route::get('/', [Housing2ZoneController::class, 'index'])->name('housing2.zon.index');
+        Route::get('/mukim/baharu', [Housing2ZoneController::class, 'mukimCreate'])->name('housing2.zon.mukim.create');
+        Route::post('/mukim', [Housing2ZoneController::class, 'mukimStore'])->name('housing2.zon.mukim.store');
+        Route::get('/mukim/{mukim}/sunting', [Housing2ZoneController::class, 'mukimEdit'])->name('housing2.zon.mukim.edit');
+        Route::put('/mukim/{mukim}', [Housing2ZoneController::class, 'mukimUpdate'])->name('housing2.zon.mukim.update');
+        Route::delete('/mukim/{mukim}', [Housing2ZoneController::class, 'mukimDestroy'])->name('housing2.zon.mukim.destroy');
+    });
+
+    Route::prefix('kakitangan')->group(function () {
+        Route::get('/', [Housing2ZoneController::class, 'staffIndex'])->name('housing2.staff.index');
+        Route::get('/baharu', [Housing2ZoneController::class, 'staffCreate'])->name('housing2.staff.create');
+        Route::post('/', [Housing2ZoneController::class, 'staffStore'])->name('housing2.staff.store');
+        Route::get('/{staffMember}/sunting', [Housing2ZoneController::class, 'staffEdit'])->name('housing2.staff.edit');
+        Route::put('/{staffMember}', [Housing2ZoneController::class, 'staffUpdate'])->name('housing2.staff.update');
+        Route::delete('/{staffMember}', [Housing2ZoneController::class, 'staffDestroy'])->name('housing2.staff.destroy');
+    });
+
+    Route::prefix('rekod/{jenis}')->group(function () {
+        Route::get('/', [Housing2RekodController::class, 'list'])->name('housing2.list');
+        Route::get('/pilih', [Housing2RekodController::class, 'choose'])->name('housing2.choose');
+        Route::get('/baharu', [Housing2RekodController::class, 'create'])->name('housing2.create');
+        Route::post('/', [Housing2RekodController::class, 'store'])->name('housing2.store');
+        Route::get('/{rekod}', [Housing2RekodController::class, 'show'])->name('housing2.show');
+        Route::get('/{rekod}/muat-turun', [Housing2RekodController::class, 'download'])->name('housing2.download');
+        Route::post('/{rekod}/kongsi', [Housing2RekodController::class, 'share'])->name('housing2.share');
+        Route::patch('/{rekod}/status-permohonan', [Housing2RekodController::class, 'updateStatusPermohonan'])->name('housing2.status-permohonan');
+        Route::get('/{rekod}/sunting', [Housing2RekodController::class, 'edit'])->name('housing2.edit');
+        Route::put('/{rekod}', [Housing2RekodController::class, 'update'])->name('housing2.update');
+        Route::delete('/{rekod}', [Housing2RekodController::class, 'destroy'])->name('housing2.destroy');
+    });
+});
+#===================================
+
+#==============NEW==================
+// Sistem Kunci Kira-Kira (KKK): school balance-sheet tracking module, built
+// 2026-09-29 from a Claude Design-canvas artifact. Fully independent module
+// with its own session-based role picker (no integration with the app's real
+// users/roles tables) — see kkk_* tables and App\Models\Kkk\*.
+use App\Http\Controllers\KkkController;
+
+Route::prefix('kunci-kira-kira')->name('kkk.')->group(function () {
+    Route::get('/', fn () => redirect()->route('kkk.rekod'))->name('login');
+    Route::post('/keluar', [KkkController::class, 'logout'])->name('logout');
+    Route::get('/lang/{locale}', [KkkController::class, 'setLang'])->name('lang');
+    Route::get('/tema/{mode}', [KkkController::class, 'setTheme'])->name('theme');
+    Route::get('/peranan/{peranan}', [KkkController::class, 'switchRole'])->name('switch-role');
+
+    Route::get('/rekod', [KkkController::class, 'rekod'])->name('rekod');
+    Route::post('/rekod', [KkkController::class, 'storeRekod'])->name('rekod.store');
+    Route::post('/rekod/{peminjaman}/{langkah}', [KkkController::class, 'advance'])
+        ->where('langkah', 'benarkan|tolak|keluarkan|terima|kembalikan|terima-stor')
+        ->name('rekod.langkah');
+
+    Route::get('/pemeriksaan', [KkkController::class, 'pemeriksaan'])->name('pemeriksaan');
+    Route::post('/pemeriksaan', [KkkController::class, 'storePemeriksaan'])->name('pemeriksaan.store');
+    Route::post('/pemeriksaan/jana', [KkkController::class, 'janaPemeriksaan'])->name('pemeriksaan.jana');
+    Route::post('/pemeriksaan/{rekod}/terima', [KkkController::class, 'terimaPemeriksaan'])->name('pemeriksaan.terima');
+    Route::post('/pemeriksaan/{rekod}/kuiri', [KkkController::class, 'issueKuiri'])->name('pemeriksaan.kuiri');
+    Route::post('/pemeriksaan/{rekod}/jawapan', [KkkController::class, 'recordJawapan'])->name('pemeriksaan.jawapan');
+    Route::post('/pemeriksaan/{rekod}/tfv', [KkkController::class, 'confirmTfv'])->name('pemeriksaan.tfv');
+    Route::post('/pemeriksaan/{rekod}/buka-semula', [KkkController::class, 'reopen'])->name('pemeriksaan.reopen');
+    Route::post('/pemeriksaan/{rekod}/catatan', [KkkController::class, 'updateCatatan'])->name('pemeriksaan.catatan');
+    Route::get('/pencapaian', [KkkController::class, 'pencapaian'])->name('pencapaian');
+
+    Route::get('/borang-peminjaman', [KkkController::class, 'borangPeminjaman'])->name('borang');
+    Route::get('/dashboard', [KkkController::class, 'dashboard'])->name('dashboard');
+    Route::get('/eksekutif', [KkkController::class, 'executive'])->name('exec');
+
+    Route::get('/sekolah', [KkkController::class, 'sekolah'])->name('sekolah');
+    Route::post('/sekolah/{sekolah}/pemimpin', [KkkController::class, 'storeLeader'])->name('leader.store');
+
+    Route::get('/import', [KkkController::class, 'import'])->name('import');
+    Route::post('/import/muat-naik', [KkkController::class, 'uploadImport'])->name('import.upload');
+    Route::post('/import/jalankan', [KkkController::class, 'runImport'])->name('import.run');
+    Route::post('/import/reset', [KkkController::class, 'resetImport'])->name('import.reset');
+
+    Route::get('/audit', [KkkController::class, 'auditLog'])->name('audit');
+    Route::get('/audit/muat-turun', [KkkController::class, 'exportAudit'])->name('audit.export');
+});
+
+// (KKK1) Pengesahan Penerimaan Kunci Kira-Kira — public form, replaces the Unit Audit
+// Dalaman Microsoft Form. Open without login, like /borangpermohonanperanan.
+Route::get('/borangkuncikirakira', [\App\Http\Controllers\KkkPengesahanController::class, 'create'])
+    ->name('kkk.pengesahan');
+Route::post('/borangkuncikirakira', [\App\Http\Controllers\KkkPengesahanController::class, 'store'])
+    ->middleware('throttle:20,1')
+    ->name('kkk.pengesahan.store');
+#===================================
+
 // Combined Report Dashboard (Recommended - All 6 diagrams on one page)
 Route::get('/reports/staff-dashboard', [StaffReportController::class, 'combinedReport'])
     ->name('reports.combinedReport');
@@ -4851,7 +5084,7 @@ Route::prefix('pemegang-jawatan')->name('pj.')->group(function () {
      
      // Landing page
      Route::get('/HRIDS-landing-page', [PemegangJawatanController::class, 'landingpage'])
-     ->middleware(['auth','role:ROLE_HRIDS,ROLE_SUPERADMIN'])
+     ->middleware(['auth','role:ROLE_HRIDS,ROLE_SUPERADMIN,ROLE_HRIDS_NONTEACHING'])
      ->name('landingpage');
      
      // Main index
@@ -4860,10 +5093,18 @@ Route::prefix('pemegang-jawatan')->name('pj.')->group(function () {
      // Export routes
      Route::get('/teachers/export', [TeacherController::class, 'export'])->name('teachers.export');
      Route::get('/spj/export', [PemegangJawatanController::class, 'export'])->name('spj.export');
-     
+
      // Staff lists
      Route::get('/teaching', [PemegangJawatanController::class, 'teachingList'])->name('teaching.list');
      Route::get('/non-teaching', [PemegangJawatanController::class, 'index'])->name('show.list');
+
+     // Non-teaching dashboard report (same filters as Export Excel)
+     Route::get('/non-teaching/report', [PemegangJawatanController::class, 'nonTeachingReport'])->name('nonteaching.report');
+     Route::get('/non-teaching/report/data', [PemegangJawatanController::class, 'nonTeachingReportData'])->name('nonteaching.report.data');
+
+     // Teaching dashboard report (same filters as Export Excel)
+     Route::get('/teaching/report', [TeacherController::class, 'report'])->name('teaching.report');
+     Route::get('/teaching/report/data', [TeacherController::class, 'reportData'])->name('teaching.report.data');
      
      // --------------------------------------------
      // Teaching Staff Routes
@@ -5055,6 +5296,21 @@ Route::get('/jawatan/status-jawatan/create', function () {
      }
      );
             
+/* =============== NISAH =============== */
+// DICT HR and TPAWSE are self-contained sub-apps inside MESH (see routes/dicthr.php,
+// routes/tpawse.php). Must be required BEFORE the Linkup catch-all GET route below --
+// that route matches Route::get('/{filename}')->where('filename','.*'), i.e. ANY GET
+// path with any number of segments, so anything registered after it is unreachable.
+// Loaded only when the sub-app's controllers exist -- the route files were copied in
+// without app/Http/Controllers/Dicthr*.php and TPAWSE*.php. Copy those in to re-enable.
+if (class_exists(\App\Http\Controllers\DicthrDashboardController::class)) {
+    require __DIR__.'/dicthr.php';
+}
+if (class_exists(\App\Http\Controllers\TPAWSEPortalController::class)) {
+    require __DIR__.'/tpawse.php';
+}
+/* =============================================== */
+
 // Linkup 14/10/2023 Zharif | MAKE SURE THIS IS PLACED AT THE BOTTOM OF THE PAGE
      Route::group(
           [

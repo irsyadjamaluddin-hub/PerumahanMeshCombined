@@ -90,7 +90,7 @@
                 <!-- BUTTON -->
                 <tr>
                     <td align="center" style="padding:20px;">
-                        <a href="https://mesh.moe.gov.bn"
+                        <a href="http://127.0.0.1:8000"
                            style="background:{{ $purple }};
                                   color:#fff;
                                   padding:12px 20px;

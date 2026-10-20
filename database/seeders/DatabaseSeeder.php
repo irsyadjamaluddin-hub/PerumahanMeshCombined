@@ -14,5 +14,9 @@ class DatabaseSeeder extends Seeder
     {
 		Eloquent::unguard();
          $this->call(DummyUsersTableSeeder::class);
+
+        #==============NEW==================
+        $this->call(\Database\Seeders\Housing2RekodSeeder::class);
+        #===================================
     }
 }

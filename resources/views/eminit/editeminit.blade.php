@@ -1,6 +1,6 @@
 @extends('layouts.app-all')
 
-@section('title', 'Edit e-minit')
+@section('title', 'Edit E-Memo')
 
 @section('content')
 <?php $pagename = "e-minit"; ?>
@@ -37,7 +37,7 @@
           <div class="row mb-3 justify-content-end">
               <div class="col-lg-6 col-md-8 col-sm-12 d-flex justify-content-end align-items-center">
                   <label class="col-form-label me-2 text-end label">
-                      Daripada (Dihantar oleh):
+                      from Department:
                   </label>
                   <div class="flex-grow-1">
                       @foreach($employments as $employment)
@@ -59,10 +59,10 @@
 
             {{-- Jenis --}}
             <div class="row">
-              <label class="col-lg-4 label">Jenis</label>
+              <label class="col-lg-4 label">Category</label>
               <div class="col-lg-8">
                 <select class="form-select" name="jenis">
-                  <option value="">-- Pilih Jenis --</option>
+                  <option value="">-- Select Category --</option>
                   @foreach ($jenis as $key => $value)
                     <option value="{{ $key }}" {{ (string)old('jenis', $eminit->jenis) === (string)$key ? 'selected' : '' }}>
                       {{ $value }}
@@ -76,10 +76,10 @@
 
             {{-- Memo Daripada --}}
             <div class="row">
-              <label class="col-lg-4 label">Memo Daripada <i style="color:red;">*</i></label>
+              <label class="col-lg-4 label">Memo From <i style="color:red;">*</i></label>
               <div class="col-lg-8">
                 <select class="form-select" name="memo_daripada" required>
-                  <option value="">-- Pilih Memo Daripada --</option>
+                  <option value="">-- Select Memo From --</option>
                   @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}" {{ (string)old('memo_daripada', $eminit->memo_daripada) === (string)$dept->id ? 'selected' : '' }}>
                       {{ $dept->label }}
@@ -92,7 +92,7 @@
 
             {{-- Kepada --}}
             <div class="row">
-              <div class="col-lg-4 label">Kepada <i style="color:red;">*</i></div>
+              <div class="col-lg-4 label">To <i style="color:red;">*</i></div>
               <div class="col-lg-8">
                 @php
                   $selectedKpd = old('kpd', (array)($eminit->kpd ?? []));
@@ -111,10 +111,10 @@
 
             {{-- Untuk Perhatian --}}
             <div class="row">
-              <label class="col-lg-4 label">Untuk Perhatian</label>
+              <label class="col-lg-4 label">For Attention</label>
               <div class="col-lg-8">
                 <select class="form-select" name="untukperhatian">
-                  <option value="">-- Pilih UP --</option>
+                  <option value="">-- Select FA --</option>
                   @foreach ($Eminit_Untukperhatian as $value)
                     <option value="{{ $value }}" {{ old('untukperhatian', $eminit->untukperhatian) === $value ? 'selected' : '' }}>
                       {{ $value }}
@@ -126,7 +126,7 @@
 
             {{-- Perkara --}}
               <div class="row">
-                <label class="col-lg-4 label">Perkara <i style="color:red;">*</i></label>
+                <label class="col-lg-4 label">Subject <i style="color:red;">*</i></label>
                 <div class="col-lg-8">
                   <input type="text" name="perkara" class="form-control" 
                         value="{{ old('perkara', $eminit->perkara) }}"
@@ -136,7 +136,7 @@
 
             {{-- Rujukan Tuan/Puan --}}
             <div class="row">
-              <label class="col-lg-4 label">Rujukan (Memo Diterima)</label>
+              <label class="col-lg-4 label">No Reference (Memo Recieved)</label>
               <div class="col-lg-8">
                 <input type="text" name="rujukan_tp" class="form-control" value="{{ old('rujukan_tp', $eminit->rujukan_tp) }}">
               </div>
@@ -144,7 +144,7 @@
 
             {{-- E-Memo Dokumen (Sedia Ada) --}}
 <div class="row form-group mb-2">
-    <label class="col-lg-4 label">E-Memo Dokumen (Sedia Ada)</label>
+    <label class="col-lg-4 label">e-Memo Document (Existing)</label>
     <div class="col-lg-8">
         @php $existingFiles = (array)($eminit->eminit_file ?? []); @endphp
 
@@ -153,7 +153,7 @@
                 @foreach ($existingFiles as $f)
                     @php
                         $stored = $f['stored'] ?? null;
-                        $label  = $f['original'] ?? $stored ?? 'Dokumen';
+                        $label  = $f['original'] ?? $stored ?? 'Document';
                         // Use controller route to open inline
                         $url = $stored ? route('ememo.view', ['filename' => $stored]) : null;
                     @endphp
@@ -167,35 +167,35 @@
                             @else
                                 {{ $label }}
                             @endif
-                            <small class="text-muted ms-2">(tandakan untuk buang)</small>
+                            <small class="text-muted ms-2">(mark to remove)</small>
                         </div>
                     </li>
                 @endforeach
             </ul>
         @else
-            <em>Tiada dokumen sedia ada.</em>
+            <em>No existing documents.</em>
         @endif
 
         <small class="text-muted d-block">
-            Sekurang-kurangnya 1 dokumen mesti wujud (sama ada kekalkan sedia ada atau tambah baharu).
+            At least 1 document must exist (either keep an existing one or add a new one).
         </small>
     </div>
 </div>
 
 {{-- E-Memo Dokumen (tambah baru, satu demi satu) --}}
 <div class="row form-group mb-3">
-  <label class="col-lg-4 label">Tambah e-Memo Dokumen</label>
+  <label class="col-lg-4 label">Add e-Memo Document</label>
   <div class="col-lg-8">
     <div id="fileRows" data-has-existing="{{ count($existingFiles) ? '1' : '0' }}">
       <div class="input-group mb-2 file-row">
         {{-- If no existing files, make first input required; else optional --}}
         <input type="file" name="eminit_file[]" class="form-control" {{ count($existingFiles) ? '' : 'required' }}>
-        <button type="button" class="btn btn-outline-danger ms-2 remove-row" disabled>Buang</button>
+        <button type="button" class="btn btn-outline-danger ms-2 remove-row" disabled>Remove</button>
       </div>
     </div>
 
-    <button type="button" id="addFileRow" class="btn btn-outline-secondary mt-2">+ Tambah fail</button>
-    <small class="text-muted d-block mt-1">Biarkan kosong jika tidak menambah dokumen baharu.</small>
+    <button type="button" id="addFileRow" class="btn btn-outline-secondary mt-2">+ Add file</button>
+    <small class="text-muted d-block mt-1">Leave empty if not adding a new document.</small>
 
     @error('eminit_file')   <div class="text-danger mt-1">{{ $message }}</div> @enderror
     @error('eminit_file.*') <div class="text-danger mt-1">{{ $message }}</div> @enderror
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
     row.className = 'input-group mb-2 file-row';
     row.innerHTML = `
       <input type="file" name="eminit_file[]" class="form-control">
-      <button type="button" class="btn btn-outline-danger ms-2 remove-row">Buang</button>
+      <button type="button" class="btn btn-outline-danger ms-2 remove-row">Remove</button>
     `;
     container.appendChild(row);
     updateState();
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             {{-- Catatan --}}
             <div class="row">
-              <label class="col-lg-4 label">Catatan</label>
+              <label class="col-lg-4 label">Remarks</label>
               <div class="col-lg-8">
                 <textarea class="form-control" name="catatan" style="height: 100px;">{{ old('catatan', $eminit->catatan) }}</textarea>
               </div>
@@ -254,13 +254,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             {{-- Salinan Kepada --}}
             <div class="row">
-              <label class="col-lg-4 label">Salinan Kepada</label>
+              <label class="col-lg-4 label">CC To</label>
               <div class="col-lg-8">
                 @php
                   $selectedSalinan = old('salinan_kepada', (array)($eminit->salinan_kepada ?? []));
                 @endphp
                 <select class="form-select2" id="salinanSelect" name="salinan_kepada[]" multiple="multiple">
-                  <option value="">-- Pilih Salinan --</option>
+                  <option value="">-- Select CC Dept --</option>
                   @foreach ($kepada as $key => $value)
                     <option value="{{ $key }}" {{ in_array((string)$key, array_map('strval', $selectedSalinan), true) ? 'selected' : '' }}>
                       {{ $value }}
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             {{-- Salinan Persuratan Luar --}}
             <div class="row">
-              <label class="col-lg-4 label">Salinan Persuratan Luar</label>
+              <label class="col-lg-4 label">CC External</label>
               <div class="col-lg-8">
                 <input type="text" name="salinan" class="form-control" value="{{ old('salinan', $eminit->salinan) }}">
               </div>
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             {{-- Salinan Dokumen (existing) --}}
             <div class="row form-group mb-2">
-              <label class="col-lg-4 label">Salinan Dokumen (Sedia Ada)</label>
+              <label class="col-lg-4 label">CC Document (Existing)</label>
               <div class="col-lg-8">
                 @php $existingSalinanDocs = (array)($eminit->salinan_dokumen ?? []); @endphp
                 @if(count($existingSalinanDocs))
@@ -288,31 +288,31 @@ document.addEventListener('DOMContentLoaded', function () {
                     @foreach ($existingSalinanDocs as $f)
                       <li>
                         @if(!empty($f['url']))
-                          <a href="{{ $f['url'] }}" target="_blank">{{ $f['original'] ?? $f['stored'] ?? 'Dokumen' }}</a>
+                          <a href="{{ $f['url'] }}" target="_blank">{{ $f['original'] ?? $f['stored'] ?? 'Document' }}</a>
                         @else
-                          {{ $f['original'] ?? $f['stored'] ?? 'Dokumen' }}
+                          {{ $f['original'] ?? $f['stored'] ?? 'Document' }}
                         @endif
                       </li>
                     @endforeach
                   </ul>
                 @else
-                  <em>Tiada dokumen sedia ada.</em>
+                  <em>No existing documents.</em>
                 @endif
               </div>
             </div>
 
             {{-- Salinan Dokumen (tambah baru) --}}
             <div class="row form-group mb-3">
-              <label class="col-lg-4 label">Tambah Salinan Dokumen</label>
+              <label class="col-lg-4 label">Add CC Document</label>
               <div class="col-lg-8">
                 <input type="file" name="salinan_dokumen[]" class="form-control" multiple>
-                <small class="text-muted">Biarkan kosong jika tiada dokumen baharu.</small>
+                <small class="text-muted">Leave empty if there is no new document.</small>
               </div>
             </div>
 
             {{-- No Rujukan --}}
             <div class="row">
-              <label class="col-lg-4 label">Rujukan Jabatan</label>
+              <label class="col-lg-4 label">Department Reference</label>
               <div class="col-lg-8">
                 <input type="text" name="no_rujukan" class="form-control" value="{{ old('no_rujukan', $eminit->no_rujukan) }}">
               </div>
@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   <script>
     $('#myselect').select2({ width: '100%', placeholder: "", allowClear: true });
-    $('#salinanSelect').select2({ width: '100%', placeholder: "Pilih salinan penerima", allowClear: true });
+    $('#salinanSelect').select2({ width: '100%', placeholder: "Select recipient copy", allowClear: true });
   </script>
 </section>
 @endsection

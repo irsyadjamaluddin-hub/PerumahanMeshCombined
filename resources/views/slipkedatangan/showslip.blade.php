@@ -1,15 +1,31 @@
 @extends('layouts.app-all')
 
+{{-- #==========ORI CODE=========
 @section('title', 'Admin Show Slip Kehadiran')
+===========================--}}
+{{-- #==========NEWLY ADDED======== --}}
+@section('title', 'Admin Show MESH Attendance Slip')
+{{-- ===========================--}}
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "Slip Kehadiran";
 ?>
 
 <div class="pagetitle">
+    {{-- #==========ORI CODE=========
     <h1>Slip Kehadiran</h1>
+    ===========================--}}
+    {{-- #==========NEWLY ADDED======== --}}
+    <h1>MESH Attendance Slip</h1>
+    {{-- ===========================--}}
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
@@ -42,11 +58,18 @@ $pagename = "Slip Kehadiran";
 
                         <form action="{{ route('sk.slipkedatangan.updateslip', $skperkara['id']) }}" method="post" enctype="multipart/form-data">
                             @csrf
-                            
+
                             <div class="row">
                                 <div class="col-lg-4 label d-flex align-items-center">Perkara</div>
                                 <div class="col-lg-8">
                                     <input type="text" class="form-control" name="label" value="{{ $skperkara['label'] }}">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4 label d-flex align-items-center">Jabatan</div>
+                                <div class="col-lg-8">
+                                    <div class="form-control">{{ $skperkara['jabatan'] }}</div>
                                 </div>
                             </div>
 
@@ -56,14 +79,14 @@ $pagename = "Slip Kehadiran";
                                     <input class="form-control" type="datetime-local" name="tarikh_bermula" id="tarikh_bermula" value="{{ $skperkara['tarikh_bermula'] }}">
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-lg-4 label d-flex align-items-center">Tarikh Berakhir</div>
                                 <div class="col-lg-8">
                                     <input class="form-control" type="datetime-local" name="tarikh_berakhir" id="tarikh_berakhir" value="{{ $skperkara['tarikh_berakhir'] }}">
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-lg-4 label d-flex align-items-center">Status</div>
                                 <div class="col-lg-8">
@@ -75,7 +98,7 @@ $pagename = "Slip Kehadiran";
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </div>
@@ -116,7 +139,7 @@ $pagename = "Slip Kehadiran";
                                         <td>{{ $slip['jabatan']}}</td>
                                         <td>{{ $slip['created_at']}}</td>
                                         <td>{{ $slip['remark'] != null ? $slip['remark'] : '-'}}</td>
-                                        
+
                                     </tr>
                                 @endforeach
                                 @endif
@@ -129,4 +152,7 @@ $pagename = "Slip Kehadiran";
     </div>
 
 </section>
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

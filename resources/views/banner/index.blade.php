@@ -3,6 +3,12 @@
 @section('title', 'Mesh Paparan Iklan')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php
 $pagename = "Banner Form";
@@ -38,7 +44,12 @@ $pagename = "Banner Form";
                         @csrf
                         <br>
                         <div class="col profile-overview" style="border: 2px solid #012970; padding: 20px; border-radius: 25px;">
-                        <h3 class="card-title"style="padding: 0px;">Masukkan Paparan Iklan</i></h3>
+                        {{-- #============= ORI CODE ============== --}}
+                        {{-- <h3 class="card-title"style="padding: 0px;">Masukkan Paparan Iklan</i></h3> --}}
+                        {{-- #================================ --}}
+                        {{-- Title centred; gold in dark mode (mesh-gold-title, public/css/mesh-dark.css) --}}
+                        <h3 class="card-title mesh-gold-title" style="padding: 0px; text-align: center;">Masukkan Paparan Iklan</i></h3>
+                        {{-- #================================ --}}
                         <hr>
                         <br>
 
@@ -131,4 +142,7 @@ $pagename = "Banner Form";
         </div>
     </div><!-- End Recent Sales -->
 
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
     @endsection

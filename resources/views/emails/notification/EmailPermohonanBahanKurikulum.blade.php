@@ -288,9 +288,9 @@ style="
                                         <td style="text-align: center; padding-top: 1.5em;">
                                             <p style="margin: 0;">
                                                 Layari portal kami di 
-                                                <a href="https://mesh.moe.gov.bn/" 
+                                                <a href="http://127.0.0.1:8000/" 
                                                 style="color: {{ $purple }}; font-weight: bold; text-decoration: none; white-space: nowrap;">
-                                                https://mesh.moe.gov.bn/
+                                                http://127.0.0.1:8000/
                                                 </a>
 
                                             </p>

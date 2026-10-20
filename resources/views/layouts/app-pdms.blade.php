@@ -14,6 +14,11 @@
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
+  {{-- =============== NISAH =============== --}}
+  {{-- MESH v4 redesign fonts (additive -- existing Open Sans/Nunito/Poppins above are kept) --}}
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Anton&display=swap" rel="stylesheet">
+  {{-- =============================================== --}}
+
   <!-- Vendor CSS Files -->
   <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
@@ -25,7 +30,13 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('assets/css/admin.css') }}" rel="stylesheet">
-  <script src="{{ asset('assets/js/apexcharts-bundle.js') }}"></script>  
+  <script src="{{ asset('assets/js/apexcharts-bundle.js') }}"></script>
+
+  {{-- =============== NISAH =============== --}}
+  {{-- MESH v4 redesign (scoped under .mesh-v4-sidebar/.mesh-v4-header -- does not override admin.css) --}}
+  {{-- Same stylesheet used by layouts/app-all.blade.php, so PDMS pages now match the Home page look --}}
+  <link href="{{ asset('css/mesh-v4.css') }}?v={{ filemtime(public_path('css/mesh-v4.css')) }}" rel="stylesheet">
+  {{-- =============================================== --}}
 
   <!-- {{-- Tailwind CSS --}} -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -39,7 +50,7 @@
 
   <!-- Jquery UI (date-picker) -->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-  
+
   <!-- Bootstrap table with add new row button-->
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
@@ -54,36 +65,36 @@
       x.style.display = "block";
   }
   </script>
-  
+
   <script>
   function toggle2(){
     var x = document.getElementById("btn-submit");
       x.style.display = "block";
   }
   </script>
-  
+
   <script>
   function toggle3(){
     var x = document.getElementById("btn-submit");
       x.style.display = "block";
   }
   </script>
-  
+
   <script>
   function toggle4(){
     var x = document.getElementById("btn-submit");
       x.style.display = "block";
   }
   </script>
-  
+
   <script>
   function toggle5(){
     var x = document.getElementById("btn-submit");
       x.style.display = "block";
   }
   </script>
-  
-  
+
+
   <script>
   function toggle6(){
     var x = document.getElementById("btn-submit");
@@ -99,13 +110,13 @@
     .line-clamp-3 {
         display: -webkit-box;
         -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;  
+        -webkit-box-orient: vertical;
     }
 
     .line-clamp-4 {
         display: -webkit-box;
         -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;  
+        -webkit-box-orient: vertical;
     }
 
     .collapse{
@@ -161,86 +172,166 @@
     }
   </style>
 
+  {{-- #========== NEWLY ADDED ============ --}}
+  {{-- Dark mode: saved-choice script + public/css/mesh-dark.css. Must stay the last thing in <head>. --}}
+  @include('inc.theme-head')
+  {{-- #================================ --}}
+  {{-- #========== NEWLY ADDED ============ --}}
+  {{-- English / Malay switch: keeps the page hidden for a moment when BM is saved, so it doesn't flash English --}}
+  @include('inc.lang-head')
+  {{-- #================================ --}}
+
 </head>
 
-<body>
+{{-- =============== NISAH =============== --}}
+{{-- #============= ORI CODE ============== --}}
+{{-- <body class="mesh-v4-page"> --}}
+{{-- #================================ --}}
+{{-- mesh-dark-ready lets the dark mode styles apply on this page (every page, unless it declares @section('mesh_dark_off')) --}}
+<body class="mesh-v4-page @sectionMissing('mesh_dark_off') mesh-dark-ready @endif">
+{{-- #================================ --}}
+{{-- =============================================== --}}
 
-  <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
+  {{-- =============== NISAH =============== --}}
+  {{-- Shared "network/mesh" SVG pattern (same symbol as layouts/app-all.blade.php), used by the sidebar --}}
+  {{-- brand area and by the announcement/news modal cover panels ported into pdmshome.blade.php. --}}
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="netmesh" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
+      <g stroke="currentColor" stroke-width="0.7" fill="none" opacity="0.9">
+        <path d="M20 40 110 15 195 80 285 25 370 95 455 30 545 85 630 20 715 75 790 25"></path>
+        <path d="M60 150 150 205 240 140 330 190 420 150 505 210 590 145 680 200 770 140"></path>
+        <path d="M25 290 115 340 205 275 295 330 385 270 470 335 560 280 650 330 740 275"></path>
+        <path d="M20 40 60 150 25 290 115 340 90 395"></path>
+        <path d="M110 15 150 205 205 275 300 398"></path>
+        <path d="M195 80 240 140 295 330"></path>
+        <path d="M285 25 330 190 385 270 520 392"></path>
+        <path d="M370 95 420 150 470 335"></path>
+        <path d="M455 30 505 210 560 280 700 398"></path>
+        <path d="M545 85 590 145 650 330"></path>
+        <path d="M630 20 680 200 740 275"></path>
+        <path d="M715 75 770 140 790 25"></path>
+        <path d="M60 150 195 80 330 190 455 30 590 145 715 75"></path>
+        <path d="M115 340 240 140 385 270 505 210 650 330 770 140"></path>
+        <path d="M25 290 150 205 295 330 420 150 560 280 680 200"></path>
+      </g>
+      <g fill="currentColor">
+        <circle cx="20" cy="40" r="2.4"></circle><circle cx="110" cy="15" r="1.8"></circle><circle cx="195" cy="80" r="2.8"></circle><circle cx="285" cy="25" r="1.8"></circle>
+        <circle cx="370" cy="95" r="2.4"></circle><circle cx="455" cy="30" r="2.8"></circle><circle cx="545" cy="85" r="1.8"></circle><circle cx="630" cy="20" r="2.4"></circle>
+        <circle cx="715" cy="75" r="2.8"></circle><circle cx="790" cy="25" r="1.8"></circle><circle cx="60" cy="150" r="2.8"></circle><circle cx="150" cy="205" r="2.4"></circle>
+        <circle cx="240" cy="140" r="1.8"></circle><circle cx="330" cy="190" r="2.8"></circle><circle cx="420" cy="150" r="2.4"></circle><circle cx="505" cy="210" r="2.8"></circle>
+        <circle cx="590" cy="145" r="1.8"></circle><circle cx="680" cy="200" r="2.4"></circle><circle cx="770" cy="140" r="2.8"></circle><circle cx="25" cy="290" r="1.8"></circle>
+        <circle cx="115" cy="340" r="2.8"></circle><circle cx="205" cy="275" r="2.4"></circle><circle cx="295" cy="330" r="1.8"></circle><circle cx="385" cy="270" r="2.8"></circle>
+        <circle cx="470" cy="335" r="2.4"></circle><circle cx="560" cy="280" r="2.8"></circle><circle cx="650" cy="330" r="1.8"></circle><circle cx="740" cy="275" r="2.4"></circle>
+        <circle cx="90" cy="395" r="2.4"></circle><circle cx="300" cy="398" r="1.8"></circle><circle cx="520" cy="392" r="2.4"></circle><circle cx="700" cy="398" r="1.8"></circle>
+      </g>
+    </symbol>
+  </svg>
+  {{-- =============================================== --}}
 
-    <div class="d-flex align-items-center justify-content-between">
-      <a href="/home" class="logo d-flex align-items-center">
-        <span class="d-none d-lg-block">M E S H</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+  <!-- ======= Header (MESH v4) ======= -->
+  <header id="header" class="header mesh-v4-header fixed-top">
+    <button id="meshSidebarToggle" type="button" class="mesh-toggle-btn" aria-label="Toggle menu">
+      <i class="bi bi-list"></i>
+    </button>
 
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
+    <div>
+      <p class="mesh-page-title">{{ $pagename ?? 'MESH' }}</p>
+      <p class="mesh-page-subtitle">Ministry of Education &middot; Employee &amp; Services Hub (MESH)</p>
+    </div>
 
-            <li class="nav-item dropdown pe-3">
+    <div class="mesh-header-right">
+      {{-- #========== NEWLY ADDED ============ --}}
+      {{-- English / Malay switch, left of the sun/moon button (resources/views/inc/lang-toggle.blade.php) --}}
+      @include('inc.lang-toggle')
+      {{-- #================================ --}}
+      {{-- #========== NEWLY ADDED ============ --}}
+      {{-- Light/dark mode switch, left of the bell (resources/views/inc/theme-toggle.blade.php) --}}
+      @include('inc.theme-toggle')
+      {{-- #================================ --}}
 
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-person-fill"></i>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
-                </a><!-- End Profile Image Icon -->
+      {{-- =============== NISAH =============== --}}
+      {{-- Announcements bell, same as layouts/app-all.blade.php (Sept 2026) — was decorative only. Latest 4 announcements --}}
+      {{-- are loaded here once; inc/announcement-bell-modals.blade.php (near the end of <body>) reuses the same list. --}}
+      @php
+        $meshBellAnnouncements = \App\Models\Announcement::orderBy('created_at', 'DESC')->take(4)->get();
+      @endphp
+      @include('inc.announcement-bell')
+      {{-- =============================================== --}}
 
-            
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('biodatas.biodata.show', [Auth::user()->ic_no]) }}">
-                        <i class="bi bi-person"></i>
-                        <span>My Profile</span>
-                    </a>
-                    </li>
-                    <li>
-                    <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('change_password') }}">
-                        <i class="bi bi-key-fill"></i>
-                        <span>Change Password</span>
-                    </a>
-                    </li>
-                    <li>
-                    <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('logout') }}">
-                        <i class="bi bi-box-arrow-right"></i>
-                        <span>Sign Out</span>
-                    </a>
-                    </li>
-                </ul><!-- End Profile Dropdown Items -->
-
-            </li><!-- End Profile Nav -->
-
+      <div class="dropdown">
+        <a href="#" class="mesh-user-chip dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="mesh-user-avatar">{{ Str::upper(Str::substr(Auth::user()->name, 0, 1)) }}</span>
+          {{-- =============== NISAH =============== --}}
+          {{-- Name shown in normal case (Nur, not NUR) via User::display_name --}}
+          <span class="mesh-user-name">{{ Auth::user()->display_name }}</span>
+          {{-- =============================================== --}}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{{ route('biodatas.biodata.show', [Auth::user()->ic_no]) }}">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{{ route('change_password') }}">
+              <i class="bi bi-key-fill"></i>
+              <span>Change Password</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{{ route('logout') }}">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Sign Out</span>
+            </a>
+          </li>
         </ul>
-    </nav><!-- End Icons Navigation -->
+      </div>
+    </div>
+  </header><!-- End Header -->
 
-    </header><!-- End Header -->
+  <!-- Backdrop for the off-canvas sidebar on narrow screens (<992px) -->
+  <div class="mesh-sidebar-backdrop" data-mesh-sidebar-backdrop></div>
 
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
+  <!-- ======= Sidebar (MESH v4) ======= -->
+  <aside id="sidebar" class="sidebar mesh-v4-sidebar">
+
+    <div id="mesh-sidebar-particles" class="mesh-sidebar-particles" aria-hidden="true"></div>
+
+    <div class="mesh-brand">
+      {{-- =============== NISAH =============== --}}
+      {{-- Brunei crest on the left of the MESH title (styles: .mesh-brand-logo in public/css/mesh-v4.css) --}}
+      <div class="mesh-brand-logo"><img src="{{ asset('assets/img/logo.png') }}" alt="Brunei Darussalam crest"></div>
+      {{-- =============================================== --}}
+      <div class="mesh-brand-text">
+        <div class="mesh-brand-title">M E S H</div>
+        <div class="mesh-brand-sub">EMPLOYEE &amp; SERVICES HUB</div>
+      </div>
+    </div>
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
     @if (Auth::check())
-      @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PDMS_ADMIN') 
+      @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PDMS_ADMIN')
       || Auth::user()->hasRole('ROLE_PDMS_SERVICE') || Auth::user()->hasRole('ROLE_PDMS_CUTI'))
-      <li class="nav-heading">PDMS Access</li>
+      <li class="mesh-nav-heading">PDMS Access</li>
       <li class="nav-item">
-        <a class="@if($pagename == 'pdmshome') nav-link @else nav-link collapsed @endif" href="{{ route('pdmshome') }}">
+        {{-- =============== NISAH =============== --}}
+        {{-- Checks 'PDMS Home' (was 'pdmshome', which pdmshome.blade.php never set, so this link was never highlighted) --}}
+        {{-- =============================================== --}}
+        <a class="@if($pagename == 'PDMS Home') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('pdmshome') }}">
           <i class="bi bi-pc-display"></i>
           <span>PDMS Home</span>
         </a>
       </li>
       @endif
-	
-      <li class="nav-heading">Main Menu</li>
+
+      <li class="mesh-nav-heading">Main Menu</li>
 
       <li class="nav-item">
-        <a class="@if($pagename == 'home') nav-link @else nav-link collapsed @endif" href="{{ route('home') }}">
+        <a class="@if($pagename == 'home') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('home') }}">
           <i class="bi bi-house-fill"></i>
           <span>MESH Home</span>
         </a>
@@ -248,7 +339,7 @@
 
       @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PDMS_ADMIN') || Auth::user()->hasRole('ROLE_PDMS_CUTI'))
       <li class="nav-item">
-        <a class="@if($pagename == 'PDMS Cuti') nav-link @else nav-link collapsed @endif" href="{{ route('pdms.cutiindex') }}">
+        <a class="@if($pagename == 'PDMS Cuti') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('pdms.cutiindex') }}">
           <i class="bi bi-list-check"></i>
           </i><span>PDMS Cuti Records</span>
         </a>
@@ -257,24 +348,17 @@
 
       @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PDMS_ADMIN') || Auth::user()->hasRole('ROLE_PDMS_SERVICE'))
       <li class="nav-item">
-        <a class="@if($pagename == 'PDMS Service') nav-link @else nav-link collapsed @endif" href="{{ route('pdms.serviceindex') }}">
+        <a class="@if($pagename == 'PDMS Service') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('pdms.serviceindex') }}">
           <i class="bi bi-list-ol"></i>
           </i><span>PDMS Service Records</span>
         </a>
       </li>
       @endif
 
-        {{-- <li class="nav-item">
-          <a class="@if($pagename == 'PDMSServices') nav-link @else nav-link collapsed @endif" href="{{ route('pdmsservicesdashboard') }}">
-            <i class="bi bi-list-task">
-            </i><span>Services</span>
-          </a>
-        </li> --}}
-
       @if (Auth::user()->hasRole('ROLE_SUPERADMIN') || Auth::user()->hasRole('ROLE_PDMS_ADMIN') )
-      <li class="nav-heading">Admin</li>
+      <li class="mesh-nav-heading">Admin</li>
       <li class="nav-item">
-        <a class="@if($pagename == 'PDMS Data') nav-link @else nav-link collapsed @endif" href="{{ route('pdms.index') }}">
+        <a class="@if($pagename == 'PDMS Data') mesh-nav-link mesh-active @else mesh-nav-link @endif" href="{{ route('pdms.index') }}">
           <i class="bi bi-archive"></i>
           </i><span>PDMS Admin</span>
         </a>
@@ -282,21 +366,22 @@
       @endif
     @endif
 
-  </aside><!-- End Sidebar-->
+    </ul>
+  </aside><!-- End Sidebar (MESH v4) -->
 
   <main id="main" class="main">
     <div class="row">
       @yield('content')
-    </div>            
+    </div>
   </main><!-- End #main -->
 
-<!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-      <span style="color:black" title="Developed by: Saidatul Ekma (MESH Lead Developer), Laila Khamis(EASE Lead Developer), Nurul Hasinah(Database Administrator), Nadzirah Ali Hassim(Programmer), Wan Arif(Project Officer), Lyanna Karim (MESH Layout & Design)">
-		Ministry of Education &copy; 2021 All Rights Reserved</span>
-    </div>
-</footer><!-- End Footer -->
+<footer id="footer" class="footer mesh-v4-footer">
+  <img src="{{ asset('assets/img/logo.png') }}" alt="">
+  <span class="mesh-footer-text" title="Developed by: Saidatul Ekma (MESH Lead Developer), Laila Khamis(EASE Lead Developer), Nurul Hasinah(Database Administrator), Nadzirah Ali Hassim(Programmer), Wan Arif(Project Officer), Lyanna Karim (MESH Layout & Design)">
+    Ministry of Education &copy; 2026 All Rights Reserved. Powered by DevOps ICT.
+  </span>
+  <span class="mesh-footer-version">v4.0</span>
+</footer><!-- End Footer (MESH v4) -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -435,7 +520,7 @@
 	</script>
 	<script type="text/javascript">
     $(document).ready(function(){
-    $('#bahagianOther').hide();	
+    $('#bahagianOther').hide();
       $('#bahagian').on('change', function() {
         if ( this.value == '999')
         {
@@ -450,7 +535,7 @@
     </script>
     <script type="text/javascript">
     $(document).ready(function(){
-    $('#unitOther').hide();	
+    $('#unitOther').hide();
       $('#unit').on('change', function() {
         if ( this.value == '999')
         {
@@ -466,7 +551,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-	$('#raceOther').hide();	
+	$('#raceOther').hide();
 		$('#races').on('change', function() {
 		  if ( this.value == '10')
 		  {
@@ -482,7 +567,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-	$('#religionOther').hide();	
+	$('#religionOther').hide();
 		$('#religions').on('change', function() {
 		  if ( this.value == '4')
 		  {
@@ -624,7 +709,37 @@
 });
 
     </script>
+
+    {{-- =============== NISAH =============== --}}
+    {{-- Header bell's announcement popups + dropdown script, at <body> level so the popups aren't trapped under the --}}
+    {{-- fixed header. Must stay ABOVE mesh-v4.js: it adds the poster lightbox on pages that don't already have one. --}}
+    @include('inc.announcement-bell-modals')
+    {{-- =============================================== --}}
+
+    {{-- =============== NISAH =============== --}}
+    {{-- MESH v4 redesign: sidebar particle background + collapse/lightbox toggle (same as layouts/app-all.blade.php) --}}
+    <script src="{{ asset('js/particles.min.js') }}"></script>
+    <script src="{{ asset('js/mesh-v4.js') }}?v={{ filemtime(public_path('js/mesh-v4.js')) }}"></script>
+    {{-- =============================================== --}}
+
+    {{-- #========== NEWLY ADDED ============ --}}
+    {{-- English / Malay switch: swaps the page text to Malay when BM is picked (word list inside the file) --}}
+    <script src="{{ asset('js/mesh-lang.js') }}?v={{ filemtime(public_path('js/mesh-lang.js')) }}"></script>
+    {{-- #================================ --}}
+
     @yield('scripts')
+
+        @yield('scripts')
+
+        {{-- #========== NEWLY ADDED ============ --}}
+        {{-- MESH Smart Bot (Elia) on PDMS pages too -- same include as layouts/app-all.blade.php on live --}}
+        {{-- @include('inc.smartbot') --}} {{-- SmartBot disabled temporarily --}}
+        {{-- #================================ --}}
+
+</body>
+
+</html>
+
 
 </body>
 

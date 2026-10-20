@@ -5,7 +5,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td align="center">
-                <a href="https://mesh.moe.gov.bn">
+                <a href="http://127.0.0.1:8000">
                     <img src="{{ asset('img/newmoelogo.png') }}" class="logo" alt="img">
                 </a>
             </td>
@@ -27,7 +27,7 @@
     <p style="color:#2b2a2a;"> Please click the link below to proceed with the verification:</p>
 
 
-    <p style="color:#2b2a2a;"> https://mesh.moe.gov.bn/approververify/{{ $notf_id }}</p>
+    <p style="color:#2b2a2a;"> http://127.0.0.1:8000/approververify/{{ $notf_id }}</p>
 
 
     <p style="color:#2b2a2a;">Your prompt attention to this matter is greatly appreciated.</p>
@@ -37,7 +37,7 @@
 
 
     <br>
-    <p style="color:#2b2a2a; margin-bottom: 0px;">Mesh: <a href="https://mesh.moe.gov.bn">https://mesh.moe.gov.bn</a></p>
+    <p style="color:#2b2a2a; margin-bottom: 0px;">Mesh: <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p>
     <br>
 
     <b style="color:#232425;"><i>Ministry of Education, Brunei Darussalam</i></b>

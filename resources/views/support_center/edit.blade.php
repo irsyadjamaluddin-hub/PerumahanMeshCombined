@@ -3,6 +3,12 @@
 @section('title', 'Permohonan Sokongan Admin')
 
 @section('content')
+{{-- #========== NEWLY ADDED ============ --}}
+{{-- Dark mode in the Home page theme (purple/gold), chosen Oct 2026: the styles are in public/css/mesh-dark.css --}}
+{{-- ("Home page theme" sections; app-all already loads that file), applied inside the mesh-home-theme wrapper below. --}}
+{{-- Light mode is unchanged. --}}
+<div class="mesh-home-theme">
+{{-- #================================ --}}
 
 <?php $pagename = "SupportCenter"; ?>
 
@@ -29,7 +35,12 @@
       <div class="card-body">
         <div class="profile-overview pt-3" style="padding:18px;">
 
-          <h4>Butiran Permohonan Sokongan</h4>
+          {{-- #============= ORI CODE ============== --}}
+          {{-- <h4>Butiran Permohonan Sokongan</h4> --}}
+          {{-- #================================ --}}
+          {{-- Title centred; gold in dark mode (mesh-gold-title, public/css/mesh-dark.css) --}}
+          <h4 class="mesh-gold-title" style="text-align: center;">Butiran Permohonan Sokongan</h4>
+          {{-- #================================ --}}
           <hr>
 
           {{-- TICKET ID --}}
@@ -236,4 +247,7 @@
   </div>
 
 </section>
+{{-- #========== NEWLY ADDED ============ --}}
+</div>{{-- end .mesh-home-theme --}}
+{{-- #================================ --}}
 @endsection

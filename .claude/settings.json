@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -l resources/views/servicesdashboard.blade.php)",
+      "Bash(php -l resources/views/superadmindashboard.blade.php)",
+      "PowerShell(php artisan migrate --path=database/migrations/2026_08_05_020000_add_jabatan_to_skperkara_table.php --force)",
+      "PowerShell(php artisan tinker --execute=\"echo Schema::hasColumn\\('skperkara','jabatan'\\) ? 'OK: column present' : 'MISSING';\")",
+      "PowerShell(php artisan route:clear)"
+    ]
+  }
+}

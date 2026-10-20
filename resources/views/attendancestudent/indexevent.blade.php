@@ -32,7 +32,7 @@ $pagename = "Data_kehadiran";
 
     <div class="col-12 mb-2 mt-2" style="text-align: right;">
         <!-- Added by Amal 'Izzah (PB) -->
-        <a href="https://mesh.moe.gov.bn/ratingopenform"  target="_blank" class= "btn btn-primary" hidden>
+        <a href="http://127.0.0.1:8000/ratingopenform"  target="_blank" class= "btn btn-primary" hidden>
             <i class="bi bi-send"></i>
         </a>
         <!------ ==========  ------>

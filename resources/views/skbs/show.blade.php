@@ -174,7 +174,7 @@ Sekian untuk perhatian mengenainya dan sebarang pertanyaan lanjut bolehlah mengh
 <br>
 @php $id = Crypt::encrypt($qo->emp_qo_infos_id); @endphp
 
-{!! QrCode::size(100)->generate("https://mesh.moe.gov.bn/verify/$id"); !!}
+{!! QrCode::size(100)->generate("http://127.0.0.1:8000/verify/$id"); !!}
 
 </div>
 

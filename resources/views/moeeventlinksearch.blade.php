@@ -152,7 +152,7 @@
                       <div class="col-lg-8 col-md-9">
                       <br>
                   Please use this link for attendance record:-
-                    <p style="color:#2b2a2a; margin-bottom: 0px;">Mesh: <a href="https://mesh.moe.gov.bn/moeeventscanqrcode/{{$result->id}}">https://mesh.moe.gov.bn/moeeventscanqrcode/{{$result->id}}</a></p>
+                    <p style="color:#2b2a2a; margin-bottom: 0px;">Mesh: <a href="http://127.0.0.1:8000/moeeventscanqrcode/{{$result->id}}">http://127.0.0.1:8000/moeeventscanqrcode/{{$result->id}}</a></p>
                     <br>
                         
                       </div>

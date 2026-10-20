@@ -29,7 +29,12 @@ class PemegangJawatanController extends Controller
 // FIXED VERSION - Corrects tarikh bersara filter, status display, and umur filter
 // Replace your existing export() method with this
 
-public function export(Request $request)
+// Shared by export() and the dashboard report: applies the same
+// standardization + filters to the non-teaching SPJ dataset.
+
+// Shared by export() and the dashboard report: applies the same
+// standardization + filters to the non-teaching SPJ dataset.
+private function getFilteredSpjs(Request $request)
 {
     $jawatan = $request->get('jawatan');
     $jantina = $request->get('jantina');
@@ -43,7 +48,7 @@ public function export(Request $request)
     $kelulusan = $request->get('kelulusan');
     $jabatan = $request->get('jabatan');
     $status = $request->get('status');
-    
+
     $spjs = DB::table('spjs')
         ->select(
             'nama',
@@ -90,13 +95,13 @@ public function export(Request $request)
                     $birthDate = \Carbon\Carbon::parse($item->tarikhLahir);
                     $item->umur = $birthDate->age;
                     $item->tarikhBersara_carbon = $birthDate->copy()->addYears(60);
-                    
+
                     // Calculate default retirement date (birth + 60)
                     $item->tarikhBersaraDefault = $item->tarikhBersara_carbon->format('Y-m-d');
-                    
+
                     // Use override if exists, otherwise use default
                     $item->tarikhBersara = $item->tarikhBersaraOverride ?? $item->tarikhBersaraDefault;
-                    
+
                 } catch (\Exception $e) {
                     $item->umur = null;
                     $item->tarikhBersara = $item->tarikhBersaraOverride;
@@ -197,7 +202,7 @@ public function export(Request $request)
     if ($jabatan && $jabatan !== 'all') {
         $spjs = $spjs->filter(fn($i) => trim(strtolower($i->jabatan)) === trim(strtolower($jabatan)));
     }
-    
+
     // ✅ FIX #3: Umur range filtering - Store umurMin/Max for Excel display
     if ($umurMin || $umurMax) {
         $spjs = $spjs->filter(function($i) use ($umurMin, $umurMax) {
@@ -216,36 +221,36 @@ public function export(Request $request)
             try {
                 $itemDate = \Carbon\Carbon::parse($i->tarikhBersara);
                 // Match year, month, and day
-                return $itemDate->year === $fromDate->year 
-                    && $itemDate->month === $fromDate->month 
+                return $itemDate->year === $fromDate->year
+                    && $itemDate->month === $fromDate->month
                     && $itemDate->day === $fromDate->day;
             } catch (\Exception $e) {
                 return false;
             }
         });
     }
-    
+
     // Status filtering (skip if value is 'all')
     if ($status && $status !== 'all') {
         $spjs = $spjs->filter(function($item) use ($status) {
             $umur = $item->umur ?? null;
             $tatatertib = $item->tatatertib ?? 0;
             $tarikhBersara = $item->tarikhBersara ?? null;
-            
+
             if ($umur === null) {
                 return false;
             }
-            
+
             if ($status === 'Active') {
                 if ($umur >= 60) {
                     return false;
                 }
-                
+
                 if ($tatatertib == 1 && $tarikhBersara) {
                     try {
                         $bersaraDate = \Carbon\Carbon::parse($tarikhBersara);
                         $today = \Carbon\Carbon::now();
-                        
+
                         if ($bersaraDate->isPast()) {
                             return false;
                         }
@@ -253,19 +258,19 @@ public function export(Request $request)
                         // ignore
                     }
                 }
-                
+
                 return true;
-                
+
             } elseif ($status === 'Retired') {
                 if ($umur < 60) {
                     return false;
                 }
-                
+
                 if ($tatatertib == 1 && $tarikhBersara) {
                     try {
                         $bersaraDate = \Carbon\Carbon::parse($tarikhBersara);
                         $today = \Carbon\Carbon::now();
-                        
+
                         if ($bersaraDate->isPast()) {
                             return false;
                         }
@@ -273,28 +278,48 @@ public function export(Request $request)
                         // ignore
                     }
                 }
-                
+
                 return true;
-                
+
             } elseif ($status === 'Inactive') {
                 if ($tatatertib != 1 || !$tarikhBersara) {
                     return false;
                 }
-                
+
                 try {
                     $bersaraDate = \Carbon\Carbon::parse($tarikhBersara);
                     $today = \Carbon\Carbon::now();
-                    
+
                     return $bersaraDate->isPast();
                 } catch (\Exception $e) {
                     return false;
                 }
             }
-            
+
             return true;
         });
     }
-    
+
+    return $spjs;
+}
+
+public function export(Request $request)
+{
+    $jawatan = $request->get('jawatan');
+    $jantina = $request->get('jantina');
+    $divisyen = $request->get('divisyen');
+    $jenisTanggagaji = $request->get('jenisTanggagaji');
+    $tanggagajiSebenar = $request->get('tanggagajiSebenar');
+    $umurMin = $request->get('umurMin');
+    $umurMax = $request->get('umurMax');
+    $tarikhBersaraFrom = $request->get('tarikhBersaraFrom');
+    $cawanganDaerah = $request->get('cawanganDaerah');
+    $kelulusan = $request->get('kelulusan');
+    $jabatan = $request->get('jabatan');
+    $status = $request->get('status');
+
+    $spjs = $this->getFilteredSpjs($request);
+
     // ---------- Generate filename with "all" options ----------
     $filename = 'non-teaching-staff';
     
@@ -356,10 +381,121 @@ public function export(Request $request)
     );
 }
 
+// ---------------------------------------------------------------
+// Non-Teaching Dashboard Report (same filters as the Export Excel
+// modal, rendered as summary counts + charts instead of a download)
+// ---------------------------------------------------------------
+public function nonTeachingReport()
+{
+    $jawatanOptions = SPJ::select('Text167')->distinct()->whereNotNull('Text167')->where('Text167', '!=', '')->pluck('Text167')->map(fn($v) => ucwords(strtolower(trim($v))))->unique()->sort()->values();
+    $divisyenOptions = SPJ::select('jawatanBahagian')->distinct()->whereNotNull('jawatanBahagian')->where('jawatanBahagian', '!=', '')->pluck('jawatanBahagian')->map(fn($v) => ucwords(strtolower(trim($v))))->unique()->sort()->values();
+    $jenisTanggagajiOptions = SPJ::select('jenisTanggagaji')->distinct()->whereNotNull('jenisTanggagaji')->where('jenisTanggagaji', '!=', '')->pluck('jenisTanggagaji')->map(fn($v) => trim($v))->unique()->sort()->values();
+    $tanggagajiSebenarOptions = SPJ::select('tanggagajiSebenar')->distinct()->whereNotNull('tanggagajiSebenar')->where('tanggagajiSebenar', '!=', '')->pluck('tanggagajiSebenar')->map(fn($v) => trim($v))->unique()->sort()->values();
+    $daerahOptions = ['Brunei Muara', 'Tutong', 'Temburong', 'Kuala-Belait'];
+    $kelulusanOptions = ['PhD', 'PGCE', 'Master', 'Degree', 'Higher Diploma', 'BTEC', 'Diploma', 'ND', 'Certificate', 'O Level', 'A Level'];
+    $jabatanOptions = SPJ::select('text322')->distinct()->whereNotNull('text322')->where('text322', '!=', '')->pluck('text322')->map(fn($v) => ucwords(strtolower(trim($v))))->unique()->sort()->values();
+
+    return view('hrs.pemegang-jawatan.report', compact(
+        'jawatanOptions',
+        'divisyenOptions',
+        'jenisTanggagajiOptions',
+        'tanggagajiSebenarOptions',
+        'daerahOptions',
+        'kelulusanOptions',
+        'jabatanOptions'
+    ));
+}
+
+public function nonTeachingReportData(Request $request)
+{
+    $spjs = $this->getFilteredSpjs($request);
+
+    $total = $spjs->count();
+    $avgAge = $total ? round($spjs->pluck('umur')->filter(fn($v) => $v !== null)->avg(), 1) : 0;
+
+    $countBy = function (string $field, ?int $limit = null) use ($spjs) {
+        $counts = $spjs
+            ->groupBy(fn($i) => trim((string) ($i->{$field} ?? '')) !== '' ? $i->{$field} : 'Unknown')
+            ->map->count()
+            ->sortDesc();
+
+        return $limit ? $counts->take($limit) : $counts;
+    };
+
+    $statusCounts = ['Active' => 0, 'Retired' => 0, 'Inactive' => 0, 'Unknown' => 0];
+    $ageBuckets = ['<30' => 0, '30-39' => 0, '40-49' => 0, '50-59' => 0, '60+' => 0, 'Unknown' => 0];
+    $retireBuckets = ['Within 1 year' => 0, '1-2 years' => 0, '2-5 years' => 0, '5+ years' => 0, 'Unknown' => 0];
+    $now = Carbon::now();
+
+    foreach ($spjs as $item) {
+        $umur = $item->umur ?? null;
+        $tatatertib = $item->tatatertib ?? 0;
+        $tarikhBersara = $item->tarikhBersara ?? null;
+
+        // ---- Status ----
+        if ($umur === null) {
+            $statusCounts['Unknown']++;
+        } elseif ($tatatertib == 1 && $tarikhBersara && $this->isPastDate($tarikhBersara)) {
+            $statusCounts['Inactive']++;
+        } elseif ($umur >= 60) {
+            $statusCounts['Retired']++;
+        } else {
+            $statusCounts['Active']++;
+        }
+
+        // ---- Age bucket ----
+        if ($umur === null) $ageBuckets['Unknown']++;
+        elseif ($umur < 30) $ageBuckets['<30']++;
+        elseif ($umur < 40) $ageBuckets['30-39']++;
+        elseif ($umur < 50) $ageBuckets['40-49']++;
+        elseif ($umur < 60) $ageBuckets['50-59']++;
+        else $ageBuckets['60+']++;
+
+        // ---- Upcoming retirement timeline ----
+        if (!$tarikhBersara) {
+            $retireBuckets['Unknown']++;
+            continue;
+        }
+        try {
+            $months = $now->diffInMonths(Carbon::parse($tarikhBersara), false);
+            if ($months < 0) $retireBuckets['Unknown']++;
+            elseif ($months <= 12) $retireBuckets['Within 1 year']++;
+            elseif ($months <= 24) $retireBuckets['1-2 years']++;
+            elseif ($months <= 60) $retireBuckets['2-5 years']++;
+            else $retireBuckets['5+ years']++;
+        } catch (\Exception $e) {
+            $retireBuckets['Unknown']++;
+        }
+    }
+
+    return response()->json([
+        'total' => $total,
+        'avgAge' => $avgAge,
+        'statusCounts' => $statusCounts,
+        'ageBuckets' => $ageBuckets,
+        'retireBuckets' => $retireBuckets,
+        'byJantina' => $countBy('jantina'),
+        'byDivisyen' => $countBy('divisyen'),
+        'byJawatan' => $countBy('jawatan_std', 10),
+        'byKelulusan' => $countBy('kelulusan_std'),
+        'byJabatan' => $countBy('jabatan', 10),
+        'byCawangan' => $countBy('cawanganDaerah'),
+    ]);
+}
+
+private function isPastDate($date): bool
+{
+    try {
+        return Carbon::parse($date)->isPast();
+    } catch (\Exception $e) {
+        return false;
+    }
+}
+
 // Middleware for HRIDS
 public function __construct()
 {
-    $this->middleware(['auth', 'role:ROLE_HRIDS']);
+    $this->middleware(['auth', 'role:ROLE_HRIDS,ROLE_HRIDS_NONTEACHING']);
 }
 
 

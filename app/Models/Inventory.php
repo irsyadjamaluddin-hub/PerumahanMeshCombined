@@ -18,7 +18,7 @@ class Inventory extends Model
      *
      * @var string
      */
-    protected $table = 'mesh.inventory';
+    protected $table = 'inventory'; // was 'mesh.inventory' -- this database has it as dbo.inventory
 
 
     /**

@@ -214,7 +214,7 @@ style="
                             <p> We need your assistance to verify the status of a user account. Kindly review the account details and confirm user validity. Please click link below to verify:</p>
 
                             <div style="margin: 2em auto;">
-                                <a href= "https://mesh.moe.gov.bn/approververify/{{ $notf_id }}" style="text-decoration: none;">
+                                <a href= "http://127.0.0.1:8000/approververify/{{ $notf_id }}" style="text-decoration: none;">
                                     <p style="
                                         display: block;
                                         padding: 12px 24px;

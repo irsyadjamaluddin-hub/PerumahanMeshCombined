@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -46,21 +46,128 @@
     p {
       font-size: 14px;
     }
-    body {
-      background: #4f77aa;
+
+    html, body {
+      height: 100%;
     }
 
+    body {
+      margin: 0;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      background: #0c2f5e;
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(155deg, #081f42 0%, #0c2f5e 45%, #144d8f 100%);
+      background-size: 24px 24px, cover;
+      background-attachment: fixed;
+      font-family: "Poppins", "Open Sans", sans-serif;
+    }
+
+    #particles-js {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .section.register {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section.register .card {
+      border: none;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(4, 18, 40, 0.45);
+    }
+
+    .section.register .card-title {
+      display: inline-block;
+      font-weight: 700;
+      color: #0c2f5e;
+      letter-spacing: 0.3px;
+      padding-bottom: 10px;
+      position: relative;
+    }
+
+    .section.register .card-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 46px;
+      height: 3px;
+      border-radius: 2px;
+      background: #f0b429;
+    }
+
+    .section.register .col-form-label {
+      font-weight: 600;
+      color: #4a90d9;
+    }
+
+    .section.register .form-control,
+    .section.register .form-select {
+      border: 1.5px solid #dde3ea;
+      border-radius: 8px;
+      padding: 10px 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .section.register .form-control:focus,
+    .section.register .form-select:focus {
+      border-color: #144d8f;
+      box-shadow: 0 0 0 4px rgba(20, 77, 143, 0.15);
+    }
+
+    .section.register .btn-primary {
+      background: #0c2f5e;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 36px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .section.register .btn-primary:hover {
+      background: #144d8f;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(4, 18, 40, 0.3);
+    }
+
+    .section.register .btn-primary:focus {
+      box-shadow: 0 0 0 4px rgba(240, 180, 41, 0.35);
+    }
+
+    .section.register hr {
+      opacity: 0.12;
+    }
   </style>
 
 </head>
 
 <body>
+
+  {{-- Particles JS --}}
+  <div id="particles-js"></div>
+
+  {{-- Particles JS CDN --}}
+  <script src="{{ asset('js/particles.min.js') }}"></script>
+
+  {{-- Particles JS Initializer --}}
+  <script>
+    particlesJS("particles-js", {"particles":{"number":{"value":100,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffffff"},"shape":{"type":"circle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":3,"random":true,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":6,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"repulse"},"onclick":{"enable":true,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});
+  </script>
+
  <!-- Back Button - Only visible when user is logged in -->
  @auth  
         <div class="container" style="padding-top: 20px;">
           <div class="row justify-content-center">
             <div class="col-lg-8">
-              <a href="https://mesh.moe.gov.bn/servicesdashboard" class="btn btn-primary" style="margin-bottom: 10px;">
+              <a href="http://127.0.0.1:8000/servicesdashboard" class="btn btn-primary" style="margin-bottom: 10px;">
                 <i class="bi bi-arrow-left"></i> 
               </a>
             </div>
@@ -184,12 +291,6 @@
   });
 </script>
 
-
-			
-
-
-
-              
               <div class="row mb-3">
                   <label for="inputNama" class="col-lg-4 col-form-label">Nama:<i style="color:red;">*</i></label>
                   <div class="col-lg-8">
@@ -290,6 +391,7 @@
       allowClear: true
     });
   </script>
+
   
 </section>
 
